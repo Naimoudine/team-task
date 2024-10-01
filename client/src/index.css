@@ -1,0 +1,33 @@
+@tailwind base;
+@layer base {
+  body {
+    @apply h-screen w-screen;
+  }
+
+  #root {
+    @apply h-full w-full;
+  }
+}
+@tailwind components;
+@tailwind utilities;
+@layer utilities {
+  .wrapper {
+    @apply p-4;
+  }
+
+  #logo {
+    @apply font-bold text-xl text-zinc-900;
+  }
+
+  .nav-link {
+    @apply flex items-center justify-start gap-2 font-semibold text-sm py-2;
+  }
+
+  .nav-icon {
+    @apply size-4 text-gray-600;
+  }
+
+  .page-title {
+    @apply text-xl font-bold text-zinc-900;
+  }
+}
