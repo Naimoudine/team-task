@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="h-full w-full flex">
       <Aside />
-      <div className="w-[80%] overflow-hidden">
+      <div className="w-[85%] overflow-hidden">
         <Outlet />
       </div>
     </div>

@@ -39,7 +39,7 @@
   }
 
   .task-list-card {
-    @apply w-[35%] h-full bg-zinc-100 rounded-md px-4 py-2 flex flex-col gap-2 overflow-scroll;
+    @apply min-w-[300px] w-[20%] h-full bg-zinc-100 rounded-md px-4 py-2 flex flex-col gap-2 overflow-scroll;
   }
 
   .task {

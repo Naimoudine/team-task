@@ -5,29 +5,43 @@ import type React from "react";
 
 type Props = {
   taskList: TaskList[];
-  setTaskList: React.Dispatch<React.SetStateAction<TaskList[]>>;
+  setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
-export default function TaskListView({ taskList, setTaskList }: Props) {
+export default function TaskListView({
+  taskList,
+  setDisplayAddTask,
+  setCurrentListId,
+}: Props) {
+  const handleOpenModal = (id: string) => {
+    setDisplayAddTask(true);
+    setCurrentListId(id);
+  };
+
   return (
     <section className="w-full">
-      <header className="task-list-header">
-        <h2 className="task-status">Status 1</h2>
-        <button className="p-1 rounded-lg hover:bg-zinc-100" type="button">
-          <PlusIcon className="size-4 text-zinc-600 text-zinc-900" />
-        </button>
-      </header>
-      <ul className="task-list">
-        <li className="task">
-          <Link to="">task 1</Link>
-        </li>
-        <li className="task">
-          <Link to="">task 2</Link>
-        </li>
-        <li className="task">
-          <Link to="">task 3</Link>
-        </li>
-      </ul>
+      {taskList.map((list) => (
+        <div key={list.id}>
+          <header className="task-list-header">
+            <h2 className="task-status">{list.title}</h2>
+            <button
+              className="p-1 rounded-lg hover:bg-zinc-100"
+              type="button"
+              onClick={() => handleOpenModal(list.id)}
+            >
+              <PlusIcon className="size-4 text-zinc-600 text-zinc-900" />
+            </button>
+          </header>
+          <ul className="task-list">
+            {list.tasks.map((task) => (
+              <li key={task.id} className="task">
+                <Link to={`/tasks/${task.id}`}>{task.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </section>
   );
 }

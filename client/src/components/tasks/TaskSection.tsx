@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { DisplayType } from "../../pages/Tasks";
+import AddTaskModal from "./AddTaskModal";
 import TaskBoardView from "./TaskBoardView";
 import TaskListView from "./TaskListView";
 
@@ -23,6 +24,7 @@ export interface TaskList {
 }
 
 export default function Tasksection({ display }: Props) {
+  const [displayAddTask, setDisplayAddTask] = useState<boolean>(false);
   const [taskList, setTaskList] = useState<TaskList[]>([
     {
       id: uuid(),
@@ -35,16 +37,34 @@ export default function Tasksection({ display }: Props) {
       ],
     },
   ]);
+  const [currentListId, setCurrentListId] = useState<string | undefined>(
+    undefined
+  );
 
   return (
     <div className="w-full h-full">
+      <AddTaskModal
+        displayAddTask={displayAddTask}
+        setDisplayAddTask={setDisplayAddTask}
+        currentListId={currentListId}
+        taskList={taskList}
+        setTaskList={setTaskList}
+      />
       {display === "list" ? (
         <div className="w-full h-full">
-          <TaskListView taskList={taskList} setTaskList={setTaskList} />
+          <TaskListView
+            taskList={taskList}
+            setDisplayAddTask={setDisplayAddTask}
+            setCurrentListId={setCurrentListId}
+          />
         </div>
       ) : (
         <div className="mx-2 w-full h-full flex gap-4 mt-2">
-          <TaskBoardView taskList={taskList} setTaskList={setTaskList} />
+          <TaskBoardView
+            taskList={taskList}
+            setDisplayAddTask={setDisplayAddTask}
+            setCurrentListId={setCurrentListId}
+          />
         </div>
       )}
     </div>
