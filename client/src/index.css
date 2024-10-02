@@ -34,16 +34,16 @@
   .task-list {
   }
 
-  .task-status {
-    @apply bg-zinc-200 px-4 py-2 font-semibold;
+  .task-list-header {
+    @apply bg-zinc-200 px-4 py-2 font-semibold flex items-center justify-between;
+  }
+
+  .task-list-card {
+    @apply w-[35%] h-full bg-zinc-100 rounded-md px-4 py-2 flex flex-col gap-2 overflow-scroll;
   }
 
   .task {
     @apply py-2 hover:bg-zinc-100 px-4 border-b border-zinc-200 font-semibold;
-  }
-
-  .task-card-list {
-    @apply w-[35%] h-full bg-zinc-100 rounded-md px-4 py-2 flex flex-col gap-2 overflow-scroll;
   }
 
   .task-card {

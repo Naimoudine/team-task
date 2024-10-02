@@ -1,5 +1,5 @@
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/16/solid";
-import TaskList from "../components/tasks/TaskList";
+import TaskSection from "../components/tasks/TaskSection";
 import DisplayModal from "../components/tasks/DisplayModal";
 import { useState } from "react";
 
@@ -33,7 +33,7 @@ export default function Tasks({}: Props) {
           />
         </button>
       </header>
-      <TaskList display={display} />
+      <TaskSection display={display} />
     </div>
   );
 }
