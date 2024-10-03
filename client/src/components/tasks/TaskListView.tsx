@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/16/solid";
-import { TaskList } from "./TaskSection";
 import type React from "react";
+import { useTaskListStore } from "../../store/taskList-Store";
 
 type Props = {
-  taskList: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export default function TaskListView({
-  taskList,
   setDisplayAddTask,
   setCurrentListId,
 }: Props) {
+  const taskLists = useTaskListStore((state) => state.taskLists);
+
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);
     setCurrentListId(id);
@@ -21,7 +21,7 @@ export default function TaskListView({
 
   return (
     <section className="w-full">
-      {taskList.map((list) => (
+      {taskLists.map((list) => (
         <div key={list.id}>
           <header className="task-list-header">
             <h2 className="task-status">{list.title}</h2>

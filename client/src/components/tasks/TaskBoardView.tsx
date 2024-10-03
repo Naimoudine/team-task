@@ -1,16 +1,17 @@
 import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
-import { TaskList } from "./TaskSection";
+import { useTaskListStore } from "../../store/taskList-Store";
+
 type Props = {
-  taskList: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export default function TaskBoardSView({
-  taskList,
   setDisplayAddTask,
   setCurrentListId,
 }: Props) {
+  const taskLists = useTaskListStore((state) => state.taskLists);
+
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);
     setCurrentListId(id);
@@ -18,10 +19,10 @@ export default function TaskBoardSView({
 
   return (
     <section className="task-list-card">
-      {taskList.map((list) => (
+      {taskLists.map((list) => (
         <div key={list.id}>
           <header className="flex items-center justify-between">
-            <h2 className="font-semibold mb-2">{list.title}</h2>
+            <h2 className="mb-2 font-semibold">{list.title}</h2>
             <button className="p-1 rounded-lg hover:bg-gray-200" type="button">
               <EllipsisHorizontalIcon className="size-4 text-zinc-600" />
             </button>
@@ -34,7 +35,7 @@ export default function TaskBoardSView({
             ))}
           </div>
           <button
-            className="border-2 border-zinc-200 rounded-md mt-4 py-1 px-2 flex items-center justify-center opacity-100 hover:bg-gray-200 w-full"
+            className="flex items-center justify-center w-full px-2 py-1 mt-4 border-2 rounded-md opacity-100 border-zinc-200 hover:bg-gray-200"
             type="button"
             onClick={() => handleOpenModal(list.id)}
           >
