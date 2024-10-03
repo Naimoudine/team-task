@@ -19,6 +19,8 @@ export default function TaskListView({
     setCurrentListId(id);
   };
 
+  console.log(taskLists);
+
   return (
     <section className="w-full">
       {taskLists.map((list) => (
@@ -34,11 +36,15 @@ export default function TaskListView({
             </button>
           </header>
           <ul className="task-list">
-            {list.tasks.map((task) => (
-              <li key={task.id} className="task">
-                <Link to={`/tasks/${task.id}`}>{task.title}</Link>
-              </li>
-            ))}
+            {[...list.tasks]
+              .sort((a, b) => {
+                return b.priority - a.priority;
+              })
+              .map((task) => (
+                <li key={task.id} className="task">
+                  <Link to={`/tasks/${task.id}`}>{task.title}</Link>
+                </li>
+              ))}
           </ul>
         </div>
       ))}

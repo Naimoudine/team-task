@@ -18,6 +18,18 @@ export const useTaskListStore = create<TaskListStore>((set) => ({
         {
           id: uuid(),
           title: "learn context manager",
+          priority: 1,
+        },
+      ],
+    },
+    {
+      id: uuid(),
+      title: "in progress",
+      tasks: [
+        {
+          id: uuid(),
+          title: "learn context manager",
+          priority: 1,
         },
       ],
     },

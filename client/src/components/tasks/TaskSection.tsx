@@ -11,6 +11,8 @@ type Props = {
 export interface Task {
   id: string;
   title: string;
+  description?: string;
+  priority: 1 | 2 | 3;
   date?: Date;
   due?: Date;
   assingned?: string;

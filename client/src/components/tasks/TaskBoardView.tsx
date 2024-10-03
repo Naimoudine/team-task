@@ -18,9 +18,9 @@ export default function TaskBoardSView({
   };
 
   return (
-    <section className="task-list-card">
+    <section className="flex gap-8">
       {taskLists.map((list) => (
-        <div key={list.id}>
+        <div className="task-list-card" key={list.id}>
           <header className="flex items-center justify-between">
             <h2 className="mb-2 font-semibold">{list.title}</h2>
             <button className="p-1 rounded-lg hover:bg-gray-200" type="button">
@@ -28,11 +28,15 @@ export default function TaskBoardSView({
             </button>
           </header>
           <div className="flex flex-col gap-4">
-            {list.tasks.map((task) => (
-              <article key={task.id} className="task-card">
-                {task.title}
-              </article>
-            ))}
+            {[...list.tasks]
+              .sort((a, b) => {
+                return b.priority - a.priority;
+              })
+              .map((task) => (
+                <article key={task.id} className="task-card">
+                  {task.title}
+                </article>
+              ))}
           </div>
           <button
             className="flex items-center justify-center w-full px-2 py-1 mt-4 border-2 rounded-md opacity-100 border-zinc-200 hover:bg-gray-200"

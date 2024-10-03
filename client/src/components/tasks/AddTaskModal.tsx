@@ -1,7 +1,6 @@
 import type React from "react";
 import { v4 as uuid } from "uuid";
 import { XMarkIcon } from "@heroicons/react/16/solid";
-import { TaskList } from "./TaskSection";
 import { useTaskListStore } from "../../store/taskList-Store";
 
 type Props = {
@@ -22,11 +21,22 @@ export default function AddTaskModal({
     const form = e.currentTarget;
     const formData = new FormData(form);
     const newTaskTitle = formData.get("title");
+    const newDescription = formData.get("description");
+    const newPriority = formData.get("priority");
 
     if (currentListId) {
       addTask(currentListId, {
         id: uuid(),
         title: newTaskTitle?.toString()!,
+        description: newDescription ? newDescription.toString() : "",
+        priority:
+          newPriority === "low"
+            ? 1
+            : newPriority === "medium"
+            ? 2
+            : newPriority === "high"
+            ? 3
+            : 1,
       });
     }
 
@@ -74,7 +84,23 @@ export default function AddTaskModal({
             placeholder="Add a description..."
           />
         </div>
-        <div className="self-end">
+        <div className="flex items-center justify-between ">
+          <div>
+            <label
+              htmlFor="priority"
+              className="flex items-center justify-center gap-2"
+            >
+              <select
+                className="p-1 border rounded-lg border-zinc-400"
+                name="priority"
+                id="priority"
+              >
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+              </select>
+            </label>
+          </div>
           <button
             className="px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg w-fit hover:bg-blue-600/70"
             type="submit"
