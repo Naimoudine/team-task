@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import "./index.css";
 import Home from "./pages/Home.tsx";
 import Tasks from "./pages/Tasks.tsx";
+import Task from "./pages/Task.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/tasks",
         element: <Tasks />,
+      },
+      {
+        path: "/tasks/:id",
+        element: <Task />,
       },
     ],
   },

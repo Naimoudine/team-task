@@ -40,8 +40,8 @@ export default function TaskListView({
                 return b.priority - a.priority;
               })
               .map((task) => (
-                <li key={task.id} className="task">
-                  <Link to={`/tasks/${task.id}`}>
+                <li key={task.id} className="flex">
+                  <Link className="w-full task" to={`/tasks/${task.id}`}>
                     <span className="mr-4 font-semibold text-zinc-500">
                       {displayPriority(task.priority)}
                     </span>

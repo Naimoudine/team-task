@@ -35,7 +35,7 @@
   }
 
   .task-list-header {
-    @apply flex items-center justify-between px-4 py-2 font-semibold bg-zinc-200;
+    @apply flex items-center justify-between px-4 py-2 font-semibold bg-zinc-100;
   }
 
   .task-list-card {
@@ -43,7 +43,7 @@
   }
 
   .task {
-    @apply px-4 py-2 font-semibold border-b hover:bg-zinc-100 border-zinc-200;
+    @apply px-4 py-2 font-semibold border-b hover:bg-zinc-200 border-zinc-200;
   }
 
   .task-card {
