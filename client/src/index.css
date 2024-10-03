@@ -1,11 +1,11 @@
 @tailwind base;
 @layer base {
   body {
-    @apply h-screen w-screen;
+    @apply w-screen h-screen;
   }
 
   #root {
-    @apply h-full w-full;
+    @apply w-full h-full;
   }
 }
 @tailwind components;
@@ -16,15 +16,15 @@
   }
 
   #logo {
-    @apply font-bold text-xl text-zinc-900;
+    @apply text-xl font-bold text-zinc-900;
   }
 
   .nav-link {
-    @apply flex items-center justify-start gap-2 font-semibold text-sm py-2;
+    @apply flex items-center justify-start gap-2 py-2 text-sm font-semibold;
   }
 
   .nav-icon {
-    @apply size-4 text-gray-600;
+    @apply text-gray-600 size-4;
   }
 
   .page-title {
@@ -35,7 +35,7 @@
   }
 
   .task-list-header {
-    @apply bg-zinc-200 px-4 py-2 font-semibold flex items-center justify-between;
+    @apply flex items-center justify-between px-4 py-2 font-semibold bg-zinc-200;
   }
 
   .task-list-card {
@@ -43,10 +43,10 @@
   }
 
   .task {
-    @apply py-2 hover:bg-zinc-100 px-4 border-b border-zinc-200 font-semibold;
+    @apply px-4 py-2 font-semibold border-b hover:bg-zinc-100 border-zinc-200;
   }
 
   .task-card {
-    @apply px-4 py-2 h-[85px] w-full bg-white text-zinc-800 shadow-lg rounded-md;
+    @apply px-4 py-2 h-[85px] w-full flex flex-col justify-between bg-white text-zinc-800 shadow-lg rounded-md;
   }
 }

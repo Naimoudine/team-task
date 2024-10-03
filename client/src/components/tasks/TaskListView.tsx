@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import type React from "react";
 import { useTaskListStore } from "../../store/taskList-Store";
+import { displayPriority } from "./TaskSection";
 
 type Props = {
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,8 +19,6 @@ export default function TaskListView({
     setDisplayAddTask(true);
     setCurrentListId(id);
   };
-
-  console.log(taskLists);
 
   return (
     <section className="w-full">
@@ -42,7 +41,12 @@ export default function TaskListView({
               })
               .map((task) => (
                 <li key={task.id} className="task">
-                  <Link to={`/tasks/${task.id}`}>{task.title}</Link>
+                  <Link to={`/tasks/${task.id}`}>
+                    <span className="mr-4 font-semibold text-zinc-500">
+                      {displayPriority(task.priority)}
+                    </span>
+                    {task.title}
+                  </Link>
                 </li>
               ))}
           </ul>

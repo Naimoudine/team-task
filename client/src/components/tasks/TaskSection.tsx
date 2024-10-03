@@ -24,6 +24,16 @@ export interface TaskList {
   tasks: Task[];
 }
 
+export const displayPriority = (priority: number) => {
+  if (priority === 1) {
+    return "Low";
+  } else if (priority === 1) {
+    return "Medium";
+  } else {
+    return "High";
+  }
+};
+
 export default function Tasksection({ display }: Props) {
   const [displayAddTask, setDisplayAddTask] = useState<boolean>(false);
   const [currentListId, setCurrentListId] = useState<string | undefined>(

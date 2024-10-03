@@ -1,5 +1,6 @@
 import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import { useTaskListStore } from "../../store/taskList-Store";
+import { displayPriority } from "./TaskSection";
 
 type Props = {
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,7 +35,10 @@ export default function TaskBoardSView({
               })
               .map((task) => (
                 <article key={task.id} className="task-card">
-                  {task.title}
+                  <h3>{task.title}</h3>
+                  <p className="font-semibold text-zinc-500">
+                    {displayPriority(task.priority)}
+                  </p>
                 </article>
               ))}
           </div>
