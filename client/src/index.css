@@ -49,4 +49,8 @@
   .task-card {
     @apply px-4 py-2 h-[85px] w-full flex flex-col justify-between bg-white text-zinc-800 shadow-lg rounded-md;
   }
+
+  .task-opt-btn {
+    @apply flex items-center justify-start w-full gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-start hover:bg-gray-200;
+  }
 }
