@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, "http://mysite.com"],
+    origin: [process.env.CLIENT_URL as string, "http://mysite.com"],
   })
 );
 
