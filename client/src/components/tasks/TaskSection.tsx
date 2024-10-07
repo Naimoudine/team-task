@@ -15,7 +15,7 @@ export interface Task {
   priority: 1 | 2 | 3;
   date?: Date;
   due?: Date;
-  assingned?: string;
+  assigned?: string;
 }
 
 export interface TaskList {
