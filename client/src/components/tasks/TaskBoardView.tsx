@@ -1,18 +1,18 @@
 import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import { useTaskListStore } from "../../store/taskList-Store";
-import { displayPriority } from "./TaskSection";
+import { displayPriority, TaskList } from "./TaskSection";
 
 type Props = {
+  taskLists: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export default function TaskBoardSView({
+  taskLists,
   setDisplayAddTask,
   setCurrentListId,
 }: Props) {
-  const taskLists = useTaskListStore((state) => state.taskLists);
-
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);
     setCurrentListId(id);
@@ -29,7 +29,7 @@ export default function TaskBoardSView({
             </button>
           </header>
           <div className="flex flex-col gap-4">
-            {[...list.tasks]
+            {[...list.tasksDetails]
               .sort((a, b) => {
                 return b.priority - a.priority;
               })

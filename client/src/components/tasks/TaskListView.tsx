@@ -2,19 +2,19 @@ import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import type React from "react";
 import { useTaskListStore } from "../../store/taskList-Store";
-import { displayPriority } from "./TaskSection";
+import { displayPriority, TaskList } from "./TaskSection";
 
 type Props = {
+  taskLists: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 export default function TaskListView({
+  taskLists,
   setDisplayAddTask,
   setCurrentListId,
 }: Props) {
-  const taskLists = useTaskListStore((state) => state.taskLists);
-
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);
     setCurrentListId(id);
@@ -22,7 +22,7 @@ export default function TaskListView({
 
   return (
     <section className="w-full">
-      {taskLists.map((list) => (
+      {taskLists?.map((list) => (
         <div key={list.id}>
           <header className="task-list-header">
             <h2 className="task-status">{list.title}</h2>
@@ -35,7 +35,7 @@ export default function TaskListView({
             </button>
           </header>
           <ul className="task-list">
-            {[...list.tasks]
+            {[...list.tasksDetails]
               .sort((a, b) => {
                 return b.priority - a.priority;
               })

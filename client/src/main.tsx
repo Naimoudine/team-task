@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import Home from "./pages/Home.tsx";
-import Tasks from "./pages/Tasks.tsx";
+import Tasks, { loader as tasksLoader } from "./pages/Tasks.tsx";
 import Task from "./pages/Task.tsx";
 
 const router = createBrowserRouter([
@@ -19,6 +19,7 @@ const router = createBrowserRouter([
       {
         path: "/tasks",
         element: <Tasks />,
+        loader: tasksLoader,
       },
       {
         path: "/tasks/:id",

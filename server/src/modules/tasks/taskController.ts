@@ -28,10 +28,13 @@ export const createTask = async (req: Request, res: Response) => {
 
       const task: Task = {
         title: req.body.title,
-        description: req.body.description || undefined, // Peut être défini comme undefined
         priority: req.body.priority,
         taskListId,
       };
+
+      if (req.body.description) {
+        task.description = req.body.description;
+      }
 
       if (req.body.date) {
         task.date = new Date(req.body.date);
@@ -46,13 +49,30 @@ export const createTask = async (req: Request, res: Response) => {
       console.log("Document à insérer:", JSON.stringify(task, null, 2)); // Log pour débogage
 
       const result = await taskCollection.insertOne(task);
+
       if (result.acknowledged) {
-        res.status(201).json(result.insertedId);
+        const newTaskId = result.insertedId;
+
+        const updateTaskListCollection = await taskListCollection.updateOne(
+          { _id: taskListId },
+          { $push: { tasks: newTaskId } }
+        );
+
+        if (updateTaskListCollection.modifiedCount === 1) {
+          res.status(201).json({
+            taskId: newTaskId,
+            message: "Task created and added to task list!",
+          });
+        } else {
+          res
+            .status(500)
+            .json({ message: "Task created but failed to update task list" });
+        }
       }
     } else {
       res.status(404).json({ message: "Task list doesn't exist" });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error while creating task:", error);
     if (error.errInfo) {
       console.error(

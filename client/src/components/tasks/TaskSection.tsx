@@ -6,6 +6,7 @@ import TaskListView from "./TaskListView";
 
 type Props = {
   display: DisplayType;
+  taskLists: TaskList[];
 };
 
 export interface Task {
@@ -21,7 +22,7 @@ export interface Task {
 export interface TaskList {
   id: string;
   title: string;
-  tasks: Task[];
+  tasksDetails: Task[];
 }
 
 export const displayPriority = (priority: number) => {
@@ -34,7 +35,7 @@ export const displayPriority = (priority: number) => {
   }
 };
 
-export default function Tasksection({ display }: Props) {
+export default function Tasksection({ display, taskLists }: Props) {
   const [displayAddTask, setDisplayAddTask] = useState<boolean>(false);
   const [currentListId, setCurrentListId] = useState<string | undefined>(
     undefined
@@ -52,6 +53,7 @@ export default function Tasksection({ display }: Props) {
           <TaskListView
             setDisplayAddTask={setDisplayAddTask}
             setCurrentListId={setCurrentListId}
+            taskLists={taskLists}
           />
         </div>
       ) : (
@@ -59,6 +61,7 @@ export default function Tasksection({ display }: Props) {
           <TaskBoardView
             setDisplayAddTask={setDisplayAddTask}
             setCurrentListId={setCurrentListId}
+            taskLists={taskLists}
           />
         </div>
       )}
