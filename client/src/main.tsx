@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import Home from "./pages/Home.tsx";
-import Tasks, { loader as tasksLoader } from "./pages/Tasks.tsx";
+import TaskLists, { loader as taskListsLoarder } from "./pages/TaskLists.tsx";
 import Task from "./pages/Task.tsx";
 
 const router = createBrowserRouter([
@@ -17,13 +17,18 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/tasks",
-        element: <Tasks />,
-        loader: tasksLoader,
+        path: "/taskLists",
+        element: <TaskLists />,
+        loader: taskListsLoarder,
       },
       {
-        path: "/tasks/:id",
-        element: <Task />,
+        path: "/taskLists/:id",
+        children: [
+          {
+            path: "tasks/:id",
+            element: <Task />,
+          },
+        ],
       },
     ],
   },

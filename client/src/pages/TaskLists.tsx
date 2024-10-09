@@ -14,7 +14,7 @@ export const loader = async () => {
   return getTaskLists();
 };
 
-export default function Tasks({}: Props) {
+export default function TaskLists({}: Props) {
   const [display, setDisplay] = useState<DisplayType>("list");
   const [isDisplayModal, setIsDisplayModal] = useState<boolean>(false);
 

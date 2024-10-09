@@ -14,7 +14,7 @@ export default function Navbar({}: Props) {
           </NavLink>
         </li>
         <li>
-          <NavLink className="nav-link" to="/tasks">
+          <NavLink className="nav-link" to="/taskLists">
             <CheckCircleIcon className="nav-icon" />
             Tasks
           </NavLink>

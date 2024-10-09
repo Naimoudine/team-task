@@ -83,3 +83,28 @@ export const createTask = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getTaskById = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const taskId = new ObjectId(req.query.id as string);
+
+    const currentTask = await taskCollection.find({ _id: taskId });
+
+    if (!currentTask) {
+      res.status(404).json({ message: "Task doesn't exist" });
+      return;
+    }
+
+    res.status(200).json(currentTask);
+  } catch (error: any) {
+    console.error("Error while creating task:", error);
+    if (error.errInfo) {
+      console.error(
+        "Erreur de validation:",
+        JSON.stringify(error.errInfo, null, 2)
+      );
+    }
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

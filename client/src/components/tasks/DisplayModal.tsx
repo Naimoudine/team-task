@@ -1,5 +1,5 @@
 import { ListBulletIcon, ViewColumnsIcon } from "@heroicons/react/16/solid";
-import { DisplayType } from "../../pages/Tasks";
+import { DisplayType } from "../../pages/TaskLists";
 import type React from "react";
 
 type Props = {

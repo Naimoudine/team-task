@@ -1,15 +1,16 @@
 import express from "express";
 import { getUsers } from "./modules/users/userController";
 import { createTaskList, readAll } from "./modules/tasks/taskListController";
-import { createTask } from "./modules/tasks/taskController";
+import { createTask, getTaskById } from "./modules/tasks/taskController";
 
 const router = express.Router();
 
 router.get("/users", getUsers);
 
 // tasks
-router.post("/tasks", createTaskList);
-router.post("/tasks/:id", createTask);
-router.get("/tasks", readAll);
+router.post("/taskLists", createTaskList);
+router.post("/tasksLists/:id/tasks", createTask);
+router.get("/taskLists", readAll);
+router.get("/taskLists/:taskListId/tasks/:id", getTaskById);
 
 export default router;

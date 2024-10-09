@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import type React from "react";
-import { useTaskListStore } from "../../store/taskList-Store";
 import { displayPriority, TaskList } from "./TaskSection";
 
 type Props = {
@@ -23,13 +22,13 @@ export default function TaskListView({
   return (
     <section className="w-full">
       {taskLists?.map((list) => (
-        <div key={list.id}>
+        <div key={list._id}>
           <header className="task-list-header">
             <h2 className="task-status">{list.title}</h2>
             <button
               className="p-1 rounded-lg hover:bg-zinc-100"
               type="button"
-              onClick={() => handleOpenModal(list.id)}
+              onClick={() => handleOpenModal(list._id)}
             >
               <PlusIcon className="size-4 text-zinc-600 text-zinc-900" />
             </button>
@@ -40,8 +39,11 @@ export default function TaskListView({
                 return b.priority - a.priority;
               })
               .map((task) => (
-                <li key={task.id} className="flex">
-                  <Link className="w-full task" to={`/tasks/${task.id}`}>
+                <li key={task._id} className="flex">
+                  <Link
+                    className="w-full task"
+                    to={`/taskLists/${list._id}/tasks/${task._id}`}
+                  >
                     <span className="mr-4 font-semibold text-zinc-500">
                       {displayPriority(task.priority)}
                     </span>

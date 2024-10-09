@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DisplayType } from "../../pages/Tasks";
+import { DisplayType } from "../../pages/TaskLists";
 import AddTaskModal from "./AddTaskModal";
 import TaskBoardView from "./TaskBoardView";
 import TaskListView from "./TaskListView";
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export interface Task {
-  id: string;
+  _id: string;
   title: string;
   description?: string;
   priority: 1 | 2 | 3;
@@ -20,7 +20,7 @@ export interface Task {
 }
 
 export interface TaskList {
-  id: string;
+  _id: string;
   title: string;
   tasksDetails: Task[];
 }
