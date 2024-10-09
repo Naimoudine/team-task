@@ -7,10 +7,11 @@ import TaskListView from "./TaskListView";
 type Props = {
   display: DisplayType;
   taskLists: TaskList[];
+  revalidator: any;
 };
 
 export interface Task {
-  _id: string;
+  _id?: string;
   title: string;
   description?: string;
   priority: 1 | 2 | 3;
@@ -28,14 +29,18 @@ export interface TaskList {
 export const displayPriority = (priority: number) => {
   if (priority === 1) {
     return "Low";
-  } else if (priority === 1) {
+  } else if (priority === 2) {
     return "Medium";
   } else {
     return "High";
   }
 };
 
-export default function Tasksection({ display, taskLists }: Props) {
+export default function Tasksection({
+  display,
+  taskLists,
+  revalidator,
+}: Props) {
   const [displayAddTask, setDisplayAddTask] = useState<boolean>(false);
   const [currentListId, setCurrentListId] = useState<string | undefined>(
     undefined
@@ -47,6 +52,7 @@ export default function Tasksection({ display, taskLists }: Props) {
         displayAddTask={displayAddTask}
         setDisplayAddTask={setDisplayAddTask}
         currentListId={currentListId}
+        revalidator={revalidator}
       />
       {display === "list" ? (
         <div className="w-full h-full">

@@ -1,22 +1,24 @@
 import type React from "react";
-import { v4 as uuid } from "uuid";
 import { XMarkIcon } from "@heroicons/react/16/solid";
 import { useTaskListStore } from "../../store/taskList-Store";
+import type { Task } from "./TaskSection";
+import { createTask } from "../../api";
+import { useNavigate, useRevalidator } from "react-router-dom";
 
 type Props = {
   displayAddTask: boolean;
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   currentListId: string | undefined;
+  revalidator: any;
 };
 
 export default function AddTaskModal({
   displayAddTask,
   setDisplayAddTask,
   currentListId,
+  revalidator,
 }: Props) {
-  const addTask = useTaskListStore((state) => state.addTask);
-
-  const handeAddTask = (e: React.FormEvent<HTMLFormElement>) => {
+  const handeAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -24,20 +26,25 @@ export default function AddTaskModal({
     const newDescription = formData.get("description");
     const newPriority = formData.get("priority");
 
-    if (currentListId) {
-      addTask(currentListId, {
-        id: uuid(),
-        title: newTaskTitle?.toString()!,
-        description: newDescription ? newDescription.toString() : "",
-        priority:
-          newPriority === "low"
-            ? 1
-            : newPriority === "medium"
-            ? 2
-            : newPriority === "high"
-            ? 3
-            : 1,
-      });
+    try {
+      if (currentListId) {
+        const newTask: Task = {
+          title: newTaskTitle?.toString() || "",
+          description: newDescription?.toString() || "",
+          priority:
+            newPriority === "low"
+              ? 1
+              : newPriority === "medium"
+              ? 2
+              : newPriority === "high"
+              ? 3
+              : 1,
+        };
+        await createTask(currentListId, newTask);
+        revalidator.revalidate();
+      }
+    } catch (error) {
+      throw new Error("Failed to add task");
     }
 
     form.reset();

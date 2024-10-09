@@ -2,7 +2,7 @@ import { AdjustmentsHorizontalIcon } from "@heroicons/react/16/solid";
 import TaskSection from "../components/tasks/TaskSection";
 import DisplayModal from "../components/tasks/DisplayModal";
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import type { TaskList } from "../components/tasks/TaskSection";
 import { getTaskLists } from "../api";
 
@@ -19,6 +19,8 @@ export default function TaskLists({}: Props) {
   const [isDisplayModal, setIsDisplayModal] = useState<boolean>(false);
 
   const tasklists = useLoaderData() as TaskList[];
+
+  const revalidator = useRevalidator();
 
   return (
     <div className="h-full">
@@ -42,7 +44,11 @@ export default function TaskLists({}: Props) {
           setIsDisplayModal={setIsDisplayModal}
         />
       </header>
-      <TaskSection display={display} taskLists={tasklists} />
+      <TaskSection
+        display={display}
+        taskLists={tasklists}
+        revalidator={revalidator}
+      />
     </div>
   );
 }

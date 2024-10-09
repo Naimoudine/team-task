@@ -9,7 +9,7 @@ router.get("/users", getUsers);
 
 // tasks
 router.post("/taskLists", createTaskList);
-router.post("/tasksLists/:id/tasks", createTask);
+router.post("/taskLists/:id/tasks", createTask);
 router.get("/taskLists", readAll);
 router.get("/taskLists/:taskListId/tasks/:id", getTaskById);
 

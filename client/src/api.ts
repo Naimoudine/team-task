@@ -19,3 +19,20 @@ export const getTaskById = async (taskListId: string, id: string) => {
   const data = await response.json();
   return data as Task;
 };
+
+export const createTask = async (taskListId: string, task: Task) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/taskLists/${taskListId}/tasks`,
+    {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(task),
+    }
+  );
+  if (response.status !== 201) {
+    throw new Error("Failed to add task");
+  }
+  const data = await response.json();
+  return data;
+};

@@ -3,7 +3,7 @@ import { TagIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { getTaskById } from "../api";
 import { useLocation } from "react-router-dom";
-import type { Task } from "../components/tasks/TaskSection";
+import { displayPriority, type Task } from "../components/tasks/TaskSection";
 
 type Props = {};
 
@@ -36,7 +36,7 @@ export default function Task({}: Props) {
       </header>
       <main className="flex flex-grow">
         <div className="w-[80%]">
-          <div className="max-w-[800px] mx-auto my-8">
+          <div className="max-w-[800px] mx-auto p-8">
             <h1 className="text-2xl font-semibold">{task?.title}</h1>
             <form className="mt-8">
               <textarea
@@ -50,7 +50,7 @@ export default function Task({}: Props) {
         </div>
         <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-8">
           <button className="task-opt-btn" type="button">
-            Low
+            {task?.priority && displayPriority(task?.priority)}
           </button>
           <button className="task-opt-btn" type="button">
             <TagIcon className="size-4 text-zinc-600" />
