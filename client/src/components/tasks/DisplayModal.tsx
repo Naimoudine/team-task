@@ -24,7 +24,7 @@ export default function DisplayModal({
     <div
       className={
         isDisplayModal
-          ? "absolute top-8 right-0 p-2 rounded-lg border border-zinc-200 z-50 bg-white flex shadow-lg"
+          ? "absolute top-14 right-0 p-2 rounded-lg border border-zinc-200 z-50 bg-white flex shadow-lg"
           : "hidden"
       }
     >

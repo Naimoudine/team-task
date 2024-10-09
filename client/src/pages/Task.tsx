@@ -49,14 +49,14 @@ export default function Task({}: Props) {
           </div>
         </div>
         <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-8">
-          <button className="?-opt-btn" type="button">
+          <button className="task-opt-btn" type="button">
             Low
           </button>
-          <button className="?-opt-btn" type="button">
+          <button className="task-opt-btn" type="button">
             <TagIcon className="size-4 text-zinc-600" />
             Add label
           </button>
-          <button className="?-opt-btn" type="button">
+          <button className="task-opt-btn" type="button">
             <UserPlusIcon className="size-4 text-zinc-600" />
             Assign
           </button>

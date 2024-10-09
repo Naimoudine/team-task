@@ -22,8 +22,8 @@ export default function TaskLists({}: Props) {
 
   return (
     <div className="h-full">
-      <header className="flex items-center justify-between border-b wrapper border-zinc-200">
-        <h1 className="page-title">Tasks</h1>
+      <header className="relative flex items-center justify-between border-b wrapper border-zinc-200">
+        <h1 className=" page-title">Tasks</h1>
         <button
           className={
             isDisplayModal
@@ -34,13 +34,13 @@ export default function TaskLists({}: Props) {
         >
           <AdjustmentsHorizontalIcon className="size-4 text-zinc-800" />
           <span className="text-xs font-semibold text-zinc-800">Display</span>
-          <DisplayModal
-            display={display}
-            setDisplay={setDisplay}
-            isDisplayModal={isDisplayModal}
-            setIsDisplayModal={setIsDisplayModal}
-          />
         </button>
+        <DisplayModal
+          display={display}
+          setDisplay={setDisplay}
+          isDisplayModal={isDisplayModal}
+          setIsDisplayModal={setIsDisplayModal}
+        />
       </header>
       <TaskSection display={display} taskLists={tasklists} />
     </div>
