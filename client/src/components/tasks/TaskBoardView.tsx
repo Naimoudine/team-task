@@ -1,5 +1,4 @@
 import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
-import { useTaskListStore } from "../../store/taskList-Store";
 import { displayPriority, TaskList } from "./TaskSection";
 
 type Props = {
@@ -21,7 +20,7 @@ export default function TaskBoardSView({
   return (
     <section className="flex gap-8">
       {taskLists.map((list) => (
-        <div className="task-list-card" key={list.id}>
+        <div className="task-list-card" key={list._id}>
           <header className="flex items-center justify-between">
             <h2 className="mb-2 font-semibold">{list.title}</h2>
             <button className="p-1 rounded-lg hover:bg-gray-200" type="button">
@@ -34,7 +33,7 @@ export default function TaskBoardSView({
                 return b.priority - a.priority;
               })
               .map((task) => (
-                <article key={task.id} className="task-card">
+                <article key={task._id} className="task-card">
                   <h3>{task.title}</h3>
                   <p className="font-semibold text-zinc-500">
                     {displayPriority(task.priority)}
@@ -45,7 +44,7 @@ export default function TaskBoardSView({
           <button
             className="flex items-center justify-center w-full px-2 py-1 mt-4 border-2 rounded-md opacity-100 border-zinc-200 hover:bg-gray-200"
             type="button"
-            onClick={() => handleOpenModal(list.id)}
+            onClick={() => handleOpenModal(list._id)}
           >
             <PlusIcon className="size-4 text-zinc-600" />
           </button>
