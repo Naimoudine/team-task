@@ -12,8 +12,8 @@ export const createTaskList = async (req: Request, res: Response) => {
   try {
     const taskListCollection = await getCollection<TaskList>("taskLists");
     const taskList = await taskListCollection.insertOne({
-      title: req.body.name,
-      tasks: req.body.tasksIds,
+      title: req.body.title,
+      tasks: req.body.tasks,
     });
     if (taskList.acknowledged) {
       res.status(201).json(taskList.insertedId);

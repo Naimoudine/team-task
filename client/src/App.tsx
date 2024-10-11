@@ -3,7 +3,7 @@ import Aside from "./components/Aside";
 
 function App() {
   return (
-    <div className="h-full w-full flex">
+    <div className="flex w-full h-full">
       <Aside />
       <div className="w-[85%] overflow-hidden">
         <Outlet />

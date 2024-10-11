@@ -21,9 +21,9 @@ export interface Task {
 }
 
 export interface TaskList {
-  _id: string;
+  _id?: string;
   title: string;
-  tasksDetails: Task[];
+  tasksDetails?: Task[];
 }
 
 export const displayPriority = (priority: number) => {
@@ -47,7 +47,7 @@ export default function Tasksection({
   );
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full overflow-scroll">
       <AddTaskModal
         displayAddTask={displayAddTask}
         setDisplayAddTask={setDisplayAddTask}
@@ -63,7 +63,7 @@ export default function Tasksection({
           />
         </div>
       ) : (
-        <div className="flex w-full h-full gap-4 mx-2 mt-2">
+        <div className="flex w-full h-full gap-4 mt-2">
           <TaskBoardView
             setDisplayAddTask={setDisplayAddTask}
             setCurrentListId={setCurrentListId}

@@ -1,9 +1,7 @@
 import type React from "react";
 import { XMarkIcon } from "@heroicons/react/16/solid";
-import { useTaskListStore } from "../../store/taskList-Store";
 import type { Task } from "./TaskSection";
 import { createTask } from "../../api";
-import { useNavigate, useRevalidator } from "react-router-dom";
 
 type Props = {
   displayAddTask: boolean;
@@ -52,13 +50,7 @@ export default function AddTaskModal({
   };
 
   return (
-    <div
-      className={
-        displayAddTask
-          ? "w-screen h-screen absolute top-0 left-0 bg-black/70 flex pt-48 justify-center z-[100]"
-          : "hidden"
-      }
-    >
+    <div className={displayAddTask ? "modal-component" : "hidden"}>
       <form
         className="relative flex flex-col justify-between bg-white w-[60%] h-[200px] py-4 px-4 rounded-lg"
         onSubmit={(e) => handeAddTask(e)}

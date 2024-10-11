@@ -1,4 +1,4 @@
-import { Task } from "./components/tasks/TaskSection";
+import { Task, TaskList } from "./components/tasks/TaskSection";
 
 export const getTaskLists = async () => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/api/taskLists`);
@@ -32,6 +32,23 @@ export const createTask = async (taskListId: string, task: Task) => {
   );
   if (response.status !== 201) {
     throw new Error("Failed to add task");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const createTaskList = async (taskList: TaskList) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/taskLists`,
+    {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(taskList),
+    }
+  );
+  if (response.status !== 201) {
+    throw new Error("Failed to create list");
   }
   const data = await response.json();
   return data;
