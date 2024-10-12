@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { CheckCircleIcon, HomeIcon } from "@heroicons/react/16/solid";
+import { FolderIcon, HomeIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
 
@@ -14,13 +14,16 @@ export default function Navbar({}: Props) {
           </NavLink>
         </li>
         <li>
-          <NavLink className="nav-link" to="/taskLists">
-            <CheckCircleIcon className="nav-icon" />
-            Tasks
+          <NavLink className="nav-link" to="/projects">
+            <FolderIcon className="nav-icon" />
+            Projects
           </NavLink>
         </li>
         <li>
-          <NavLink to=""></NavLink>
+          <NavLink className="nav-link" to="">
+            <UsersIcon className="nav-icon" />
+            Teams
+          </NavLink>
         </li>
       </ul>
     </nav>

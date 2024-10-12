@@ -1,7 +1,20 @@
 import { Task, TaskList } from "./components/tasks/TaskSection";
 
-export const getTaskLists = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/taskLists`);
+export const getProjects = async () => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch projects");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const getTaskLists = async (projectId: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/taskLists`
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch tasklists");
   }

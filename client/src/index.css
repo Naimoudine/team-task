@@ -24,11 +24,15 @@
   }
 
   .nav-link {
-    @apply flex items-center justify-start gap-2 py-2 text-base font-semibold;
+    @apply flex items-center justify-start gap-2 py-2 text-base font-semibold text-zinc-700;
   }
 
   .nav-icon {
     @apply text-gray-600 size-5;
+  }
+
+  .page-header {
+    @apply relative flex items-center justify-between border-b wrapper border-zinc-200;
   }
 
   .page-title {

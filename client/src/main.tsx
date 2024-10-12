@@ -4,8 +4,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import Home from "./pages/Home.tsx";
-import TaskLists, { loader as taskListsLoarder } from "./pages/TaskLists.tsx";
+import TaskLists from "./pages/TaskLists.tsx";
 import Task from "./pages/Task.tsx";
+import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,16 +18,13 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/taskLists",
-        element: <TaskLists />,
-        loader: taskListsLoarder,
-      },
-      {
-        path: "/taskLists/:id",
+        path: "/projects",
+        element: <Projects />,
+        loader: projectsLoader,
         children: [
           {
-            path: "tasks/:id",
-            element: <Task />,
+            path: ":id/taskLists",
+            element: <TaskLists />,
           },
         ],
       },

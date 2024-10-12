@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { getCollection } from "../../mongoClient";
 import { Project } from "../projects/projectController";
+import { Request, Response } from "express";
 
 export interface TaskList {
   _id?: ObjectId;
   title: string;
   tasks: ObjectId[];
+  projectId: ObjectId;
 }
 
 export const createTaskList = async (req: Request, res: Response) => {
@@ -23,6 +24,7 @@ export const createTaskList = async (req: Request, res: Response) => {
       const result = await taskListCollection.insertOne({
         title: req.body.title,
         tasks: req.body.tasks,
+        projectId,
       });
 
       if (result.acknowledged) {
@@ -67,6 +69,41 @@ export const readAll = async (req: Request, res: Response) => {
         },
       ])
       .toArray();
+
+    res.status(200).json(taskListsWithTasks);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const readTaskListsByProjectId = async (req: Request, res: Response) => {
+  try {
+    const projectId = new ObjectId(req.params.id as string);
+
+    const taskListCollection = await getCollection<TaskList>("taskLists");
+
+    const taskListsWithTasks = await taskListCollection
+      .aggregate([
+        {
+          $match: { projectId }, // Filtrer par projectId
+        },
+        {
+          $lookup: {
+            from: "tasks", // La collection des tâches
+            localField: "tasks", // Le tableau d'ObjectId des tâches dans la taskList
+            foreignField: "_id", // Le champ _id dans la collection tasks
+            as: "tasksDetails", // Le tableau qui contiendra les détails des tâches
+          },
+        },
+      ])
+      .toArray();
+
+    // Si aucune task list n'est trouvée pour ce projectId
+    if (!taskListsWithTasks || taskListsWithTasks.length === 0) {
+      res.status(404).json({ message: "No task lists found for this project" });
+      return;
+    }
 
     res.status(200).json(taskListsWithTasks);
   } catch (error) {

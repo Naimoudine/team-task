@@ -2,7 +2,7 @@ import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import TaskSection from "../components/tasks/TaskSection";
 import DisplayModal from "../components/tasks/DisplayModal";
 import AddTaskListModal from "../components/tasks/AddTaskListModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData, useRevalidator } from "react-router-dom";
 import type { TaskList } from "../components/tasks/TaskSection";
 import { getTaskLists } from "../api";
@@ -10,10 +10,6 @@ import { getTaskLists } from "../api";
 type Props = {};
 
 export type DisplayType = "list" | "board";
-
-export const loader = async () => {
-  return getTaskLists();
-};
 
 export default function TaskLists({}: Props) {
   const [display, setDisplay] = useState<DisplayType>("list");
@@ -24,6 +20,10 @@ export default function TaskLists({}: Props) {
   const tasklists = useLoaderData() as TaskList[];
 
   const revalidator = useRevalidator();
+
+  useEffect(() => {
+    const fetchTaskLists = async () => {};
+  }, []);
 
   return (
     <div className="h-full">

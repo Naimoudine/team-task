@@ -23,3 +23,25 @@ export const createProject = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const readAll = async (req: Request, res: Response) => {
+  try {
+    const projectCollection = await getCollection<Project>("projects");
+    const projects = await projectCollection
+      .aggregate([
+        {
+          $lookup: {
+            from: "taskLists", // La collection des tâches
+            localField: "taskLists", // Le champ de la collection d'origine
+            foreignField: "_id", // Le champ de la collection de jointure
+            as: "taskListsDetails", // Le nom du tableau pour stocker les résultats
+          },
+        },
+      ])
+      .toArray();
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
