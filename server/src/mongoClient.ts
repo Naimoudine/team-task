@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { createUserCollection } from "./modules/users/userCollection";
 import { createTaskListCollection } from "./modules/tasks/taskListCollection";
 import { createTaskCollection } from "./modules/tasks/taskCollection";
+import { createProjectCollection } from "./modules/projects/projectCollection";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ export async function getCollection<T extends Document>(
 
 export async function createAllCollection() {
   try {
+    await createProjectCollection();
     await createTaskListCollection();
     await createTaskCollection();
   } catch (error) {
