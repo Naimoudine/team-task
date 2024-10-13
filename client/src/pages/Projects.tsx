@@ -5,7 +5,7 @@ import { FolderIcon } from "@heroicons/react/16/solid";
 
 type Props = {};
 
-interface Project {
+export interface Project {
   _id?: string;
   title: string;
   taskLists: string[];
@@ -39,7 +39,7 @@ export default function Projects({}: Props) {
             >
               <Link
                 className="flex items-center w-full h-full gap-4 px-8 py-2"
-                to=""
+                to={`/projects/${project._id}/taskLists`}
               >
                 <FolderIcon className="size-4" />
                 {project.title}

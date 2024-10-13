@@ -45,3 +45,20 @@ export const readAll = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const readById = async (req: Request, res: Response) => {
+  try {
+    const projectCollection = await getCollection<Project>("projects");
+    const project = await projectCollection.findOne({
+      _id: new ObjectId(req.params.id),
+    });
+    if (!project) {
+      res.status(404).json({ message: "Project doesn't exists." });
+      return;
+    }
+    res.json(project);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

@@ -2,14 +2,28 @@ import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import TaskSection from "../components/tasks/TaskSection";
 import DisplayModal from "../components/tasks/DisplayModal";
 import AddTaskListModal from "../components/tasks/AddTaskListModal";
-import { useEffect, useState } from "react";
-import { useLoaderData, useRevalidator } from "react-router-dom";
+import { useState } from "react";
+import { useLoaderData, useLocation, useRevalidator } from "react-router-dom";
 import type { TaskList } from "../components/tasks/TaskSection";
-import { getTaskLists } from "../api";
+import { getTaskListsByProjectId } from "../api";
+import { Project } from "./Projects";
 
 type Props = {};
 
 export type DisplayType = "list" | "board";
+
+interface LoaderDataType {
+  project: Project;
+  taskLists: TaskList[];
+}
+
+export const loader = async ({ params }: any) => {
+  try {
+    return getTaskListsByProjectId(params.id);
+  } catch (error) {
+    throw error;
+  }
+};
 
 export default function TaskLists({}: Props) {
   const [display, setDisplay] = useState<DisplayType>("list");
@@ -17,13 +31,13 @@ export default function TaskLists({}: Props) {
   const [displayAddTaskListModal, setDisplayAddTaskListModal] =
     useState<boolean>(false);
 
-  const tasklists = useLoaderData() as TaskList[];
+  const { project, taskLists } = useLoaderData() as LoaderDataType;
 
   const revalidator = useRevalidator();
 
-  useEffect(() => {
-    const fetchTaskLists = async () => {};
-  }, []);
+  const { pathname } = useLocation();
+
+  const projectId = pathname.slice(10, pathname.length - 10);
 
   return (
     <div className="h-full">
@@ -31,9 +45,10 @@ export default function TaskLists({}: Props) {
         displayAddTaskListModal={displayAddTaskListModal}
         setDisplayAddTaskListModal={setDisplayAddTaskListModal}
         revalidator={revalidator}
+        projectId={projectId}
       />
       <header className="relative flex items-center justify-between border-b wrapper border-zinc-200">
-        <h1 className=" page-title">Tasks</h1>
+        <h1 className=" page-title">{project?.title}</h1>
         <div className="flex items-center gap-8">
           <button
             type="button"
@@ -66,7 +81,7 @@ export default function TaskLists({}: Props) {
       </header>
       <TaskSection
         display={display}
-        taskLists={tasklists}
+        taskLists={taskLists}
         revalidator={revalidator}
       />
     </div>

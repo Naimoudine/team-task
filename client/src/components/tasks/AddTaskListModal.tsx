@@ -2,12 +2,14 @@ import { XMarkIcon } from "@heroicons/react/16/solid";
 import type React from "react";
 import { createTaskList } from "../../api";
 type Props = {
+  projectId: string;
   displayAddTaskListModal: boolean;
   setDisplayAddTaskListModal: React.Dispatch<React.SetStateAction<boolean>>;
   revalidator: any;
 };
 
 export default function AddTaskListModal({
+  projectId,
   displayAddTaskListModal,
   setDisplayAddTaskListModal,
   revalidator,
@@ -23,7 +25,7 @@ export default function AddTaskListModal({
     };
 
     try {
-      await createTaskList(newTask);
+      await createTaskList(projectId, newTask);
       revalidator.revalidate();
     } catch (error) {
       throw error;

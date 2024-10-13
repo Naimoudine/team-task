@@ -11,6 +11,36 @@ export const getProjects = async () => {
   return data;
 };
 
+export const getProjectById = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch project");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const getTaskListsByProjectId = async (id: string) => {
+  const [projectsData, taskListsData] = await Promise.all([
+    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}`, {
+      credentials: "include",
+    }),
+    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}/taskLists`, {
+      credentials: "include",
+    }),
+  ]);
+  if (!projectsData.ok || !taskListsData.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const [project, taskLists] = await Promise.all([
+    projectsData.json(),
+    taskListsData.json(),
+  ]);
+  return { project, taskLists };
+};
+
 export const getTaskLists = async (projectId: string) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/taskLists`
@@ -50,9 +80,9 @@ export const createTask = async (taskListId: string, task: Task) => {
   return data;
 };
 
-export const createTaskList = async (taskList: TaskList) => {
+export const createTaskList = async (id: string, taskList: TaskList) => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/taskLists`,
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}/taskLists`,
     {
       method: "post",
       headers: { "Content-Type": "application/json" },
