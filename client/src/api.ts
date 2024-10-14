@@ -66,15 +66,25 @@ export const getTaskLists = async (projectId: string) => {
   return data;
 };
 
-export const getTaskById = async (id: string) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/tasks/${id}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch task");
+export const getTaskById = async (
+  projectId: string,
+  taskListId: string,
+  id: string
+) => {
+  const [projectsData, taskListsData, tasksData] = await Promise.all([
+    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}`),
+    fetch(`${import.meta.env.VITE_API_URL}/api/taskLists/${taskListId}`),
+    fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`),
+  ]);
+  if (!projectsData.ok || !taskListsData.ok || !tasksData.ok) {
+    throw new Error("Failed to fetch data");
   }
-  const data = await response.json();
-  return data as Task;
+  const [project, taskList, task] = await Promise.all([
+    projectsData.json(),
+    taskListsData.json(),
+    tasksData.json(),
+  ]);
+  return { project, taskList, task };
 };
 
 export const createTask = async (taskListId: string, task: Task) => {

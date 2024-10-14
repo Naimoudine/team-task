@@ -12,7 +12,7 @@
 @tailwind utilities;
 @layer utilities {
   .wrapper {
-    @apply p-4;
+    @apply px-6 py-4;
   }
 
   .modal-component {
@@ -43,7 +43,7 @@
   }
 
   .task-list-header {
-    @apply flex items-center justify-between px-4 py-2 font-semibold bg-zinc-100;
+    @apply flex items-center justify-between px-6 py-2 font-semibold bg-zinc-100;
   }
 
   .task-title {
@@ -55,11 +55,11 @@
   }
 
   .task {
-    @apply px-4 py-2 font-semibold border-b hover:bg-zinc-200 border-zinc-200;
+    @apply px-6 py-2 font-semibold border-b hover:bg-zinc-200 border-zinc-200;
   }
 
   .task-card {
-    @apply px-4 py-2 h-[85px] w-full flex flex-col justify-between bg-white text-zinc-800 shadow-lg rounded-md;
+    @apply px-6 py-2 h-[85px] w-full flex flex-col justify-between bg-white text-zinc-800 shadow-lg rounded-md;
   }
 
   .task-opt-btn {

@@ -54,23 +54,17 @@ export const createTaskList = async (req: Request, res: Response) => {
   }
 };
 
-export const readAll = async (req: Request, res: Response) => {
+export const readById = async (req: Request, res: Response) => {
   try {
     const taskListCollection = await getCollection<TaskList>("taskLists");
-    const taskListsWithTasks = await taskListCollection
-      .aggregate([
-        {
-          $lookup: {
-            from: "tasks", // La collection des tâches
-            localField: "tasks", // Le champ de la collection d'origine
-            foreignField: "_id", // Le champ de la collection de jointure
-            as: "tasksDetails", // Le nom du tableau pour stocker les résultats
-          },
-        },
-      ])
-      .toArray();
-
-    res.status(200).json(taskListsWithTasks);
+    const taskList = await taskListCollection.findOne({
+      _id: new ObjectId(req.params.id),
+    });
+    if (!taskList) {
+      res.status(404).json({ message: "Task List doesn't exist" });
+      return;
+    }
+    res.status(200).json(taskList);
   } catch (error) {
     console.error("Error fetching tasklist:", error);
     res.status(500).json({ message: "Internal Server Error" });

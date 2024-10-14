@@ -2,6 +2,7 @@ import express from "express";
 import { getUsers } from "./modules/users/userController";
 import {
   createTaskList,
+  readById as taskListReadById,
   readTaskListsByProjectId,
 } from "./modules/tasks/taskListController";
 import {
@@ -25,6 +26,7 @@ router.get("/projects", projectReadAll);
 router.get("/projects/:id", projectReadById);
 
 // taskLists
+router.get("/taskLists/:id", taskListReadById);
 router.get("/projects/:id/taskLists", readTaskListsByProjectId);
 router.post("/projects/:id/taskLists", createTaskList);
 

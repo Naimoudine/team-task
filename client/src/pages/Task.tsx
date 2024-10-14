@@ -1,21 +1,30 @@
-import { TagIcon } from "@heroicons/react/16/solid";
+import { NavLink } from "react-router-dom";
+import { TagIcon, SlashIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { getTaskById } from "../api";
 import { useLoaderData } from "react-router-dom";
-import { displayPriority, type Task } from "../components/tasks/TaskSection";
+import { displayPriority } from "../components/tasks/TaskSection";
+import type { Task, TaskList } from "../components/tasks/TaskSection";
+import { Project } from "./Projects";
 
 type Props = {};
 
+interface LoaderType {
+  project: Project;
+  taskList: TaskList;
+  task: Task;
+}
+
 export const loader = async ({ params }: any) => {
   try {
-    return getTaskById(params.taskId);
+    return getTaskById(params.projectId, params.taskListId, params.taskId);
   } catch (error) {
     throw error;
   }
 };
 
 export default function Task({}: Props) {
-  const task = useLoaderData() as Task;
+  const { project, taskList, task } = useLoaderData() as LoaderType;
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -24,6 +33,27 @@ export default function Task({}: Props) {
           Task
         </p>
       </header>
+      <nav className="w-full px-6 py-4 text-sm font-semibold border-b border-zinc-200">
+        <ul className="flex items-center">
+          <li>
+            <NavLink to="/projects">Projects</NavLink>
+          </li>
+          <SlashIcon className="size-5" />
+          <li>
+            <NavLink to={`/projects/${project._id}/taskLists`}>
+              {project.title}
+            </NavLink>
+          </li>
+          <SlashIcon className="size-5" />
+          <li>
+            <NavLink
+              to={`/projects/${project._id}/taskLists/${taskList._id}/tasks/${task._id}`}
+            >
+              {task._id}
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
       <main className="flex flex-grow">
         <div className="w-[80%]">
           <div className="max-w-[800px] mx-auto p-8">

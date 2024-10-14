@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useLoaderData, useLocation, useRevalidator } from "react-router-dom";
+import {
+  useLoaderData,
+  useLocation,
+  useRevalidator,
+  NavLink,
+} from "react-router-dom";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import type { TaskList } from "../components/tasks/TaskSection";
 import TaskSection from "../components/tasks/TaskSection";
@@ -7,6 +12,7 @@ import DisplayModal from "../components/tasks/DisplayModal";
 import AddTaskListModal from "../components/tasks/AddTaskListModal";
 import { getTaskListsByProjectId } from "../api";
 import { Project } from "./Projects";
+import { SlashIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
 
@@ -50,7 +56,7 @@ export default function TaskLists({}: Props) {
         projectId={projectId}
       />
       <header className="relative flex items-center justify-between border-b wrapper border-zinc-200">
-        <h1 className=" page-title">{project?.title}</h1>
+        <h1 className="page-title">{project?.title}</h1>
         <div className="flex items-center gap-8">
           <button
             type="button"
@@ -81,6 +87,19 @@ export default function TaskLists({}: Props) {
           setIsDisplayModal={setIsDisplayModal}
         />
       </header>
+      <nav className="w-full px-6 py-3.5 text-sm font-semibold border-b border-zinc-200">
+        <ul className="flex items-center">
+          <li>
+            <NavLink to="/projects">Projects</NavLink>
+          </li>
+          <SlashIcon className="size-5" />
+          <li>
+            <NavLink to={`/projects/${projectId}/taskLists`}>
+              {project.title}
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
       <TaskSection
         display={display}
         taskLists={taskLists}
