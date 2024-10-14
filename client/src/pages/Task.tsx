@@ -47,6 +47,9 @@ export default function Task({}: Props) {
           <SlashIcon className="size-5" />
           <li>
             <NavLink
+              className={(isActive) =>
+                isActive ? "underline underline-offset-2" : ""
+              }
               to={`/projects/${project._id}/taskLists/${taskList._id}/tasks/${task._id}`}
             >
               {task._id}

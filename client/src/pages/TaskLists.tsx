@@ -94,7 +94,12 @@ export default function TaskLists({}: Props) {
           </li>
           <SlashIcon className="size-5" />
           <li>
-            <NavLink to={`/projects/${projectId}/taskLists`}>
+            <NavLink
+              className={(isActive) =>
+                isActive ? "underline underline-offset-2" : ""
+              }
+              to={`/projects/${projectId}/taskLists`}
+            >
               {project.title}
             </NavLink>
           </li>
