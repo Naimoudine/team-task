@@ -84,7 +84,18 @@ export const createTask = async (req: Request, res: Response) => {
   }
 };
 
-export const getTaskById = async (req: Request, res: Response) => {
+export const readTaskByTaskListId = async (req: Request, res: Response) => {
+  const taskCollection = await getCollection<Task>("tasks");
+  const taskListId = new ObjectId(req.params.id as string);
+  const tasks = await taskCollection.find({ taskListId: taskListId }).toArray();
+  if (tasks.length === 0) {
+    res.status(404).json({ message: "No tasks in this list" });
+    return;
+  }
+  res.json(tasks);
+};
+
+export const readTaskById = async (req: Request, res: Response) => {
   try {
     const taskCollection = await getCollection<Task>("tasks");
 

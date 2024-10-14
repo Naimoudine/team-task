@@ -81,6 +81,15 @@ export const readTaskListsByProjectId = async (req: Request, res: Response) => {
   try {
     const projectId = new ObjectId(req.params.id as string);
 
+    const projectCollection = await getCollection<Project>("projects");
+
+    const projectExists = await projectCollection.findOne({ _id: projectId });
+
+    if (!projectExists) {
+      res.status(404).json({ message: "Project doesn't exists" });
+      return;
+    }
+
     const taskListCollection = await getCollection<TaskList>("taskLists");
 
     const taskListsWithTasks = await taskListCollection
@@ -98,12 +107,6 @@ export const readTaskListsByProjectId = async (req: Request, res: Response) => {
         },
       ])
       .toArray();
-
-    // Si aucune task list n'est trouvée pour ce projectId
-    if (!taskListsWithTasks || taskListsWithTasks.length === 0) {
-      res.status(404).json({ message: "No task lists found for this project" });
-      return;
-    }
 
     res.status(200).json(taskListsWithTasks);
   } catch (error) {

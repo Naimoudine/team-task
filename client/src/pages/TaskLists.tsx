@@ -1,10 +1,10 @@
+import { useState } from "react";
+import { useLoaderData, useLocation, useRevalidator } from "react-router-dom";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
+import type { TaskList } from "../components/tasks/TaskSection";
 import TaskSection from "../components/tasks/TaskSection";
 import DisplayModal from "../components/tasks/DisplayModal";
 import AddTaskListModal from "../components/tasks/AddTaskListModal";
-import { useState } from "react";
-import { useLoaderData, useLocation, useRevalidator } from "react-router-dom";
-import type { TaskList } from "../components/tasks/TaskSection";
 import { getTaskListsByProjectId } from "../api";
 import { Project } from "./Projects";
 
@@ -38,6 +38,8 @@ export default function TaskLists({}: Props) {
   const { pathname } = useLocation();
 
   const projectId = pathname.slice(10, pathname.length - 10);
+
+  console.log(taskLists);
 
   return (
     <div className="h-full">
@@ -83,6 +85,7 @@ export default function TaskLists({}: Props) {
         display={display}
         taskLists={taskLists}
         revalidator={revalidator}
+        projectId={projectId}
       />
     </div>
   );

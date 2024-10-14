@@ -1,4 +1,18 @@
 import { Task, TaskList } from "./components/tasks/TaskSection";
+import { Project } from "./pages/Projects";
+
+export const createProject = async (project: Project) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(project),
+  });
+  if (response.status !== 201) {
+    throw new Error("Failed to create project");
+  }
+  const data = await response.json();
+  return data;
+};
 
 export const getProjects = async () => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
@@ -52,9 +66,9 @@ export const getTaskLists = async (projectId: string) => {
   return data;
 };
 
-export const getTaskById = async (taskListId: string, id: string) => {
+export const getTaskById = async (id: string) => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/taskLists/${taskListId}/tasks/${id}`
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}`
   );
   if (!response.ok) {
     throw new Error("Failed to fetch task");

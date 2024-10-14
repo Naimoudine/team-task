@@ -1,53 +1,52 @@
-import { XMarkIcon } from "@heroicons/react/16/solid";
-import type React from "react";
-import { createTaskList } from "../../api";
+import React from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { createProject } from "../../api";
+import { Project } from "../../pages/Projects";
+
 type Props = {
-  projectId: string;
-  displayAddTaskListModal: boolean;
-  setDisplayAddTaskListModal: React.Dispatch<React.SetStateAction<boolean>>;
+  displayAddProjectModal: boolean;
+  setDisplayAddProjectModal: React.Dispatch<React.SetStateAction<boolean>>;
   revalidator: any;
 };
 
-export default function AddTaskListModal({
-  projectId,
-  displayAddTaskListModal,
-  setDisplayAddTaskListModal,
+export default function AddProjectModal({
+  displayAddProjectModal,
+  setDisplayAddProjectModal,
   revalidator,
 }: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
     const newTitle = formData.get("title");
-    const newTaskList = {
+    const newProject: Project = {
       title: newTitle as string,
-      tasks: [],
+      taskLists: [],
     };
 
     try {
-      await createTaskList(projectId, newTaskList);
+      await createProject(newProject);
       revalidator.revalidate();
     } catch (error) {
-      throw error;
+      throw new Error();
     }
 
     form.reset();
-    setDisplayAddTaskListModal(!displayAddTaskListModal);
+    setDisplayAddProjectModal(!displayAddProjectModal);
   };
 
   return (
-    <div className={displayAddTaskListModal ? "modal-component" : "hidden"}>
+    <div className={displayAddProjectModal ? "modal-component" : "hidden"}>
       <form
         className="relative flex flex-col justify-between bg-white w-[60%] h-[150px] py-4 px-4 rounded-lg"
         onSubmit={(e) => handleSubmit(e)}
       >
         <div className="flex items-center justify-between">
-          <p className="font-semibold">Add a list</p>
+          <p className="font-semibold">Add a project</p>
           <button
             className="rounded-lg hover:bg-gray-200"
             type="button"
             aria-label="close modal"
-            onClick={() => setDisplayAddTaskListModal(!displayAddTaskListModal)}
+            onClick={() => setDisplayAddProjectModal(!displayAddProjectModal)}
           >
             <XMarkIcon className="size-6 text-zinc-600" />
           </button>
@@ -57,7 +56,7 @@ export default function AddTaskListModal({
           type="text"
           name="title"
           id="title"
-          placeholder="List title"
+          placeholder="Project title"
           autoFocus
           required
         />
@@ -65,7 +64,7 @@ export default function AddTaskListModal({
           className="self-end px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg w-fit hover:bg-blue-600/70"
           type="submit"
         >
-          Create list
+          Create project
         </button>
       </form>
     </div>

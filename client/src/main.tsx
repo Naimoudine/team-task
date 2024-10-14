@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import "./index.css";
 import Home from "./pages/Home.tsx";
 import TaskLists, { loader as taskListsLoarder } from "./pages/TaskLists.tsx";
-import Task from "./pages/Task.tsx";
+import Task, { loader as taskLoader } from "./pages/Task.tsx";
 import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
 
 const router = createBrowserRouter([
@@ -22,11 +22,15 @@ const router = createBrowserRouter([
         element: <Projects />,
         loader: projectsLoader,
       },
-
       {
         path: "/projects/:id/taskLists",
         element: <TaskLists />,
         loader: taskListsLoarder,
+      },
+      {
+        path: "projects/:projectId/taskLists/:taskListId/tasks/:taskId",
+        element: <Task />,
+        loader: taskLoader,
       },
     ],
   },

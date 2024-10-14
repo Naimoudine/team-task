@@ -7,12 +7,14 @@ type Props = {
   taskLists: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  projectId: string;
 };
 
 export default function TaskListView({
   taskLists,
   setDisplayAddTask,
   setCurrentListId,
+  projectId,
 }: Props) {
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);
@@ -49,7 +51,7 @@ export default function TaskListView({
                       <li key={task._id} className="flex">
                         <Link
                           className="w-full task"
-                          to={`/taskLists/${list._id}/tasks/${task._id}`}
+                          to={`/projects/${projectId}/taskLists/${list._id}/tasks/${task._id}`}
                         >
                           <span className="mr-4 font-semibold text-zinc-500">
                             {displayPriority(task.priority)}

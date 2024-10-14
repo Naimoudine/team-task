@@ -1,31 +1,21 @@
-import { useEffect, useState } from "react";
 import { TagIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { getTaskById } from "../api";
-import { useLocation } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { displayPriority, type Task } from "../components/tasks/TaskSection";
 
 type Props = {};
 
+export const loader = async ({ params }: any) => {
+  try {
+    return getTaskById(params.taskId);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default function Task({}: Props) {
-  const [task, setTask] = useState<Task>();
-
-  const location = useLocation();
-
-  useEffect(() => {
-    const fetchTask = async () => {
-      const taskListId = location.pathname.slice(11, 35);
-      const taskId = location.pathname.slice(42);
-
-      try {
-        const currTask = await getTaskById(taskListId, taskId);
-        setTask(currTask);
-      } catch (error) {
-        console.error("Error fetching task:", error);
-      }
-    };
-    fetchTask();
-  }, [location]);
+  const task = useLoaderData() as Task;
 
   return (
     <div className="flex flex-col w-full h-full">

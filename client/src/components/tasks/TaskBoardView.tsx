@@ -5,12 +5,14 @@ type Props = {
   taskLists: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  projectId: string;
 };
 
 export default function TaskBoardSView({
   taskLists,
   setDisplayAddTask,
   setCurrentListId,
+  projectId,
 }: Props) {
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);

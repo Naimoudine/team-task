@@ -8,6 +8,7 @@ type Props = {
   display: DisplayType;
   taskLists: TaskList[];
   revalidator: any;
+  projectId: string;
 };
 
 export interface Task {
@@ -40,6 +41,7 @@ export default function Tasksection({
   display,
   taskLists,
   revalidator,
+  projectId,
 }: Props) {
   const [displayAddTask, setDisplayAddTask] = useState<boolean>(false);
   const [currentListId, setCurrentListId] = useState<string | undefined>(
@@ -60,6 +62,7 @@ export default function Tasksection({
             setDisplayAddTask={setDisplayAddTask}
             setCurrentListId={setCurrentListId}
             taskLists={taskLists}
+            projectId={projectId}
           />
         </div>
       ) : (
@@ -68,6 +71,7 @@ export default function Tasksection({
             setDisplayAddTask={setDisplayAddTask}
             setCurrentListId={setCurrentListId}
             taskLists={taskLists}
+            projectId={projectId}
           />
         </div>
       )}
