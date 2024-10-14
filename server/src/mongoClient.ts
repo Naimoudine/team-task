@@ -1,4 +1,4 @@
-import { MongoClient, Document } from "mongodb";
+import { MongoClient, Document, Collection, Db } from "mongodb";
 import dotenv from "dotenv";
 import { createUserCollection } from "./modules/users/userCollection";
 import { createTaskListCollection } from "./modules/tasks/taskListCollection";
@@ -10,11 +10,20 @@ dotenv.config();
 const uri = process.env.DB_URI as string;
 const client = new MongoClient(uri);
 
+let dbInstance: Db | null = null; // Stocker l'instance de la base de données
+
 export async function connectDb() {
   try {
+    // Si la connexion a déjà été établie, retourner l'instance existante
+    if (dbInstance) {
+      return dbInstance;
+    }
+
+    // Si aucune connexion n'existe, se connecter et stocker l'instance
     await client.connect();
     console.info("Connected to mongoDB");
-    return client.db("task-team");
+    dbInstance = client.db("task-team");
+    return dbInstance;
   } catch (error) {
     console.error("Error while connecting to db", error);
     throw error;

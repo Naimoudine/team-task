@@ -120,3 +120,17 @@ export const createTaskList = async (id: string, taskList: TaskList) => {
   const data = await response.json();
   return data;
 };
+
+export const updateTaskPriority = async (id: string, priority: number) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}`,
+    {
+      method: "put",
+      headers: { "Content-TYpe": "application/json" },
+      body: JSON.stringify({ priority }),
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update task");
+  }
+};

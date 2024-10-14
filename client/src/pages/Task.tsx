@@ -1,11 +1,13 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useRevalidator } from "react-router-dom";
 import { TagIcon, SlashIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
-import { getTaskById } from "../api";
+import { getTaskById, updateTaskPriority } from "../api";
 import { useLoaderData } from "react-router-dom";
 import { displayPriority } from "../components/tasks/TaskSection";
 import type { Task, TaskList } from "../components/tasks/TaskSection";
 import { Project } from "./Projects";
+import { useState } from "react";
+import UpdatePriorityModal from "../components/tasks/UpdatePriorityModal";
 
 type Props = {};
 
@@ -24,7 +26,9 @@ export const loader = async ({ params }: any) => {
 };
 
 export default function Task({}: Props) {
+  const [updatePriority, setUpdatePriority] = useState<boolean>(false);
   const { project, taskList, task } = useLoaderData() as LoaderType;
+  const revalidator = useRevalidator();
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -72,9 +76,23 @@ export default function Task({}: Props) {
           </div>
         </div>
         <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-8">
-          <button className="task-opt-btn" type="button">
-            {task?.priority && displayPriority(task?.priority)}
-          </button>
+          <div className="relative">
+            <button
+              className={
+                updatePriority ? "task-opt-btn bg-zinc-200" : "task-opt-btn"
+              }
+              type="button"
+              onClick={() => setUpdatePriority(!updatePriority)}
+            >
+              {task?.priority && displayPriority(task?.priority)}
+            </button>
+            <UpdatePriorityModal
+              task={task}
+              setUpdatePriority={setUpdatePriority}
+              updatePriority={updatePriority}
+              revalidator={revalidator}
+            />
+          </div>
           <button className="task-opt-btn" type="button">
             <TagIcon className="size-4 text-zinc-600" />
             Add label

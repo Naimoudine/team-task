@@ -1,5 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { FolderIcon, HomeIcon, UsersIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleOvalLeftEllipsisIcon,
+  FolderIcon,
+  HomeIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
 
 type Props = {};
 
@@ -23,6 +28,12 @@ export default function Navbar({}: Props) {
           <NavLink className="nav-link" to="">
             <UsersIcon className="nav-icon" />
             Teams
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="nav-link" to="">
+            <ChatBubbleOvalLeftEllipsisIcon className="nav-icon" />
+            Message
           </NavLink>
         </li>
       </ul>

@@ -9,6 +9,7 @@ import {
   createTask,
   readTaskById,
   readTaskByTaskListId,
+  updateTaskPriority,
 } from "./modules/tasks/taskController";
 import {
   createProject,
@@ -33,4 +34,6 @@ router.post("/projects/:id/taskLists", createTaskList);
 //task
 router.post("/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
+router.put("/tasks/:id", updateTaskPriority);
+
 export default router;
