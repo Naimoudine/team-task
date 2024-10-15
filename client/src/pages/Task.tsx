@@ -8,13 +8,20 @@ import type { Task, TaskList } from "../components/tasks/TaskSection";
 import { Project } from "./Projects";
 import { useState } from "react";
 import UpdatePriorityModal from "../components/tasks/UpdatePriorityModal";
+import LabelModal from "../components/tasks/LabelModal";
 
 type Props = {};
+
+export interface Label {
+  _id?: string;
+  label: string;
+}
 
 interface LoaderType {
   project: Project;
   taskList: TaskList;
   task: Task;
+  labels: Label[];
 }
 
 export const loader = async ({ params }: any) => {
@@ -27,7 +34,8 @@ export const loader = async ({ params }: any) => {
 
 export default function Task({}: Props) {
   const [updatePriority, setUpdatePriority] = useState<boolean>(false);
-  const { project, taskList, task } = useLoaderData() as LoaderType;
+  const [addLabel, setAddLabel] = useState<boolean>(false);
+  const { project, taskList, task, labels } = useLoaderData() as LoaderType;
   const revalidator = useRevalidator();
 
   return (
@@ -93,10 +101,22 @@ export default function Task({}: Props) {
               revalidator={revalidator}
             />
           </div>
-          <button className="task-opt-btn" type="button">
-            <TagIcon className="size-4 text-zinc-600" />
-            Add label
-          </button>
+          <div className="relative">
+            <button
+              className="task-opt-btn"
+              type="button"
+              onClick={() => setAddLabel(!addLabel)}
+            >
+              <TagIcon className="size-4 text-zinc-600" />
+              Add label
+            </button>
+            <LabelModal
+              labels={labels}
+              addLabel={addLabel}
+              setAddLabel={setAddLabel}
+              revalidator={revalidator}
+            />
+          </div>
           <button className="task-opt-btn" type="button">
             <UserPlusIcon className="size-4 text-zinc-600" />
             Assign

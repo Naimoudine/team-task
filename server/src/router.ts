@@ -16,6 +16,10 @@ import {
   readAll as projectReadAll,
   readById as projectReadById,
 } from "./modules/projects/projectController";
+import {
+  createLabel,
+  readAll as labelReadAll,
+} from "./modules/label/labelController";
 
 const router = express.Router();
 
@@ -35,5 +39,9 @@ router.post("/projects/:id/taskLists", createTaskList);
 router.post("/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
 router.put("/tasks/:id", updateTaskPriority);
+
+//label
+router.post("/labels", createLabel);
+router.get("/labels", labelReadAll);
 
 export default router;
