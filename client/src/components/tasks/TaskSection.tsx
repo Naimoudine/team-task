@@ -19,6 +19,7 @@ export interface Task {
   date?: Date;
   due?: Date;
   assigned?: string;
+  labelList: string[];
 }
 
 export interface TaskList {

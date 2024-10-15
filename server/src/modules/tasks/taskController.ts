@@ -12,6 +12,7 @@ interface Task {
   due?: Date;
   assigned?: ObjectId;
   taskListId: ObjectId;
+  labelList: string[];
 }
 
 export const createTask = async (req: Request, res: Response) => {
@@ -30,6 +31,7 @@ export const createTask = async (req: Request, res: Response) => {
         title: req.body.title,
         priority: req.body.priority,
         taskListId,
+        labelList: [],
       };
 
       if (req.body.description) {
@@ -146,5 +148,44 @@ export const updateTaskPriority = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching tasklist:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateTaskLabelList = async (req: Request, res: Response) => {
+  const taskCollection = await getCollection<Task>("tasks");
+  const taskId = req.params.id;
+
+  if (!taskId || !ObjectId.isValid(taskId)) {
+    res.status(400).json({ message: "task id is missing or is invalid" });
+    return;
+  }
+
+  const labelExists = await taskCollection.findOne({
+    labelList: req.body.label,
+  });
+
+  let result = null;
+
+  if (!labelExists) {
+    result = await taskCollection.updateOne(
+      { _id: new ObjectId(taskId) },
+      { $push: { labelList: req.body.label } }
+    );
+  }
+
+  if (labelExists) {
+    result = await taskCollection.updateOne(
+      { _id: new ObjectId(taskId) },
+      { $pull: { labelList: req.body.label } }
+    );
+  }
+
+  if (result && result.modifiedCount !== 1) {
+    res.status(422).json({ message: "Failed to update label list" });
+    return;
+  }
+
+  if (result && result.acknowledged) {
+    res.status(204).json(result.upsertedId);
   }
 };

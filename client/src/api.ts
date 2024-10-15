@@ -156,3 +156,18 @@ export const createLabel = async (label: string) => {
   }
   return null;
 };
+
+export const updateLabel = async (id: string, label: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/label`,
+    {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ label }),
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update label");
+  }
+  return null;
+};

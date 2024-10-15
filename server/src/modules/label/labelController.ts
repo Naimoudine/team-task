@@ -10,6 +10,7 @@ export const createLabel = async (req: Request, res: Response) => {
 
     if (!label || typeof label !== "string") {
       res.status(400).json({ message: "label is required and is a string" });
+      return;
     }
 
     const labelCollection = await getCollection<Label>("labels");
@@ -20,6 +21,7 @@ export const createLabel = async (req: Request, res: Response) => {
       res.status(422).json({ message: "Failed to create label" });
       return;
     }
+
     res
       .status(201)
       .json({ message: "Label created", labelId: result.insertedId });

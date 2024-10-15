@@ -13,7 +13,6 @@ import LabelModal from "../components/tasks/LabelModal";
 type Props = {};
 
 export interface Label {
-  _id?: string;
   label: string;
 }
 
@@ -103,7 +102,7 @@ export default function Task({}: Props) {
           </div>
           <div className="relative">
             <button
-              className="task-opt-btn"
+              className={addLabel ? "task-opt-btn bg-zinc-200" : "task-opt-btn"}
               type="button"
               onClick={() => setAddLabel(!addLabel)}
             >
@@ -111,6 +110,7 @@ export default function Task({}: Props) {
               Add label
             </button>
             <LabelModal
+              task={task}
               labels={labels}
               addLabel={addLabel}
               setAddLabel={setAddLabel}
@@ -121,6 +121,19 @@ export default function Task({}: Props) {
             <UserPlusIcon className="size-4 text-zinc-600" />
             Assign
           </button>
+          <article>
+            <h3 className="mb-4">Labels</h3>
+            <div className="flex flex-wrap gap-4">
+              {task.labelList.map((label) => (
+                <span
+                  className="px-4 py-1 text-sm font-semibold border rounded-full border-zinc-200"
+                  key={label}
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+          </article>
         </aside>
       </main>
     </div>

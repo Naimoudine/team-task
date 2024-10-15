@@ -7,7 +7,7 @@ export async function createTaskCollection() {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["title", "priority", "taskListId"],
+        required: ["title", "priority", "taskListId", "labelList"],
         properties: {
           title: {
             bsonType: "string",
@@ -36,6 +36,10 @@ export async function createTaskCollection() {
           taskListId: {
             bsonType: "objectId",
             description: "taskListId must be an objectId and is required",
+          },
+          labelList: {
+            bsonType: "array",
+            description: "label list must be an array",
           },
         },
       },

@@ -9,6 +9,7 @@ import {
   createTask,
   readTaskById,
   readTaskByTaskListId,
+  updateTaskLabelList,
   updateTaskPriority,
 } from "./modules/tasks/taskController";
 import {
@@ -38,7 +39,8 @@ router.post("/projects/:id/taskLists", createTaskList);
 //task
 router.post("/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
-router.put("/tasks/:id", updateTaskPriority);
+router.put("/tasks/:id/priority", updateTaskPriority);
+router.put("/tasks/:id/label", updateTaskLabelList);
 
 //label
 router.post("/labels", createLabel);

@@ -1,9 +1,11 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Label } from "../../pages/Task";
-import { createLabel } from "../../api";
+import { createLabel, updateLabel } from "../../api";
+import { Task } from "./TaskSection";
 
 type Props = {
+  task: Task;
   labels: Label[];
   addLabel: boolean;
   setAddLabel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,6 +13,7 @@ type Props = {
 };
 
 export default function LabelModal({
+  task,
   labels,
   addLabel,
   setAddLabel,
@@ -18,12 +21,28 @@ export default function LabelModal({
 }: Props) {
   const [displayAddBtn, setDisplayAddBtn] = useState<boolean>(false);
 
-  const handleAddLabel = async (e) => {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAddLabel = async () => {
     try {
-      await createLabel(e.currentTarget.value);
-      revalidator.revalidate();
-      setAddLabel(!addLabel);
-      e.currentTarget.value = "";
+      if (inputRef.current && inputRef.current.value) {
+        await createLabel(inputRef.current.value);
+        setAddLabel(!addLabel);
+        revalidator.revalidate();
+        inputRef.current.value = "";
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleOnChange = async (e) => {
+    try {
+      if (task._id) {
+        await updateLabel(task._id, e.currentTarget.value);
+        revalidator.revalidate();
+      }
     } catch (error) {
       throw error;
     }
@@ -33,9 +52,10 @@ export default function LabelModal({
     <div
       className={
         addLabel
-          ? "flex flex-col py-2 rounded-lg shadow-xl w-[10rem] overflow-hidden border-2 border-zinc-200 absolute top-0 -left-32 z-[100] bg-white"
+          ? "flex flex-col py-2 rounded-lg shadow-xl w-[10rem] overflow-hidden border-2 border-zinc-200 absolute top-0 -left-44 z-[100] bg-white"
           : "hidden"
       }
+      ref={modalRef}
     >
       <input
         className="px-2 outline-none"
@@ -43,6 +63,7 @@ export default function LabelModal({
         name="label"
         id="label"
         placeholder="add label..."
+        ref={inputRef}
         onChange={(e) => {
           if (
             e.currentTarget.value !== "" &&
@@ -64,7 +85,7 @@ export default function LabelModal({
           className="flex items-center justify-center w-full gap-2 py-1 rounded-lg hover:bg-zinc-200 z-60"
           type="button"
           aria-label="add label"
-          onClick={(e) => handleAddLabel(e)}
+          onClick={handleAddLabel}
         >
           <PlusIcon className="size-4" />
           <span className="text-sm font-semibold">create label</span>
@@ -74,16 +95,18 @@ export default function LabelModal({
           {labels.map((label) => (
             <label
               className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-zinc-200"
-              key={label._id}
-              htmlFor="label"
+              key={label.label}
+              htmlFor={`${label.label}`}
             >
               <input
                 type="checkbox"
                 name="label"
                 id="label"
                 value={`${label.label}`}
+                onChange={(e) => handleOnChange(e)}
+                checked={task.labelList.some((el) => el === label.label)}
               />
-              <span className="text-sm ">{label.label}</span>
+              <span className="text-sm">{label.label}</span>
             </label>
           ))}
         </div>
