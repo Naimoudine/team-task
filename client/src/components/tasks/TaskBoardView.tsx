@@ -1,5 +1,6 @@
 import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import { displayPriority, TaskList } from "./TaskSection";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   taskLists: TaskList[];
@@ -14,6 +15,7 @@ export default function TaskBoardSView({
   setCurrentListId,
   projectId,
 }: Props) {
+  const navigate = useNavigate();
   const handleOpenModal = (id: string) => {
     setDisplayAddTask(true);
     setCurrentListId(id);
@@ -40,11 +42,28 @@ export default function TaskBoardSView({
                       return b.priority - a.priority;
                     })
                     .map((task) => (
-                      <article key={task._id} className="task-card">
-                        <h3>{task.title}</h3>
-                        <p className="font-semibold text-zinc-500">
-                          {displayPriority(task.priority)}
-                        </p>
+                      <article
+                        key={task._id}
+                        className="task-card"
+                        onClick={() =>
+                          navigate(
+                            `/projects/${projectId}/taskLists/${list._id}/tasks/${task._id}`
+                          )
+                        }
+                      >
+                        <div className="flex items-center gap-4">
+                          <p className="font-semibold text-zinc-500">
+                            {displayPriority(task.priority)}
+                          </p>
+                          <h3 className="text-sm font-bold">{task.title}</h3>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {task.labelList.map((label) => (
+                            <span key={label} className="task-label">
+                              {label}
+                            </span>
+                          ))}
+                        </div>
                       </article>
                     ))
                 : null}

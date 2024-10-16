@@ -45,8 +45,6 @@ export default function TaskLists({}: Props) {
 
   const projectId = pathname.slice(10, pathname.length - 10);
 
-  console.log(taskLists);
-
   return (
     <div className="h-full">
       <AddTaskListModal

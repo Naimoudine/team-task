@@ -16,7 +16,7 @@
   }
 
   .modal-component {
-    @apply w-screen h-screen absolute top-0 left-0 bg-black/70 flex pt-48 justify-center z-[100];
+    @apply w-screen h-screen absolute top-0 left-0 bg-black/70 flex pt-48 justify-center z-[1000];
   }
 
   #logo {
@@ -55,14 +55,18 @@
   }
 
   .task {
-    @apply px-6 py-2 font-semibold border-b hover:bg-zinc-200 border-zinc-200;
+    @apply flex items-center justify-between px-6 py-2 font-semibold border-b hover:bg-zinc-200 border-zinc-200;
   }
 
   .task-card {
-    @apply px-6 py-2 h-[85px] w-full flex flex-col justify-between bg-white text-zinc-800 shadow-lg rounded-md;
+    @apply px-6 py-2 h-[8rem] w-full flex flex-col gap-2 bg-white text-zinc-800 shadow-lg rounded-md cursor-pointer;
   }
 
   .task-opt-btn {
     @apply flex items-center justify-start w-full gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-start hover:bg-gray-200;
+  }
+
+  .task-label {
+    @apply px-2 py-1 text-xs font-semibold bg-white border rounded-full border-zinc-200;
   }
 }

@@ -125,10 +125,7 @@ export default function Task({}: Props) {
             <h3 className="mb-4">Labels</h3>
             <div className="flex flex-wrap gap-4">
               {task.labelList.map((label) => (
-                <span
-                  className="px-4 py-1 text-sm font-semibold border rounded-full border-zinc-200"
-                  key={label}
-                >
+                <span className="task-label" key={label}>
                   {label}
                 </span>
               ))}

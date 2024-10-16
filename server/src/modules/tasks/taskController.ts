@@ -161,6 +161,7 @@ export const updateTaskLabelList = async (req: Request, res: Response) => {
   }
 
   const labelExists = await taskCollection.findOne({
+    _id: new ObjectId(taskId),
     labelList: req.body.label,
   });
 

@@ -37,7 +37,9 @@ export default function AddTaskModal({
               : newPriority === "high"
               ? 3
               : 1,
+          labelList: [],
         };
+
         await createTask(currentListId, newTask);
         revalidator.revalidate();
       }

@@ -53,10 +53,19 @@ export default function TaskListView({
                           className="w-full task"
                           to={`/projects/${projectId}/taskLists/${list._id}/tasks/${task._id}`}
                         >
-                          <span className="mr-4 font-semibold text-zinc-500">
-                            {displayPriority(task.priority)}
-                          </span>
-                          {task.title}
+                          <div>
+                            <span className="mr-4 font-semibold text-zinc-500">
+                              {displayPriority(task.priority)}
+                            </span>
+                            {task.title}
+                          </div>
+                          <div className="flex gap-2">
+                            {task.labelList.map((label) => (
+                              <span key={label} className="task-label z-[100]">
+                                {label}
+                              </span>
+                            ))}
+                          </div>
                         </Link>
                       </li>
                     ))

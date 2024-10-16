@@ -29,15 +29,16 @@ export default function LabelModal({
       if (inputRef.current && inputRef.current.value) {
         await createLabel(inputRef.current.value);
         setAddLabel(!addLabel);
-        revalidator.revalidate();
         inputRef.current.value = "";
+        setDisplayAddBtn(false);
+        revalidator.revalidate();
       }
     } catch (error) {
       throw error;
     }
   };
 
-  const handleOnChange = async (e) => {
+  const handleOnChange = async (e: any) => {
     try {
       if (task._id) {
         await updateLabel(task._id, e.currentTarget.value);
