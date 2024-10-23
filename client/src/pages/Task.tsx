@@ -9,6 +9,7 @@ import { Project } from "./Projects";
 import { useState } from "react";
 import UpdatePriorityModal from "../components/tasks/UpdatePriorityModal";
 import LabelModal from "../components/tasks/LabelModal";
+import UpdateTaskTaskListModal from "../components/tasks/UpdateTaskTaskListModal";
 
 type Props = {};
 
@@ -20,6 +21,7 @@ interface LoaderType {
   project: Project;
   taskList: TaskList;
   task: Task;
+  taskLists: TaskList[];
   labels: Label[];
 }
 
@@ -32,9 +34,11 @@ export const loader = async ({ params }: any) => {
 };
 
 export default function Task({}: Props) {
+  const [updateTaskTaskList, setUpdateTaskTaskList] = useState<boolean>(false);
   const [updatePriority, setUpdatePriority] = useState<boolean>(false);
   const [addLabel, setAddLabel] = useState<boolean>(false);
-  const { project, taskList, task, labels } = useLoaderData() as LoaderType;
+  const { project, taskList, task, taskLists, labels } =
+    useLoaderData() as LoaderType;
   const revalidator = useRevalidator();
 
   return (
@@ -83,6 +87,25 @@ export default function Task({}: Props) {
           </div>
         </div>
         <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-8">
+          <div className="relative">
+            <button
+              className={
+                updateTaskTaskList ? "task-opt-btn bg-zinc-200" : "task-opt-btn"
+              }
+              type="button"
+              onClick={() => setUpdateTaskTaskList(!updateTaskTaskList)}
+            >
+              {taskList.title}
+            </button>
+            <UpdateTaskTaskListModal
+              project={project}
+              task={task}
+              taskLists={taskLists}
+              updateTaskTaskList={updateTaskTaskList}
+              setUpdateTaskTaskList={setUpdateTaskTaskList}
+              revalidator={revalidator}
+            />
+          </div>
           <div className="relative">
             <button
               className={

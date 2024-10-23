@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { Request, Response } from "express";
 import { getCollection } from "../../mongoClient";
-import { TaskList } from "./taskListController";
+import type { TaskList } from "./taskListController";
 
 interface Task {
   _id?: ObjectId;
@@ -189,4 +189,54 @@ export const updateTaskLabelList = async (req: Request, res: Response) => {
   if (result && result.acknowledged) {
     res.status(204).json(result.upsertedId);
   }
+};
+
+export const updateTaskTaskList = async (req: Request, res: Response) => {
+  const taskCollection = await getCollection<Task>("tasks");
+  const taskListCollection = await getCollection<TaskList>("taskLists");
+  const taskId = req.params.id;
+  const newTaskListId = req.params.taskListId;
+
+  if (!taskId || !ObjectId.isValid(taskId)) {
+    res.status(400).json({ message: "task id is missing or is invalid" });
+    return;
+  }
+
+  const currentTask = await taskCollection.findOne({
+    _id: new ObjectId(taskId),
+  });
+
+  const newTaskListExists = await taskListCollection.findOne({
+    _id: new ObjectId(newTaskListId),
+  });
+
+  if (!newTaskListExists || !currentTask) {
+    res.status(404).json({ message: " task or taskList don't exists" });
+    return;
+  }
+
+  const updateTask = await taskCollection.updateOne(
+    { _id: new ObjectId(taskId) },
+    { $set: { taskListId: new ObjectId(newTaskListId) } }
+  );
+
+  const updateOldList = await taskListCollection.updateOne(
+    { _id: currentTask?.taskListId },
+    { $pull: { tasks: currentTask?._id } }
+  );
+
+  const updateNewList = await taskListCollection.updateOne(
+    { _id: new ObjectId(newTaskListId) },
+    { $push: { tasks: currentTask?._id } }
+  );
+
+  if (
+    updateTask.modifiedCount !== 1 ||
+    updateOldList.modifiedCount !== 1 ||
+    updateNewList.modifiedCount !== 1
+  ) {
+    res.status(422).json({ message: "Failed to update task and taskLists" });
+    return;
+  }
+  res.sendStatus(204);
 };

@@ -11,6 +11,7 @@ import {
   readTaskByTaskListId,
   updateTaskLabelList,
   updateTaskPriority,
+  updateTaskTaskList,
 } from "./modules/tasks/taskController";
 import {
   createProject,
@@ -41,6 +42,7 @@ router.post("/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
 router.put("/tasks/:id/priority", updateTaskPriority);
 router.put("/tasks/:id/label", updateTaskLabelList);
+router.put("/tasks/:id/taskLists/:taskListId", updateTaskTaskList);
 
 //label
 router.post("/labels", createLabel);

@@ -71,28 +71,33 @@ export const getTaskById = async (
   taskListId: string,
   id: string
 ) => {
-  const [projectsData, taskListsData, tasksData, labelsData] =
+  const [projectData, taskListData, taskData, taskListsData, labelsData] =
     await Promise.all([
       fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}`),
       fetch(`${import.meta.env.VITE_API_URL}/api/taskLists/${taskListId}`),
       fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`),
+      fetch(
+        `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/taskLists`
+      ),
       fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
     ]);
   if (
-    !projectsData.ok ||
+    !projectData.ok ||
+    !taskListData.ok ||
+    !taskData.ok ||
     !taskListsData.ok ||
-    !tasksData.ok ||
     !labelsData.ok
   ) {
     throw new Error("Failed to fetch data");
   }
-  const [project, taskList, task, labels] = await Promise.all([
-    projectsData.json(),
+  const [project, taskList, task, taskLists, labels] = await Promise.all([
+    projectData.json(),
+    taskListData.json(),
+    taskData.json(),
     taskListsData.json(),
-    tasksData.json(),
     labelsData.json(),
   ]);
-  return { project, taskList, task, labels };
+  return { project, taskList, task, taskLists, labels };
 };
 
 export const createTask = async (taskListId: string, task: Task) => {
@@ -168,6 +173,21 @@ export const updateLabel = async (id: string, label: string) => {
   );
   if (response.status !== 204) {
     throw new Error("Failed to update label");
+  }
+  const data = response.json();
+  return data;
+};
+
+export const updateTaskTaskListFnc = async (id: string, taskListId: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/taskLists/${taskListId}`,
+    {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update task task list");
   }
   return null;
 };
