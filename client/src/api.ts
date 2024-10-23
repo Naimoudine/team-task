@@ -66,6 +66,15 @@ export const getTaskLists = async (projectId: string) => {
   return data;
 };
 
+export const getTasks = async () => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch tasks");
+  }
+  const data = await response.json();
+  return data;
+};
+
 export const getTaskById = async (
   projectId: string,
   taskListId: string,

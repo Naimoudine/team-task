@@ -86,6 +86,17 @@ export const createTask = async (req: Request, res: Response) => {
   }
 };
 
+export const readAll = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const tasks = await taskCollection.find({}).toArray();
+    res.json(tasks);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const readTaskByTaskListId = async (req: Request, res: Response) => {
   const taskCollection = await getCollection<Task>("tasks");
   const taskListId = new ObjectId(req.params.id as string);

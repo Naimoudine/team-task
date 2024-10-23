@@ -7,8 +7,8 @@ import {
 } from "./modules/tasks/taskListController";
 import {
   createTask,
+  readAll as tasksReadAll,
   readTaskById,
-  readTaskByTaskListId,
   updateTaskLabelList,
   updateTaskPriority,
   updateTaskTaskList,
@@ -38,6 +38,7 @@ router.get("/projects/:id/taskLists", readTaskListsByProjectId);
 router.post("/projects/:id/taskLists", createTaskList);
 
 //task
+router.get("/tasks", tasksReadAll);
 router.post("/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
 router.put("/tasks/:id/priority", updateTaskPriority);
