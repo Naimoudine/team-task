@@ -19,7 +19,6 @@ export default function UpdateTaskTaskListModal({
   taskLists,
   updateTaskTaskList,
   setUpdateTaskTaskList,
-  revalidator,
 }: Props) {
   const navigate = useNavigate();
 
