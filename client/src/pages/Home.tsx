@@ -45,7 +45,7 @@ export default function Home({}: Props) {
         </article>
       </div>
       <div className="grid w-full grid-cols-2 grid-rows-2 gap-8 mt-8">
-        <div className="p-4 border-2 rounded-lg border-zinc-200">
+        <div className="p-4 border-2 rounded-lg border-zinc-200 h-[250px]">
           <ul>
             {projects.map((project, i) => (
               <li
