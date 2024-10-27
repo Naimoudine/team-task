@@ -1,5 +1,8 @@
 import express from "express";
-import { getUsers } from "./modules/users/userController";
+import {
+  createUser,
+  readAll as userReadAll,
+} from "./modules/users/userController";
 import {
   createTaskList,
   readById as taskListReadById,
@@ -22,10 +25,10 @@ import {
   createLabel,
   readAll as labelReadAll,
 } from "./modules/label/labelController";
+import { hashPassword } from "./service/auth";
+import { login } from "./modules/users/authAction";
 
 const router = express.Router();
-
-router.get("/users", getUsers);
 
 //projects
 router.post("/projects", createProject);
@@ -49,4 +52,10 @@ router.put("/tasks/:id/taskLists/:taskListId", updateTaskTaskList);
 router.post("/labels", createLabel);
 router.get("/labels", labelReadAll);
 
+//user
+router.get("/users", userReadAll);
+router.post("/users", hashPassword, createUser);
+
+//login
+router.post("/login", login);
 export default router;

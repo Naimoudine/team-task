@@ -2,19 +2,19 @@ import { connectDb } from "../../mongoClient";
 
 export async function createUserCollection() {
   const db = await connectDb();
-  await db.createCollection("users", {
+  const userCollection = await db.createCollection("users", {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        require: ["firstname", "lastname", "email", "password"],
+        required: ["firstname", "lastname", "email", "password"],
         properties: {
           firstname: {
             bsonType: "string",
-            descritpion: "'firstname' must be a string and is required",
+            description: "'firstname' must be a string and is required",
           },
           lastname: {
             bsonType: "string",
-            descritpion: "'lastname' must be a string and is required",
+            description: "'lastname' must be a string and is required",
           },
           email: {
             bsonType: "string",
@@ -23,10 +23,13 @@ export async function createUserCollection() {
           },
           password: {
             bsonType: "string",
-            descritpion: "'password' must be a string and is required",
+            description: "'password' must be a string and is required",
           },
         },
       },
     },
   });
+  await userCollection.createIndex({ email: 1 }, { unique: true });
+  console.log("Unique index on email created (if not existing).");
+  console.info('Collection "users" created successfully!');
 }

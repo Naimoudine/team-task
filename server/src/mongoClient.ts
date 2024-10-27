@@ -40,6 +40,7 @@ export async function getCollection<T extends Document>(
 
 export async function createAllCollection() {
   try {
+    await createUserCollection();
     await createProjectCollection();
     await createTaskListCollection();
     await createTaskCollection();
