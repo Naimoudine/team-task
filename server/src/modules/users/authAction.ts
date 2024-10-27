@@ -55,3 +55,5 @@ export const login = async (
     next(error);
   }
 };
+
+export const isLoggedIn = (res: Response) => res.sendStatus(200);
