@@ -7,6 +7,7 @@ import Home, { loader as homeLoader } from "./pages/Home.tsx";
 import TaskLists, { loader as taskListsLoarder } from "./pages/TaskLists.tsx";
 import Task, { loader as taskLoader } from "./pages/Task.tsx";
 import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
+import Register from "./pages/Register.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
         loader: taskLoader,
       },
     ],
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 
