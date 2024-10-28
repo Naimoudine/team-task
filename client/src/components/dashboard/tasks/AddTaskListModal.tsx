@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/16/solid";
 import type React from "react";
-import { createTaskList } from "../../api";
+import { createTaskList } from "../../../api";
 type Props = {
   projectId: string;
   displayAddTaskListModal: boolean;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Task } from "./TaskSection";
-import { updateTaskPriority } from "../../api";
+import { updateTaskPriority } from "../../../api";
 
 type Props = {
   task: Task;

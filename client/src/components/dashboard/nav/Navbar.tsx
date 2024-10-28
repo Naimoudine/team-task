@@ -13,7 +13,7 @@ export default function Navbar({}: Props) {
     <nav className="py-4">
       <ul>
         <li>
-          <NavLink className="nav-link" to="/">
+          <NavLink className="nav-link" to="/dashboard">
             <HomeIcon className="nav-icon" />
             Home
           </NavLink>

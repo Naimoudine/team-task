@@ -6,10 +6,10 @@ import {
   NavLink,
 } from "react-router-dom";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
-import type { TaskList } from "../components/tasks/TaskSection";
-import TaskSection from "../components/tasks/TaskSection";
-import DisplayModal from "../components/tasks/DisplayModal";
-import AddTaskListModal from "../components/tasks/AddTaskListModal";
+import type { TaskList } from "../components/dashboard/tasks/TaskSection";
+import TaskSection from "../components/dashboard/tasks/TaskSection";
+import DisplayModal from "../components/dashboard/tasks/DisplayModal";
+import AddTaskListModal from "../components/dashboard/tasks/AddTaskListModal";
 import { getTaskListsByProjectId } from "../api";
 import { Project } from "./Projects";
 import { SlashIcon } from "@heroicons/react/24/outline";

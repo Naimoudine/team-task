@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DisplayType } from "../../pages/TaskLists";
+import { DisplayType } from "../../../pages/TaskLists";
 import AddTaskModal from "./AddTaskModal";
 import TaskBoardView from "./TaskBoardView";
 import TaskListView from "./TaskListView";

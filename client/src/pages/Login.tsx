@@ -31,7 +31,7 @@ export const action = async ({ request }: any) => {
 
     localStorage.setItem("userId", JSON.stringify(data._id));
 
-    return redirect("/");
+    return redirect("/dashboard");
   } catch (error) {
     throw error;
   }

@@ -14,6 +14,7 @@ import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
 import Register, { action as registerAction } from "./pages/Register.tsx";
 import Login, { action as loginAction } from "./pages/Login.tsx";
 import { authUser } from "./api.ts";
+import Landing from "./pages/Landing.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -22,7 +23,7 @@ function protectedRoute(routeConfig: any) {
       const isAllowed = await authUser();
 
       if (!isAllowed) {
-        return redirect("/login");
+        return redirect("/");
       }
 
       if (routeConfig.loader) {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
+        path: "/dashboard",
         element: <Home />,
         loader: homeLoader,
       },
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
     action: loginAction,
+  },
+  {
+    path: "/",
+    element: <Landing />,
   },
 ]);
 

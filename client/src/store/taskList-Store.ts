@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { v4 as uuid } from "uuid";
 import { produce } from "immer";
-import { Task, TaskList } from "../components/tasks/TaskSection";
+import { Task, TaskList } from "../components/dashboard/tasks/TaskSection";
 
 interface TaskListStore {
   taskLists: TaskList[];

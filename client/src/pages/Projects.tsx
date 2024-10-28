@@ -6,9 +6,9 @@ import {
   AdjustmentsHorizontalIcon,
 } from "@heroicons/react/24/outline";
 import { getProjects } from "../api";
-import DisplayModal from "../components/tasks/DisplayModal";
+import DisplayModal from "../components/dashboard/tasks/DisplayModal";
 import { DisplayType } from "./TaskLists";
-import AddProjectModal from "../components/projects/AddProjectModal";
+import AddProjectModal from "../components/dashboard/projects/AddProjectModal";
 
 type Props = {};
 

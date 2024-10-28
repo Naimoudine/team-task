@@ -1,7 +1,7 @@
 import type React from "react";
 import { XMarkIcon } from "@heroicons/react/16/solid";
 import type { Task } from "./TaskSection";
-import { createTask } from "../../api";
+import { createTask } from "../../../api";
 
 type Props = {
   displayAddTask: boolean;

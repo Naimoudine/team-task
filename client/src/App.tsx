@@ -1,5 +1,5 @@
 import { Outlet, useRevalidator } from "react-router-dom";
-import Aside from "./components/Aside";
+import Aside from "./components/dashboard/Aside";
 import { useEffect } from "react";
 import { User, useUserStore } from "./store/user-store";
 import { getUser } from "./api";

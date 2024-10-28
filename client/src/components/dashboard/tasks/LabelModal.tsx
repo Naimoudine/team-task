@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
-import { Label } from "../../pages/Task";
-import { createLabel, updateLabel } from "../../api";
+import { Label } from "../../../pages/Task";
+import { createLabel, updateLabel } from "../../../api";
 import { Task } from "./TaskSection";
 
 type Props = {

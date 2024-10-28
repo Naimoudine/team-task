@@ -1,4 +1,4 @@
-import { Task, TaskList } from "./components/tasks/TaskSection";
+import { Task, TaskList } from "./components/dashboard/tasks/TaskSection";
 import { Project } from "./pages/Projects";
 
 export const authUser = async () => {

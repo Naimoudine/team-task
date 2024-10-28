@@ -3,13 +3,13 @@ import { TagIcon, SlashIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { getTaskById, updateTaskPriority } from "../api";
 import { useLoaderData } from "react-router-dom";
-import { displayPriority } from "../components/tasks/TaskSection";
-import type { Task, TaskList } from "../components/tasks/TaskSection";
+import { displayPriority } from "../components/dashboard/tasks/TaskSection";
+import type { Task, TaskList } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
 import { useState } from "react";
-import UpdatePriorityModal from "../components/tasks/UpdatePriorityModal";
-import LabelModal from "../components/tasks/LabelModal";
-import UpdateTaskTaskListModal from "../components/tasks/UpdateTaskTaskListModal";
+import UpdatePriorityModal from "../components/dashboard/tasks/UpdatePriorityModal";
+import LabelModal from "../components/dashboard/tasks/LabelModal";
+import UpdateTaskTaskListModal from "../components/dashboard/tasks/UpdateTaskTaskListModal";
 
 type Props = {};
 

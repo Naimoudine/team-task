@@ -1,8 +1,8 @@
 import React from "react";
 import { Task, TaskList } from "./TaskSection";
-import { updateTaskTaskListFnc } from "../../api";
+import { updateTaskTaskListFnc } from "../../../api";
 import { useNavigate } from "react-router-dom";
-import { Project } from "../../pages/Projects";
+import { Project } from "../../../pages/Projects";
 
 type Props = {
   project: Project;

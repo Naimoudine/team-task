@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { getProjects, getTasks } from "../api";
-import { Task } from "../components/tasks/TaskSection";
+import { Task } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
 
 type Props = {};
