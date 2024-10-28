@@ -1,6 +1,5 @@
 import { Task, TaskList } from "./components/tasks/TaskSection";
 import { Project } from "./pages/Projects";
-import { useUserStore } from "./store/user-store";
 
 export const authUser = async () => {
   const response = await fetch(

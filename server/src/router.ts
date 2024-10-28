@@ -27,7 +27,7 @@ import {
   readAll as labelReadAll,
 } from "./modules/label/labelController";
 import { hashPassword, verifyToken } from "./service/auth";
-import { isLoggedIn, login } from "./modules/users/authAction";
+import { isLoggedIn, login, logout } from "./modules/users/authAction";
 
 const router = express.Router();
 
@@ -55,7 +55,7 @@ router.get("/labels", labelReadAll);
 
 //user
 router.get("/users", userReadAll);
-router.get("/users/:id", userReadById);
+router.get("/users/:id", verifyToken, userReadById);
 router.post("/users", hashPassword, createUser);
 
 //login
@@ -63,4 +63,7 @@ router.post("/login", login);
 
 //verify-auth
 router.post("/verify-auth", verifyToken, isLoggedIn);
+
+//logout
+router.get("/logout", verifyToken, logout);
 export default router;
