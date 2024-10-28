@@ -1,62 +1,50 @@
-import { useState } from "react";
-import { Form, useNavigation, Link, redirect } from "react-router-dom";
+import { redirect, Form, useNavigation, Link } from "react-router-dom";
+import { useUserStore } from "../store/user-store";
 
 type Props = {};
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
-  const firstname = formData.get("firstname");
-  const lastname = formData.get("lastname");
   const email = formData.get("email");
   const password = formData.get("password");
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ firstname, lastname, email, password }),
+      body: JSON.stringify({ email, password }),
     });
-    if (response.status !== 201) {
-      throw new Error("Failed to register");
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message ? data.message : "Failed to login");
     }
-    return redirect("/login");
+
+    const { setUser } = useUserStore.getState();
+
+    setUser({
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email,
+    });
+
+    return redirect("/");
   } catch (error) {
     throw error;
   }
 };
 
-export default function Register({}: Props) {
-  const [password, setPassword] = useState<string>("");
-  const [confirm, setConfirm] = useState<string>("");
-
+export default function Login({}: Props) {
   const navigation = useNavigation();
-  const isSubmiting = navigation.state === "loading";
+  const isSubmiting = navigation.state === "submitting";
 
   return (
-    <div className="flex flex-col items-center w-full h-full px-8 mt-24 h-fit">
+    <div className="flex flex-col items-center justify-center w-full h-full px-8">
       <h1 className="text-3xl font-bold logo xl:text-4xl">Team-task</h1>
-      <h2 className="mt-4 text-xl font-semibold">Register</h2>
+      <h2 className="mt-4 text-xl font-semibold">Login</h2>
       <Form
         className="flex flex-col gap-6 items-center justify-center mt-8 w-full md:w-[50%] xl:w-[30%]"
         method="post"
       >
-        <label className="form-label" htmlFor="firstname">
-          <input
-            type="text"
-            name="firstname"
-            id="firstname"
-            placeholder="Enter your firstname"
-          />
-        </label>
-        <label className="form-label" htmlFor="lastname">
-          <input
-            type="text"
-            name="lastname"
-            id="lastname"
-            placeholder="Enter your lastname"
-            required
-          />
-        </label>
         <label className="form-label" htmlFor="email">
           <input
             type="email"
@@ -73,25 +61,11 @@ export default function Register({}: Props) {
             id="password"
             placeholder="Enter your password"
             required
-            onChange={(e) => setPassword(e.target.value)}
-            value={password!}
-          />
-        </label>
-        <label className="form-label" htmlFor="confirm">
-          <input
-            type="password"
-            name="confirm"
-            id="confirm"
-            placeholder="Confirm your password"
-            required
-            onChange={(e) => setConfirm(e.target.value)}
-            value={confirm!}
           />
         </label>
         <button
           className="flex items-center justify-center w-full py-2 text-white bg-black border-2 border-transparent rounded-lg hover:bg-black/70 disabled:bg-gray-200 "
           type="submit"
-          disabled={password !== confirm || password === "" || confirm === ""}
         >
           {isSubmiting ? (
             <svg
@@ -119,9 +93,9 @@ export default function Register({}: Props) {
         </button>
       </Form>
       <p className="mt-6">
-        Already have an account ?{" "}
-        <Link className="underline underline-offset-2" to="/login">
-          Login
+        No account ?{" "}
+        <Link className="underline underline-offset-2" to="/register">
+          Register
         </Link>
       </p>
     </div>

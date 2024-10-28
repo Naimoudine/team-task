@@ -1,16 +1,41 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import Home, { loader as homeLoader } from "./pages/Home.tsx";
 import TaskLists, { loader as taskListsLoarder } from "./pages/TaskLists.tsx";
 import Task, { loader as taskLoader } from "./pages/Task.tsx";
 import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
-import Register from "./pages/Register.tsx";
+import Register, { action as registerAction } from "./pages/Register.tsx";
+import Login, { action as loginAction } from "./pages/Login.tsx";
+import { getUser } from "./api.ts";
+
+function protectedRoute(routeConfig: any) {
+  return {
+    ...routeConfig,
+    loader: async (args: any) => {
+      const isAllowed = await getUser();
+
+      if (!isAllowed) {
+        return redirect("/login");
+      }
+
+      if (routeConfig.loader) {
+        return routeConfig.loader(args);
+      }
+
+      return null;
+    },
+  };
+}
 
 const router = createBrowserRouter([
-  {
+  protectedRoute({
     element: <App />,
     children: [
       {
@@ -34,10 +59,16 @@ const router = createBrowserRouter([
         loader: taskLoader,
       },
     ],
-  },
+  }),
   {
     path: "/register",
     element: <Register />,
+    action: registerAction,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+    action: loginAction,
   },
 ]);
 

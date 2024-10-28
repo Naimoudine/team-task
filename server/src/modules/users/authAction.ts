@@ -47,6 +47,7 @@ export const login = async (
     res.cookie("token", token, {
       secure: process.env.NODE_ENV !== "development",
       httpOnly: true,
+      sameSite: "none", // Modifiez ici
       expires: dayjs().add(30, "days").toDate(),
     });
 
@@ -56,4 +57,6 @@ export const login = async (
   }
 };
 
-export const isLoggedIn = (res: Response) => res.sendStatus(200);
+export const isLoggedIn = (req: Request, res: Response) => {
+  res.status(200).json({ message: "Logged in" });
+};

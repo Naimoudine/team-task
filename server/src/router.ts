@@ -25,8 +25,8 @@ import {
   createLabel,
   readAll as labelReadAll,
 } from "./modules/label/labelController";
-import { hashPassword } from "./service/auth";
-import { login } from "./modules/users/authAction";
+import { hashPassword, verifyToken } from "./service/auth";
+import { isLoggedIn, login } from "./modules/users/authAction";
 
 const router = express.Router();
 
@@ -58,4 +58,7 @@ router.post("/users", hashPassword, createUser);
 
 //login
 router.post("/login", login);
+
+//verify-auth
+router.post("/verify-auth", verifyToken, isLoggedIn);
 export default router;

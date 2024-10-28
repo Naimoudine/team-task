@@ -1,6 +1,18 @@
 import { Task, TaskList } from "./components/tasks/TaskSection";
 import { Project } from "./pages/Projects";
 
+export const getUser = async () => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/verify-auth`,
+    {
+      method: "post",
+      headers: { "Cotent-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+  return response.ok;
+};
+
 export const createProject = async (project: Project) => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
     method: "post",
