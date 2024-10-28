@@ -1,17 +1,25 @@
 import { create } from "zustand";
 
-interface User {
+export interface User {
   firstname: string;
   lastname: string;
   email: string;
 }
 
 interface UserStore {
-  user: User;
+  user: User | null;
+  userId: string | null;
   setUser: (user: User) => void;
+  clearUser: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
-  user: { firstname: "", lastname: "", email: "" },
-  setUser: (user) => set(() => ({ user: user })),
+  user: null,
+  userId: JSON.parse(localStorage.getItem("userId") || "null"),
+  setUser: (user: User) => {
+    set(() => ({ user }));
+  },
+  clearUser: () => {
+    set(() => ({ user: null, userId: null }));
+  },
 }));

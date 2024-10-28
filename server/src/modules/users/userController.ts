@@ -58,3 +58,22 @@ export const createUser = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const readById = async (req: Request, res: Response) => {
+  try {
+    const userCollection = await getCollection<User>("users");
+    const user = await userCollection.findOne({
+      _id: new ObjectId(req.params.id),
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

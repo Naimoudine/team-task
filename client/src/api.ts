@@ -1,7 +1,8 @@
 import { Task, TaskList } from "./components/tasks/TaskSection";
 import { Project } from "./pages/Projects";
+import { useUserStore } from "./store/user-store";
 
-export const getUser = async () => {
+export const authUser = async () => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/verify-auth`,
     {
@@ -11,6 +12,26 @@ export const getUser = async () => {
     }
   );
   return response.ok;
+};
+
+export const getUser = async (userId: string) => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/users/${userId}`,
+      {
+        method: "GET",
+        credentials: "include", // Pour envoyer les cookies HttpOnly
+      }
+    );
+    if (!response.ok) throw new Error("Failed to fetch user data");
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return null;
+  }
 };
 
 export const createProject = async (project: Project) => {

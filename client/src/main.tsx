@@ -13,13 +13,13 @@ import Task, { loader as taskLoader } from "./pages/Task.tsx";
 import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
 import Register, { action as registerAction } from "./pages/Register.tsx";
 import Login, { action as loginAction } from "./pages/Login.tsx";
-import { getUser } from "./api.ts";
+import { authUser } from "./api.ts";
 
 function protectedRoute(routeConfig: any) {
   return {
     ...routeConfig,
     loader: async (args: any) => {
-      const isAllowed = await getUser();
+      const isAllowed = await authUser();
 
       if (!isAllowed) {
         return redirect("/login");

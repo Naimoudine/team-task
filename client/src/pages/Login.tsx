@@ -19,13 +19,17 @@ export const action = async ({ request }: any) => {
       throw new Error(data?.message ? data.message : "Failed to login");
     }
 
-    const { setUser } = useUserStore.getState();
+    const setUser = useUserStore.getState().setUser;
+
+    console.log(data);
 
     setUser({
       firstname: data.firstname,
       lastname: data.lastname,
       email: data.email,
     });
+
+    localStorage.setItem("userId", JSON.stringify(data._id));
 
     return redirect("/");
   } catch (error) {

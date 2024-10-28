@@ -2,6 +2,7 @@ import express from "express";
 import {
   createUser,
   readAll as userReadAll,
+  readById as userReadById,
 } from "./modules/users/userController";
 import {
   createTaskList,
@@ -54,6 +55,7 @@ router.get("/labels", labelReadAll);
 
 //user
 router.get("/users", userReadAll);
+router.get("/users/:id", userReadById);
 router.post("/users", hashPassword, createUser);
 
 //login
