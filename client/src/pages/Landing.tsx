@@ -1,3 +1,4 @@
+import { Element } from "react-scroll";
 import Header from "../components/landing/header/Header";
 import snapshot from "../assets/images/landing-snapshot.png";
 import Features from "../components/landing/Features";
@@ -7,7 +8,7 @@ type Props = {};
 
 export default function Landing({}: Props) {
   return (
-    <div className="w-screen h-fit">
+    <Element name="top" className="w-screen h-fit">
       <Header />
       <main className="pt-56">
         <h1 className="w-[65%] mx-auto text-6xl font-bold text-center">
@@ -24,9 +25,11 @@ export default function Landing({}: Props) {
             alt="snapshot app"
           />
         </div>
-        <Features />
+        <Element name="features">
+          <Features />
+        </Element>
         <Footer />
       </main>
-    </div>
+    </Element>
   );
 }

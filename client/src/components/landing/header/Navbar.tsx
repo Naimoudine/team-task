@@ -1,18 +1,30 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 
 type Props = {};
 
 export default function Navbar({}: Props) {
   return (
-    <nav className="flex items-center gap-8 p-4 border border-2 border-transparent rounded-lg border-zinc-100 bg-white/30 backdrop-blur-xl w-fit justify-evenly">
-      <Link to="/">
+    <nav className="flex items-center gap-8 p-4 border border-2 border-transparent rounded-lg border-zinc-100 bg-white/30 backdrop-blur-lg w-fit justify-evenly">
+      <ScrollLink
+        className="cursor-pointer"
+        to="top"
+        smooth={true}
+        duration={500}
+      >
         <p id="logo">Team-task</p>
-      </Link>
+      </ScrollLink>
       <ul className="flex items-center gap-8 text-sm font-semibold w-fit justify-evenly">
         <li>
-          <NavLink className="text-black/70 hover:text-black" to="/">
+          <ScrollLink
+            className="cursor-pointer text-black/70 hover:text-black"
+            offset={-125}
+            smooth={true}
+            duration={500}
+            to="features"
+          >
             Features
-          </NavLink>
+          </ScrollLink>
         </li>
         <li>
           <NavLink className="text-black/70 hover:text-black" to="/">

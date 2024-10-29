@@ -74,6 +74,7 @@ export default function Features({}: Props) {
               : workspace
           }
           alt=""
+          loading="lazy"
         />
       </div>
     </section>

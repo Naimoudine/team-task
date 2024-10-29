@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
 
 type Props = {};
 
@@ -9,28 +10,46 @@ export default function Footer({}: Props) {
       <ul className="flex flex-col gap-4">
         <li className="font-medium">Product</li>
         <li>
-          <Link to="">Features</Link>
+          <ScrollLink
+            className="cursor-pointer text-black/70 hover:text-black"
+            to="features"
+            smooth={true}
+            duration={500}
+            offset={-125}
+          >
+            Features
+          </ScrollLink>
         </li>
         <li>
-          <Link to="">Princing</Link>
+          <Link className="text-black/70 hover:text-black" to="">
+            Princing
+          </Link>
         </li>
       </ul>
       <ul className="flex flex-col gap-4">
         <li className="font-medium">Company</li>
         <li>
-          <Link to="">About</Link>
+          <Link className="text-black/70 hover:text-black" to="">
+            About
+          </Link>
         </li>
         <li>
-          <Link to="">Contact</Link>
+          <Link className="text-black/70 hover:text-black" to="">
+            Contact
+          </Link>
         </li>
       </ul>
       <ul className="flex flex-col gap-4">
         <li className="font-medium">Legal</li>
         <li>
-          <Link to="">Terms</Link>
+          <Link className="text-black/70 hover:text-black" to="">
+            Terms
+          </Link>
         </li>
         <li>
-          <Link to="">Privacy</Link>
+          <Link className="text-black/70 hover:text-black" to="">
+            Privacy
+          </Link>
         </li>
       </ul>
     </footer>
