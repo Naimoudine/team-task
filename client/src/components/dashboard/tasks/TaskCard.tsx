@@ -29,7 +29,7 @@ export default function TaskCard({ task, list, projectId }: Props) {
       //   )
       // }
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 w-fit">
         <p className="font-semibold text-zinc-500">
           {displayPriority(task.priority)}
         </p>

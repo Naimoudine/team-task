@@ -4,7 +4,7 @@ type Props = {};
 
 export default function Navbar({}: Props) {
   return (
-    <nav className="flex items-center gap-8 p-4 border-2 border-transparent rounded-lg shadow-lg bg-white/30 backdrop-blur-xl w-fit justify-evenly">
+    <nav className="flex items-center gap-8 p-4 border border-2 border-transparent rounded-lg border-zinc-100 bg-white/30 backdrop-blur-xl w-fit justify-evenly">
       <Link to="/">
         <p id="logo">Team-task</p>
       </Link>
@@ -22,10 +22,10 @@ export default function Navbar({}: Props) {
           <NavLink to="/">Contact</NavLink>
         </li>
         <li>
-          <NavLink to="/">Log in</NavLink>
+          <NavLink to="/login">Log in</NavLink>
         </li>
         <li>
-          <NavLink to="/">Register</NavLink>
+          <NavLink to="/register">Register</NavLink>
         </li>
       </ul>
     </nav>

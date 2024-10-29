@@ -59,7 +59,7 @@
   }
 
   .task-card {
-    @apply px-6 py-2 h-[8rem] w-full flex flex-col gap-2 bg-white text-zinc-800 shadow-lg rounded-md cursor-pointer;
+    @apply px-6 py-4 h-fit min-h-[6rem] w-full flex flex-col gap-2 bg-white text-zinc-800 shadow-lg rounded-md cursor-pointer;
   }
 
   .task-opt-btn {
@@ -75,6 +75,6 @@
   }
 
   .form-label > input {
-    @apply border-2 border-zinc-400 rounded-lg px-4 py-2 w-full;
+    @apply w-full px-4 py-2 border-2 rounded-lg border-zinc-400;
   }
 }
