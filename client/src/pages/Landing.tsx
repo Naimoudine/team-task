@@ -1,6 +1,7 @@
-import Header from "../components/header/Header";
+import Header from "../components/landing/header/Header";
 import snapshot from "../assets/images/landing-snapshot.png";
 import Features from "../components/landing/Features";
+import Footer from "../components/landing/Footer";
 
 type Props = {};
 
@@ -9,7 +10,7 @@ export default function Landing({}: Props) {
     <div className="w-screen h-fit">
       <Header />
       <main className="pt-56">
-        <h1 className="w-[65%] mx-auto text-6xl font-bold text-center text-gray-500">
+        <h1 className="w-[65%] mx-auto text-6xl font-bold text-center">
           Streamline projects, empower your team to succeed!
         </h1>
         <h2 className="w-full mx-auto mt-8 text-xl text-center">
@@ -24,6 +25,7 @@ export default function Landing({}: Props) {
           />
         </div>
         <Features />
+        <Footer />
       </main>
     </div>
   );

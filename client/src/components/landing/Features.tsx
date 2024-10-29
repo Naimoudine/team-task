@@ -12,47 +12,51 @@ export default function Features({}: Props) {
 
   return (
     <section className="relative flex items-center gap-16 mt-40">
-      <div className="w-[40%] ml-[200px]">
+      <div className="w-[40%] ml-[12.5rem]">
         <h3 className="text-3xl font-medium">
           Manage effectively your time and all your projects
         </h3>
         <p className="mt-8">
-          Task-team allows you to manage large scale projects, keeping track of
-          deadlines, priority, asigned tasks.
+          Task-Team helps you manage large-scale projects, track deadlines, set
+          priorities, and assign tasks.
         </p>
         <div className="flex flex-col mt-16">
           <article
             className={
               displayedFeature === "workspace"
-                ? "px-6 py-8 border-l hover:bg-zinc-100 border-black"
+                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black"
                 : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200"
             }
             onClick={() => setDisplayedFeature("workspace")}
           >
-            <h4>Organized workspace</h4>
-            <p>We provide a kanban and list view to manage projects & tasks.</p>
+            <h4 className="font-semibold">Organized workspace</h4>
+            <p className="mt-2 text-sm">
+              We provide a kanban and list view to manage projects & tasks.
+            </p>
           </article>
           <article
             className={
               displayedFeature === "custom"
-                ? "px-6 py-8 border-l hover:bg-zinc-100 border-black"
+                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black"
                 : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200"
             }
             onClick={() => setDisplayedFeature("custom")}
           >
-            <h4>Custom task</h4>
-            <p>When task are created...</p>
+            <h4 className="font-semibold">Custom task</h4>
+            <p className="mt-2 text-sm">When task are created...</p>
           </article>
           <article
             className={
               displayedFeature === "collaborate"
-                ? "px-6 py-8 border-l hover:bg-zinc-100 border-black"
+                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black"
                 : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200"
             }
             onClick={() => setDisplayedFeature("collaborate")}
           >
-            <h4>Collaborate</h4>
-            <p>Working together has never been that easy...</p>
+            <h4 className="font-semibold">Collaborate</h4>
+            <p className="mt-2 text-sm">
+              Working together has never been that easy...
+            </p>
           </article>
         </div>
       </div>
