@@ -1,6 +1,6 @@
 import { useState } from "react";
-import workspace from "../../assets/images/kaban-snapshot.png";
-import custom from "../../assets/images/task-options.png";
+import workspace from "../../assets/images/kaban-snapshot-bg.png";
+import custom from "../../assets/images/custom-snapshot-bg.png";
 
 type Props = {};
 
@@ -64,9 +64,7 @@ export default function Features({}: Props) {
       <div className="w-[60%] flex justify-center">
         <img
           className={
-            custom
-              ? "h-[25rem] w-auto border-2 border-zinc-100 rounded-lg"
-              : "w-full aspect-auto h-auto border-2 border-zinc-100 rounded-lg"
+            displayedFeature === "custom" ? "h-[25rem] w-auto" : "w-full h-full"
           }
           src={
             displayedFeature === "workspace"
