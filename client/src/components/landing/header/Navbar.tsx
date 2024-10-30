@@ -16,17 +16,6 @@ export default function Navbar({}: Props) {
       </ScrollLink>
       <ul className="flex items-center gap-8 text-sm font-semibold w-fit justify-evenly">
         <li>
-          <ScrollLink
-            className="cursor-pointer text-black/70 hover:text-black"
-            offset={-125}
-            smooth={true}
-            duration={500}
-            to="features"
-          >
-            Features
-          </ScrollLink>
-        </li>
-        <li>
           <NavLink className="text-black/70 hover:text-black" to="/">
             Pricing
           </NavLink>

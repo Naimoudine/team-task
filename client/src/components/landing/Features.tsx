@@ -24,8 +24,8 @@ export default function Features({}: Props) {
           <article
             className={
               displayedFeature === "workspace"
-                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black"
-                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200"
+                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
+                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
             }
             onClick={() => setDisplayedFeature("workspace")}
           >
@@ -37,8 +37,8 @@ export default function Features({}: Props) {
           <article
             className={
               displayedFeature === "custom"
-                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black"
-                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200"
+                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
+                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
             }
             onClick={() => setDisplayedFeature("custom")}
           >
@@ -48,8 +48,8 @@ export default function Features({}: Props) {
           <article
             className={
               displayedFeature === "collaborate"
-                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black"
-                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200"
+                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
+                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
             }
             onClick={() => setDisplayedFeature("collaborate")}
           >

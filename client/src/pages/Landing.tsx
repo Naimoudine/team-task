@@ -25,9 +25,7 @@ export default function Landing({}: Props) {
             alt="snapshot app"
           />
         </div>
-        <Element name="features">
-          <Features />
-        </Element>
+        <Features />
         <Footer />
       </main>
     </Element>
