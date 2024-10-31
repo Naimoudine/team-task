@@ -20,7 +20,8 @@ export interface Project {
 
 export const loader = async () => {
   try {
-    const projects = await getProjects();
+    const userId = JSON.parse(localStorage.getItem("userId") as string);
+    const projects = await getProjects(userId);
     return projects;
   } catch (error) {
     throw error;
@@ -50,28 +51,34 @@ export default function Projects({}: Props) {
           >
             <PlusIcon className="size-4 text-zinc-600" />
             <span className="text-sm font-semibold text-zinc-600">
-              Create List
+              Create project
             </span>
           </button>
         </div>
       </header>
       <main>
-        <ul className="flex flex-col font-semibold text-zinc-700">
-          {projects.map((project) => (
-            <li
-              className="flex font-semibold border-b hover:bg-zinc-200 border-zinc-200"
-              key={project._id}
-            >
-              <Link
-                className="flex items-center w-full h-full gap-4 px-8 py-2"
-                to={`/projects/${project._id}/taskLists`}
+        {projects.length > 0 ? (
+          <ul className="flex flex-col font-semibold text-zinc-700">
+            {projects.map((project) => (
+              <li
+                className="flex font-semibold border-b hover:bg-zinc-200 border-zinc-200"
+                key={project._id}
               >
-                <FolderIcon className="size-4" />
-                {project.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+                <Link
+                  className="flex items-center w-full h-full gap-4 px-8 py-2"
+                  to={`/projects/${project._id}/taskLists`}
+                >
+                  <FolderIcon className="size-4" />
+                  {project.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <h2 className="w-full mt-8 font-semibold text-center">
+            You don't have projects. Feel free to create one.
+          </h2>
+        )}
       </main>
     </div>
   );

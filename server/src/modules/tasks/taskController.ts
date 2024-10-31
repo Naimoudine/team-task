@@ -93,8 +93,13 @@ export const createTask = async (req: Request, res: Response) => {
 
 export const readAll = async (req: Request, res: Response) => {
   try {
+    const userId = new ObjectId(req.params.id);
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
     const taskCollection = await getCollection<Task>("tasks");
-    const tasks = await taskCollection.find({}).toArray();
+    const tasks = await taskCollection.find().toArray();
     res.json(tasks);
   } catch (error) {
     console.error("Error fetching tasklist:", error);

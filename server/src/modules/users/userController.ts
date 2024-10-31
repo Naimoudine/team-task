@@ -9,6 +9,7 @@ export interface User {
   lastname: string;
   email: string;
   password?: string;
+  projects: ObjectId[];
 }
 
 export const readAll = async (req: Request, res: Response) => {
@@ -40,6 +41,7 @@ export const createUser = async (req: Request, res: Response) => {
       lastname: req.body.lastname,
       email: req.body.email,
       password: req.body.hashedPassword,
+      projects: [],
     };
 
     const result = await userCollection.insertOne(user);

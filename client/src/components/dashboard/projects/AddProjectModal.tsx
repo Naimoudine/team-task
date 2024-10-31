@@ -24,7 +24,8 @@ export default function AddProjectModal({
     };
 
     try {
-      await createProject(newProject);
+      const userId = JSON.parse(localStorage.getItem("userId") as string);
+      await createProject(userId, newProject);
       revalidator.revalidate();
     } catch (error) {
       throw new Error();

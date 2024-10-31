@@ -33,12 +33,15 @@ export const getUser = async (userId: string) => {
   }
 };
 
-export const createProject = async (project: Project) => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(project),
-  });
+export const createProject = async (id: string, project: Project) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/users/${id}/projects`,
+    {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(project),
+    }
+  );
   if (response.status !== 201) {
     throw new Error("Failed to create project");
   }
@@ -46,10 +49,13 @@ export const createProject = async (project: Project) => {
   return data;
 };
 
-export const getProjects = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
-    credentials: "include",
-  });
+export const getProjects = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/users/${id}/projects`,
+    {
+      credentials: "include",
+    }
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch projects");
   }

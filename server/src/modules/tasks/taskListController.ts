@@ -108,10 +108,10 @@ export const readTaskListsByProjectId = async (req: Request, res: Response) => {
 
     const projectExists = await projectCollection.findOne({ _id: projectId });
 
-    if (!projectExists) {
-      res.status(404).json({ message: "Project doesn't exists" });
-      return;
-    }
+    // if (!projectExists) {
+    //   res.status(404).json({ message: "Project doesn't exists" });
+    //   return;
+    // }
 
     const taskListCollection = await getCollection<TaskList>("taskLists");
 

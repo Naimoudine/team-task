@@ -12,20 +12,48 @@ export interface Project {
 
 export const createProject = async (req: Request, res: Response) => {
   try {
-    const projectCollection = await getCollection<Project>("projects");
     const userCollection = await getCollection<User>("users");
     const userId = new ObjectId(req.params.id);
 
-    const user = userCollection.findOne({ _id: userId });
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
 
-    const project = await projectCollection.insertOne({
-      title: req.body.title,
-      taskLists: req.body.taskLists,
-      userId,
-    });
+    const userExists = await userCollection.findOne({ _id: userId });
 
-    if (project.acknowledged) {
-      res.status(201).json(project.insertedId);
+    if (userExists) {
+      const projectCollection = await getCollection<Project>("projects");
+
+      const project = {
+        title: req.body.title,
+        taskLists: req.body.taskLists,
+        userId,
+      };
+
+      const result = await projectCollection.insertOne(project);
+
+      if (result.acknowledged) {
+        const newProjectId = result.insertedId;
+        const updateUserCollection = await userCollection.updateOne(
+          { _id: userId },
+          { $push: { projects: newProjectId } }
+        );
+
+        if (updateUserCollection.modifiedCount === 1) {
+          res.status(201).json({
+            projectId: newProjectId,
+            message: "Project created and added to user's project list!",
+          });
+        } else {
+          res.status(500).json({
+            message:
+              "project created but failed to update user's projects list",
+          });
+        }
+      }
+    } else {
+      res.status(404).json({ message: "User doesn't exists" });
     }
   } catch (error) {
     console.error("Error fetching tasklist:", error);
@@ -66,6 +94,48 @@ export const readById = async (req: Request, res: Response) => {
       return;
     }
     res.json(project);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const readProjectsByUserId = async (req: Request, res: Response) => {
+  try {
+    const userId = new ObjectId(req.params.id);
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
+    const userCollection = await getCollection<Project>("users");
+
+    const userExists = await userCollection.findOne({ _id: userId });
+
+    if (!userExists) {
+      res.status(404).json({ message: "User doesn't exists" });
+      return;
+    }
+
+    const projectCollection = await getCollection<Project>("projects");
+
+    const projectsWithTaskLists = await projectCollection
+      .aggregate([
+        {
+          $match: { userId },
+        },
+        {
+          $lookup: {
+            from: "taskLists",
+            localField: "taskLists",
+            foreignField: "_id",
+            as: "taskListsDetails",
+          },
+        },
+      ])
+      .toArray();
+
+    res.status(200).json(projectsWithTaskLists);
   } catch (error) {
     console.error("Error fetching tasklist:", error);
     res.status(500).json({ message: "Internal Server Error" });

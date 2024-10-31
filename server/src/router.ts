@@ -21,6 +21,7 @@ import {
   createProject,
   readAll as projectReadAll,
   readById as projectReadById,
+  readProjectsByUserId,
 } from "./modules/projects/projectController";
 import {
   createLabel,
@@ -32,8 +33,8 @@ import { isLoggedIn, login, logout } from "./modules/users/authAction";
 const router = express.Router();
 
 //projects
-router.post("/projects", createProject);
-router.get("/projects", projectReadAll);
+router.post("/users/:id/projects", createProject);
+router.get("/users/:id/projects", readProjectsByUserId);
 router.get("/projects/:id", projectReadById);
 
 // taskLists
@@ -42,7 +43,7 @@ router.get("/projects/:id/taskLists", readTaskListsByProjectId);
 router.post("/projects/:id/taskLists", createTaskList);
 
 //task
-router.get("/tasks", tasksReadAll);
+router.get("/users/:id/tasks", tasksReadAll);
 router.post("/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
 router.put("/tasks/:id/priority", updateTaskPriority);

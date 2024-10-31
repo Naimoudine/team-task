@@ -79,7 +79,7 @@ export default function TaskBoardSView({
         ))
       ) : (
         <h2 className="w-full mt-8 font-semibold text-center">
-          You don't have a list. Feel free to create one.
+          You don't have lists. Feel free to create one.
         </h2>
       )}
     </section>
