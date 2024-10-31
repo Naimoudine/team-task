@@ -41,11 +41,14 @@ export const createUser = async (req: Request, res: Response) => {
       email: req.body.email,
       password: req.body.hashedPassword,
     };
+
     const result = await userCollection.insertOne(user);
+
     if (!result.insertedId) {
       res.status(409).json({ message: "Failed to create user" });
       return;
     }
+
     if (result.acknowledged) {
       res.status(201).json(result.insertedId);
     }
@@ -62,8 +65,15 @@ export const createUser = async (req: Request, res: Response) => {
 export const readById = async (req: Request, res: Response) => {
   try {
     const userCollection = await getCollection<User>("users");
+    const userId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
     const user = await userCollection.findOne({
-      _id: new ObjectId(req.params.id),
+      _id: userId,
     });
 
     if (!user) {

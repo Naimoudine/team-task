@@ -1,20 +1,29 @@
 import { ObjectId } from "mongodb";
 import { getCollection } from "../../mongoClient";
 import { Request, Response } from "express";
+import { User } from "../users/userController";
 
 export interface Project {
   _id?: ObjectId;
   title: string;
   taskLists: ObjectId[];
+  userId: ObjectId;
 }
 
 export const createProject = async (req: Request, res: Response) => {
   try {
     const projectCollection = await getCollection<Project>("projects");
+    const userCollection = await getCollection<User>("users");
+    const userId = new ObjectId(req.params.id);
+
+    const user = userCollection.findOne({ _id: userId });
+
     const project = await projectCollection.insertOne({
       title: req.body.title,
       taskLists: req.body.taskLists,
+      userId,
     });
+
     if (project.acknowledged) {
       res.status(201).json(project.insertedId);
     }

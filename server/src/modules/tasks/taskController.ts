@@ -20,6 +20,11 @@ export const createTask = async (req: Request, res: Response) => {
     const taskListCollection = await getCollection<TaskList>("taskLists");
     const taskListId = new ObjectId(req.params.id as string);
 
+    if (!ObjectId.isValid(taskListId)) {
+      res.status(400).json({ error: "Invalid taskList ID" });
+      return;
+    }
+
     const taskListExists = await taskListCollection.findOne({
       _id: taskListId,
     });
@@ -100,6 +105,12 @@ export const readAll = async (req: Request, res: Response) => {
 export const readTaskByTaskListId = async (req: Request, res: Response) => {
   const taskCollection = await getCollection<Task>("tasks");
   const taskListId = new ObjectId(req.params.id as string);
+
+  if (!ObjectId.isValid(taskListId)) {
+    res.status(400).json({ error: "Invalid taskList ID" });
+    return;
+  }
+
   const tasks = await taskCollection.find({ taskListId: taskListId }).toArray();
   if (tasks.length === 0) {
     res.status(404).json({ message: "No tasks in this list" });
@@ -113,6 +124,11 @@ export const readTaskById = async (req: Request, res: Response) => {
     const taskCollection = await getCollection<Task>("tasks");
 
     const taskId = new ObjectId(req.params.id as string);
+
+    if (!ObjectId.isValid(taskId)) {
+      res.status(400).json({ error: "Invalid task ID" });
+      return;
+    }
 
     const currentTask = await taskCollection.findOne({ _id: taskId });
 

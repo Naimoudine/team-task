@@ -13,7 +13,12 @@ export interface TaskList {
 export const createTaskList = async (req: Request, res: Response) => {
   try {
     const projectCollection = await getCollection<Project>("projects");
-    const projectId = new ObjectId(req.params.id as string);
+    const projectId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(projectId)) {
+      res.status(400).json({ error: "Invalid project ID" });
+      return;
+    }
 
     const projectExists = await projectCollection.findOne({
       _id: projectId,
@@ -68,9 +73,17 @@ export const readAll = async (req: Request, res: Response) => {
 export const readById = async (req: Request, res: Response) => {
   try {
     const taskListCollection = await getCollection<TaskList>("taskLists");
+    const taskListId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(taskListId)) {
+      res.status(400).json({ error: "Invalid taskList ID" });
+      return;
+    }
+
     const taskList = await taskListCollection.findOne({
-      _id: new ObjectId(req.params.id),
+      _id: taskListId,
     });
+
     if (!taskList) {
       res.status(404).json({ message: "Task List doesn't exist" });
       return;
@@ -85,6 +98,11 @@ export const readById = async (req: Request, res: Response) => {
 export const readTaskListsByProjectId = async (req: Request, res: Response) => {
   try {
     const projectId = new ObjectId(req.params.id as string);
+
+    if (!ObjectId.isValid(projectId)) {
+      res.status(400).json({ error: "Invalid project ID" });
+      return;
+    }
 
     const projectCollection = await getCollection<Project>("projects");
 
