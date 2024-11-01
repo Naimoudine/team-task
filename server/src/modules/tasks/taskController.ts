@@ -13,15 +13,22 @@ interface Task {
   assigned?: ObjectId;
   taskListId: ObjectId;
   labelList: string[];
+  userId: ObjectId;
 }
 
 export const createTask = async (req: Request, res: Response) => {
   try {
     const taskListCollection = await getCollection<TaskList>("taskLists");
-    const taskListId = new ObjectId(req.params.id as string);
+    const taskListId = new ObjectId(req.params.id);
+    const userId = new ObjectId(req.params.userId);
 
     if (!ObjectId.isValid(taskListId)) {
       res.status(400).json({ error: "Invalid taskList ID" });
+      return;
+    }
+
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
       return;
     }
 
@@ -37,6 +44,7 @@ export const createTask = async (req: Request, res: Response) => {
         priority: req.body.priority,
         taskListId,
         labelList: [],
+        userId,
       };
 
       if (req.body.description) {
@@ -99,7 +107,7 @@ export const readAll = async (req: Request, res: Response) => {
       return;
     }
     const taskCollection = await getCollection<Task>("tasks");
-    const tasks = await taskCollection.find().toArray();
+    const tasks = await taskCollection.find({ userId: userId }).toArray();
     res.json(tasks);
   } catch (error) {
     console.error("Error fetching tasklist:", error);

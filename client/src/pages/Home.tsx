@@ -14,8 +14,8 @@ export const loader = async () => {
   try {
     const userId = JSON.parse(localStorage.getItem("userId") as string);
     const projects = await getProjects(userId);
-    // const tasks = await getTasks();
-    return { projects };
+    const tasks = await getTasks(userId);
+    return { projects, tasks };
   } catch (error) {
     console.error("Error fetching data:", error); // Log the error
     throw new Error("Failed to load projects and tasks"); // Throw a custom error message
@@ -23,7 +23,7 @@ export const loader = async () => {
 };
 
 export default function Home({}: Props) {
-  const { projects } = useLoaderData() as LoaderType;
+  const { projects, tasks } = useLoaderData() as LoaderType;
   const navigate = useNavigate();
 
   return (
@@ -38,7 +38,7 @@ export default function Home({}: Props) {
         </article>
         <article className="px-4 border-r-2 border-dashed border-zinc-200">
           <h2 className="font-semibold text-zinc-600">Total Tasks</h2>
-          {/* <p className="text-xl font-bold">{tasks?.length}</p> */}
+          <p className="text-xl font-bold">{tasks?.length}</p>
         </article>
         <article>
           <h2 className="font-semibold text-zinc-600">Team members</h2>
@@ -46,7 +46,13 @@ export default function Home({}: Props) {
         </article>
       </div>
       <div className="grid w-full grid-cols-2 grid-rows-2 gap-8 mt-8">
-        <div className="p-4 border-2 rounded-lg border-zinc-200 h-[250px]">
+        <div
+          className={
+            projects.length > 0
+              ? "p-4 border-2 rounded-lg border-zinc-200 h-[250px]"
+              : "p-4 flex items-center justify-center border-2 rounded-lg border-zinc-200 h-[250px]"
+          }
+        >
           <ul>
             {projects.length > 0 ? (
               projects.map((project, i) => (
@@ -76,10 +82,10 @@ export default function Home({}: Props) {
           </ul>
         </div>
         <div className="flex items-center justify-center p-4 border-2 rounded-lg border-zinc-200">
-          <h3 className="font-semibold">You have no task assigned to you</h3>
+          <h3 className="font-semibold">Coming soon tasks asigned to you</h3>
         </div>
         <div className="flex items-center justify-center p-4 border-2 rounded-lg border-zinc-200">
-          <h3 className="font-semibold">You have no team members</h3>
+          <h3 className="font-semibold">Coming soon your team members</h3>
         </div>
       </div>
     </section>

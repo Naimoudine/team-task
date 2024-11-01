@@ -44,7 +44,7 @@ router.post("/projects/:id/taskLists", createTaskList);
 
 //task
 router.get("/users/:id/tasks", tasksReadAll);
-router.post("/taskLists/:id/tasks", createTask);
+router.post("/users/:userId/taskLists/:id/tasks", createTask);
 router.get("/tasks/:id", readTaskById);
 router.put("/tasks/:id/priority", updateTaskPriority);
 router.put("/tasks/:id/label", updateTaskLabelList);

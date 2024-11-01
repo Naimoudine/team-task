@@ -23,7 +23,7 @@ export default function AddTaskModal({
     const newTaskTitle = formData.get("title");
     const newDescription = formData.get("description");
     const newPriority = formData.get("priority");
-
+    const userId = JSON.parse(localStorage.getItem("userId") as string);
     try {
       if (currentListId) {
         const newTask: Task = {
@@ -40,7 +40,7 @@ export default function AddTaskModal({
           labelList: [],
         };
 
-        await createTask(currentListId, newTask);
+        await createTask(userId, currentListId, newTask);
         revalidator.revalidate();
       }
     } catch (error) {
