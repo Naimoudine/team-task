@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Form, useNavigation, Link, redirect } from "react-router-dom";
+import {
+  Form,
+  useNavigation,
+  Link,
+  redirect,
+  useRouteError,
+} from "react-router-dom";
 
 type Props = {};
 
@@ -16,8 +22,10 @@ export const action = async ({ request }: any) => {
       credentials: "include",
       body: JSON.stringify({ firstname, lastname, email, password }),
     });
+    const data = await response.json();
+
     if (response.status !== 201) {
-      throw new Error("Failed to register");
+      throw new Error(data?.message ? data.message : "Failed to register");
     }
     return redirect("/login");
   } catch (error) {
@@ -31,11 +39,17 @@ export default function Register({}: Props) {
 
   const navigation = useNavigation();
   const isSubmiting = navigation.state === "loading";
+  const error = useRouteError() as Error;
+
+  console.log(error);
 
   return (
     <div className="flex flex-col items-center w-full h-full px-8 mt-24 h-fit">
       <h1 className="text-3xl font-bold logo xl:text-4xl">Team-task</h1>
       <h2 className="mt-4 text-xl font-semibold">Register</h2>
+      <p className="mt-4 text-sm font-semibold text-center text-red-600">
+        {error?.message}
+      </p>
       <Form
         className="flex flex-col gap-6 items-center justify-center mt-8 w-full md:w-[50%] xl:w-[30%]"
         method="post"
@@ -114,7 +128,7 @@ export default function Register({}: Props) {
               </path>
             </svg>
           ) : (
-            "Submit"
+            "Register"
           )}
         </button>
       </Form>

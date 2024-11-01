@@ -1,7 +1,17 @@
-import { redirect, Form, useNavigation, Link } from "react-router-dom";
+import {
+  redirect,
+  Form,
+  useNavigation,
+  Link,
+  useRouteError,
+} from "react-router-dom";
 import { useUserStore } from "../store/user-store";
 
 type Props = {};
+
+export interface Error {
+  message: string;
+}
 
 export const action = async ({ request }: any) => {
   const formData = await request.formData();
@@ -21,8 +31,6 @@ export const action = async ({ request }: any) => {
 
     const setUser = useUserStore.getState().setUser;
 
-    console.log(data);
-
     setUser({
       firstname: data.firstname,
       lastname: data.lastname,
@@ -40,11 +48,15 @@ export const action = async ({ request }: any) => {
 export default function Login({}: Props) {
   const navigation = useNavigation();
   const isSubmiting = navigation.state === "submitting";
+  const error = useRouteError() as Error;
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full px-8">
       <h1 className="text-3xl font-bold logo xl:text-4xl">Team-task</h1>
       <h2 className="mt-4 text-xl font-semibold">Login</h2>
+      <p className="mt-4 text-sm font-semibold text-center text-red-600">
+        {error?.message}
+      </p>
       <Form
         className="flex flex-col gap-6 items-center justify-center mt-8 w-full md:w-[50%] xl:w-[30%]"
         method="post"
@@ -92,7 +104,7 @@ export default function Login({}: Props) {
               </path>
             </svg>
           ) : (
-            "Submit"
+            "Log in"
           )}
         </button>
       </Form>
