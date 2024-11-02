@@ -27,8 +27,8 @@ export default function Navbar({}: Props) {
           <NavLink
             className={({ isActive }) =>
               isActive
-                ? "text-black/70 hover:text-black bg-black"
-                : "text-black/70 hover:text-black"
+                ? "hover:text-black text-black"
+                : "text-black/60 hover:text-black"
             }
             to="/pricing"
           >
@@ -39,8 +39,8 @@ export default function Navbar({}: Props) {
           <NavLink
             className={({ isActive }) =>
               isActive
-                ? "text-black/70 hover:text-black bg-black"
-                : "text-black/70 hover:text-black"
+                ? "hover:text-black text-black"
+                : "text-black/60 hover:text-black"
             }
             to="/"
           >
@@ -51,8 +51,8 @@ export default function Navbar({}: Props) {
           <NavLink
             className={({ isActive }) =>
               isActive
-                ? "text-black/70 hover:text-black bg-black"
-                : "text-black/70 hover:text-black"
+                ? "hover:text-black text-black"
+                : "text-black/60 hover:text-black"
             }
             to="/"
           >
