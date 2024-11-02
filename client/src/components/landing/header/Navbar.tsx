@@ -24,17 +24,38 @@ export default function Navbar({}: Props) {
       )}
       <ul className="flex items-center gap-8 text-sm font-semibold w-fit justify-evenly">
         <li>
-          <NavLink className="text-black/70 hover:text-black" to="/pricing">
+          <NavLink
+            className={({ isActive }) =>
+              isActive
+                ? "text-black/70 hover:text-black bg-black"
+                : "text-black/70 hover:text-black"
+            }
+            to="/pricing"
+          >
             Pricing
           </NavLink>
         </li>
         <li>
-          <NavLink className="text-black/70 hover:text-black" to="/">
+          <NavLink
+            className={({ isActive }) =>
+              isActive
+                ? "text-black/70 hover:text-black bg-black"
+                : "text-black/70 hover:text-black"
+            }
+            to="/"
+          >
             About
           </NavLink>
         </li>
         <li>
-          <NavLink className="text-black/70 hover:text-black" to="/">
+          <NavLink
+            className={({ isActive }) =>
+              isActive
+                ? "text-black/70 hover:text-black bg-black"
+                : "text-black/70 hover:text-black"
+            }
+            to="/"
+          >
             Contact
           </NavLink>
         </li>
