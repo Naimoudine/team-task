@@ -15,6 +15,7 @@ import Register, { action as registerAction } from "./pages/Register.tsx";
 import Login, { action as loginAction } from "./pages/Login.tsx";
 import { authUser } from "./api.ts";
 import Landing from "./pages/Landing.tsx";
+import Pricing from "./pages/Pricing.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Landing />,
+  },
+  {
+    path: "/pricing",
+    element: <Pricing />,
   },
 ]);
 

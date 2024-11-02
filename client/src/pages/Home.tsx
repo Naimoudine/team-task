@@ -33,15 +33,21 @@ export default function Home({}: Props) {
       </header>
       <div className="flex justify-between gap-8 p-4 mt-8 border-2 rounded-lg w-fit border-zinc-200">
         <article className="px-4 border-r-2 border-dashed border-zinc-200">
-          <h2 className="font-semibold text-zinc-600">Total Projects</h2>
+          <h2 className="font-semibold text-center text-zinc-600">
+            Total Projects
+          </h2>
           <p className="text-xl font-bold">{projects?.length}</p>
         </article>
         <article className="px-4 border-r-2 border-dashed border-zinc-200">
-          <h2 className="font-semibold text-zinc-600">Total Tasks</h2>
+          <h2 className="font-semibold text-center text-zinc-600">
+            Total Tasks
+          </h2>
           <p className="text-xl font-bold">{tasks?.length}</p>
         </article>
         <article>
-          <h2 className="font-semibold text-zinc-600">Team members</h2>
+          <h2 className="font-semibold text-center text-zinc-600">
+            Team members
+          </h2>
           <p className="text-xl font-bold">0</p>
         </article>
       </div>
