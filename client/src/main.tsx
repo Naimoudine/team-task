@@ -9,7 +9,10 @@ import App from "./App.tsx";
 import "./index.css";
 import Home, { loader as homeLoader } from "./pages/Home.tsx";
 import TaskLists, { loader as taskListsLoarder } from "./pages/TaskLists.tsx";
-import Task, { loader as taskLoader } from "./pages/Task.tsx";
+import Task, {
+  loader as taskLoader,
+  action as taskAction,
+} from "./pages/Task.tsx";
 import Projects, { loader as projectsLoader } from "./pages/Projects.tsx";
 import Register, { action as registerAction } from "./pages/Register.tsx";
 import Login, { action as loginAction } from "./pages/Login.tsx";
@@ -60,6 +63,7 @@ const router = createBrowserRouter([
         path: "projects/:projectId/taskLists/:taskListId/tasks/:taskId",
         element: <Task />,
         loader: taskLoader,
+        action: taskAction,
       },
     ],
   }),

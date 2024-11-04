@@ -1,7 +1,7 @@
-import { NavLink, useRevalidator } from "react-router-dom";
+import { NavLink, useRevalidator, Form, redirect } from "react-router-dom";
 import { TagIcon, SlashIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
-import { getTaskById, updateTaskPriority } from "../api";
+import { getTaskById, updateTaskDescription } from "../api";
 import { useLoaderData } from "react-router-dom";
 import { displayPriority } from "../components/dashboard/tasks/TaskSection";
 import type { Task, TaskList } from "../components/dashboard/tasks/TaskSection";
@@ -33,12 +33,26 @@ export const loader = async ({ params }: any) => {
   }
 };
 
+export const action = async ({ request, params }: any) => {
+  const formData = await request.formData();
+  let description = formData.get("description");
+
+  try {
+    await updateTaskDescription(params.taskId, description);
+    return redirect(`${window.location.href}`);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default function Task({}: Props) {
   const [updateTaskTaskList, setUpdateTaskTaskList] = useState<boolean>(false);
   const [updatePriority, setUpdatePriority] = useState<boolean>(false);
   const [addLabel, setAddLabel] = useState<boolean>(false);
   const { project, taskList, task, taskLists, labels } =
     useLoaderData() as LoaderType;
+  const [description, setDescription] = useState<string>(task.description!);
+  const [modifyDesc, setModifyDesc] = useState<boolean>(false);
   const revalidator = useRevalidator();
 
   return (
@@ -76,14 +90,29 @@ export default function Task({}: Props) {
         <div className="w-[80%]">
           <div className="max-w-[800px] mx-auto p-8">
             <h1 className="text-2xl font-semibold">{task?.title}</h1>
-            <form className="mt-8">
+            <Form method="post" className="mt-8">
               <textarea
                 className="w-full text-lg resize-none"
                 name="description"
                 id="description"
                 placeholder="Add description..."
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                  setModifyDesc(true);
+                }}
               />
-            </form>
+              <button
+                className={
+                  modifyDesc
+                    ? "px-4 py-2 font-semibold text-white bg-black rounded-lg hover:bg-black/70"
+                    : "hidden"
+                }
+                type="submit"
+              >
+                save
+              </button>
+            </Form>
           </div>
         </div>
         <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-8">

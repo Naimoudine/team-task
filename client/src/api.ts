@@ -245,3 +245,21 @@ export const updateTaskTaskListFnc = async (id: string, taskListId: string) => {
   }
   return null;
 };
+
+export const updateTaskDescription = async (
+  id: string,
+  description: string
+) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/description`,
+    {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ description }),
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update task description");
+  }
+  return null;
+};

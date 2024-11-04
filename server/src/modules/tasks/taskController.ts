@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { getCollection } from "../../mongoClient";
 import type { TaskList } from "./taskListController";
 
@@ -192,91 +192,128 @@ export const updateTaskPriority = async (req: Request, res: Response) => {
 };
 
 export const updateTaskLabelList = async (req: Request, res: Response) => {
-  const taskCollection = await getCollection<Task>("tasks");
-  const taskId = req.params.id;
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const taskId = req.params.id;
 
-  if (!taskId || !ObjectId.isValid(taskId)) {
-    res.status(400).json({ message: "task id is missing or is invalid" });
-    return;
-  }
+    if (!taskId || !ObjectId.isValid(taskId)) {
+      res.status(400).json({ message: "task id is missing or is invalid" });
+      return;
+    }
 
-  const labelExists = await taskCollection.findOne({
-    _id: new ObjectId(taskId),
-    labelList: req.body.label,
-  });
+    const labelExists = await taskCollection.findOne({
+      _id: new ObjectId(taskId),
+      labelList: req.body.label,
+    });
 
-  let result = null;
+    let result = null;
 
-  if (!labelExists) {
-    result = await taskCollection.updateOne(
-      { _id: new ObjectId(taskId) },
-      { $push: { labelList: req.body.label } }
-    );
-  }
+    if (!labelExists) {
+      result = await taskCollection.updateOne(
+        { _id: new ObjectId(taskId) },
+        { $push: { labelList: req.body.label } }
+      );
+    }
 
-  if (labelExists) {
-    result = await taskCollection.updateOne(
-      { _id: new ObjectId(taskId) },
-      { $pull: { labelList: req.body.label } }
-    );
-  }
+    if (labelExists) {
+      result = await taskCollection.updateOne(
+        { _id: new ObjectId(taskId) },
+        { $pull: { labelList: req.body.label } }
+      );
+    }
 
-  if (result && result.modifiedCount !== 1) {
-    res.status(422).json({ message: "Failed to update label list" });
-    return;
-  }
+    if (result && result.modifiedCount !== 1) {
+      res.status(422).json({ message: "Failed to update label list" });
+      return;
+    }
 
-  if (result && result.acknowledged) {
-    res.sendStatus(204);
+    if (result && result.acknowledged) {
+      res.sendStatus(204);
+    }
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const updateTaskTaskList = async (req: Request, res: Response) => {
-  const taskCollection = await getCollection<Task>("tasks");
-  const taskListCollection = await getCollection<TaskList>("taskLists");
-  const taskId = req.params.id;
-  const newTaskListId = req.params.taskListId;
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const taskListCollection = await getCollection<TaskList>("taskLists");
+    const taskId = req.params.id;
+    const newTaskListId = req.params.taskListId;
 
-  if (!taskId || !ObjectId.isValid(taskId)) {
-    res.status(400).json({ message: "task id is missing or is invalid" });
-    return;
+    if (!taskId || !ObjectId.isValid(taskId)) {
+      res.status(400).json({ message: "task id is missing or is invalid" });
+      return;
+    }
+
+    const currentTask = await taskCollection.findOne({
+      _id: new ObjectId(taskId),
+    });
+
+    const newTaskListExists = await taskListCollection.findOne({
+      _id: new ObjectId(newTaskListId),
+    });
+
+    if (!newTaskListExists || !currentTask) {
+      res.status(404).json({ message: " task or taskList don't exists" });
+      return;
+    }
+
+    const updateTask = await taskCollection.updateOne(
+      { _id: new ObjectId(taskId) },
+      { $set: { taskListId: new ObjectId(newTaskListId) } }
+    );
+
+    const updateOldList = await taskListCollection.updateOne(
+      { _id: currentTask?.taskListId },
+      { $pull: { tasks: currentTask?._id } }
+    );
+
+    const updateNewList = await taskListCollection.updateOne(
+      { _id: new ObjectId(newTaskListId) },
+      { $push: { tasks: currentTask?._id } }
+    );
+
+    if (
+      updateTask.modifiedCount !== 1 ||
+      updateOldList.modifiedCount !== 1 ||
+      updateNewList.modifiedCount !== 1
+    ) {
+      res.status(422).json({ message: "Failed to update task and taskLists" });
+      return;
+    }
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
+};
 
-  const currentTask = await taskCollection.findOne({
-    _id: new ObjectId(taskId),
-  });
+export const updateTaskDescription = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const taskId = new ObjectId(req.params.id);
 
-  const newTaskListExists = await taskListCollection.findOne({
-    _id: new ObjectId(newTaskListId),
-  });
+    if (!taskId || !ObjectId.isValid(taskId)) {
+      res.status(400).json({ message: "task id is missing or is invalid" });
+      return;
+    }
 
-  if (!newTaskListExists || !currentTask) {
-    res.status(404).json({ message: " task or taskList don't exists" });
-    return;
+    const result = await taskCollection.updateOne(
+      { _id: taskId },
+      { $set: { description: req.body.description } }
+    );
+
+    if (!result.acknowledged) {
+      res.status(422).json({ message: "Failed to update task description" });
+      return;
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-
-  const updateTask = await taskCollection.updateOne(
-    { _id: new ObjectId(taskId) },
-    { $set: { taskListId: new ObjectId(newTaskListId) } }
-  );
-
-  const updateOldList = await taskListCollection.updateOne(
-    { _id: currentTask?.taskListId },
-    { $pull: { tasks: currentTask?._id } }
-  );
-
-  const updateNewList = await taskListCollection.updateOne(
-    { _id: new ObjectId(newTaskListId) },
-    { $push: { tasks: currentTask?._id } }
-  );
-
-  if (
-    updateTask.modifiedCount !== 1 ||
-    updateOldList.modifiedCount !== 1 ||
-    updateNewList.modifiedCount !== 1
-  ) {
-    res.status(422).json({ message: "Failed to update task and taskLists" });
-    return;
-  }
-  res.sendStatus(204);
 };
