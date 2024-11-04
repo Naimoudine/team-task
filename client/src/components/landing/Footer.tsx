@@ -17,12 +17,7 @@ export default function Footer({}: Props) {
       <ul className="flex flex-col gap-4">
         <li className="font-medium">Company</li>
         <li>
-          <Link className="text-black/70 hover:text-black" to="">
-            About
-          </Link>
-        </li>
-        <li>
-          <Link className="text-black/70 hover:text-black" to="">
+          <Link className="text-black/70 hover:text-black" to="/contact">
             Contact
           </Link>
         </li>

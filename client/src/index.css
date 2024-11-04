@@ -24,7 +24,11 @@
   }
 
   .nav-link {
-    @apply flex items-center justify-start gap-2 py-2 text-base font-semibold text-zinc-700;
+    @apply flex items-center justify-start gap-2 p-2 text-base font-semibold text-zinc-700;
+  }
+
+  .nav-active-link {
+    @apply flex items-center justify-start w-full gap-2 p-2 text-base font-semibold rounded-lg text-zinc-700 bg-zinc-200;
   }
 
   .nav-icon {
@@ -37,9 +41,6 @@
 
   .page-title {
     @apply text-2xl font-bold text-zinc-900;
-  }
-
-  .task-list {
   }
 
   .task-list-header {
