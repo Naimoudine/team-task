@@ -1,12 +1,17 @@
-import { NavLink, useRevalidator, Form, redirect } from "react-router-dom";
+import { useState } from "react";
+import {
+  NavLink,
+  useRevalidator,
+  Form,
+  redirect,
+  useLoaderData,
+} from "react-router-dom";
 import { TagIcon, SlashIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { getTaskById, updateTaskDescription } from "../api";
-import { useLoaderData } from "react-router-dom";
 import { displayPriority } from "../components/dashboard/tasks/TaskSection";
 import type { Task, TaskList } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
-import { useState } from "react";
 import UpdatePriorityModal from "../components/dashboard/tasks/UpdatePriorityModal";
 import LabelModal from "../components/dashboard/tasks/LabelModal";
 import UpdateTaskTaskListModal from "../components/dashboard/tasks/UpdateTaskTaskListModal";
@@ -115,7 +120,7 @@ export default function Task({}: Props) {
             </Form>
           </div>
         </div>
-        <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-8">
+        <aside className="border-l border-zinc-200 w-[20%] h-full px-4 py-6 flex flex-col gap-6">
           <div className="relative">
             <button
               className={
@@ -173,8 +178,16 @@ export default function Task({}: Props) {
             <UserPlusIcon className="size-4 text-zinc-600" />
             Assign
           </button>
+          <div className="flex flex-col gap-2 px-4">
+            <span className="font-semibold">date :</span>
+            <input className="w-full" type="date" name="date" id="date" />
+          </div>
+          <div className="flex flex-col gap-2 px-4">
+            <span className="font-semibold">due-date :</span>
+            <input className="w-full" type="date" name="due" id="due" />
+          </div>
           <article>
-            <h3 className="mb-4">Labels</h3>
+            <h3 className="mb-4">Labels :</h3>
             <div className="flex flex-wrap gap-4">
               {task.labelList.map((label) => (
                 <span className="task-label" key={label}>
