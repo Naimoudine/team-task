@@ -191,7 +191,7 @@ export const createTaskList = async (id: string, taskList: TaskList) => {
 
 export const updateTaskPriority = async (id: string, priority: number) => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/tasks/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/priority`,
     {
       method: "put",
       headers: { "Content-TYpe": "application/json" },
