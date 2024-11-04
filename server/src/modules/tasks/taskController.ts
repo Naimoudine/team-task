@@ -227,7 +227,7 @@ export const updateTaskLabelList = async (req: Request, res: Response) => {
   }
 
   if (result && result.acknowledged) {
-    res.status(204).json(result.upsertedId);
+    res.sendStatus(204);
   }
 };
 

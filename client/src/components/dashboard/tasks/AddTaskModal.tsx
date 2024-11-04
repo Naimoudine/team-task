@@ -54,7 +54,7 @@ export default function AddTaskModal({
   return (
     <div className={displayAddTask ? "modal-component" : "hidden"}>
       <form
-        className="relative flex flex-col justify-between bg-white w-[60%] h-[200px] py-4 px-4 rounded-lg"
+        className="relative flex flex-col justify-between bg-white w-[60%] h-fit py-4 px-4 rounded-lg"
         onSubmit={(e) => handeAddTask(e)}
       >
         <div className="flex items-center justify-between">
@@ -85,7 +85,7 @@ export default function AddTaskModal({
             placeholder="Add a description..."
           />
         </div>
-        <div className="flex items-center justify-between ">
+        <div className="flex items-center justify-between mt-2">
           <div>
             <label
               htmlFor="priority"

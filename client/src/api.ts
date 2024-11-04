@@ -229,8 +229,7 @@ export const updateLabel = async (id: string, label: string) => {
   if (response.status !== 204) {
     throw new Error("Failed to update label");
   }
-  const data = response.json();
-  return data;
+  return null;
 };
 
 export const updateTaskTaskListFnc = async (id: string, taskListId: string) => {
