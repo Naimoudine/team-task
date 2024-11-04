@@ -74,7 +74,12 @@
     @apply w-full;
   }
 
-  .form-label > input {
+  .form-label > span {
+    @apply font-medium text-zinc-600;
+  }
+
+  .form-label > input,
+  textarea {
     @apply w-full px-4 py-2 border-2 rounded-lg border-zinc-400;
   }
 }

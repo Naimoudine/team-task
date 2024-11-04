@@ -16,6 +16,8 @@ import Login, { action as loginAction } from "./pages/Login.tsx";
 import { authUser } from "./api.ts";
 import Landing from "./pages/Landing.tsx";
 import Pricing from "./pages/Pricing.tsx";
+import About from "./pages/About.tsx";
+import Contact from "./pages/Contact.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -81,6 +83,10 @@ const router = createBrowserRouter([
   {
     path: "/pricing",
     element: <Pricing />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
   },
 ]);
 

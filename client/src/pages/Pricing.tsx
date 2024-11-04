@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import Header from "../components/landing/header/Header";
 
 type Props = {};
 
 export default function Pricing({}: Props) {
+  const navigate = useNavigate();
+
   return (
     <div className="w-screen h-screen">
       <Header />
@@ -26,6 +29,7 @@ export default function Pricing({}: Props) {
             <button
               className="w-full py-2 font-semibold text-center text-white bg-black rounded-lg hover:bg-black/70"
               type="button"
+              onClick={() => navigate("/register")}
             >
               Sign up
             </button>
@@ -46,6 +50,7 @@ export default function Pricing({}: Props) {
             <button
               className="w-full py-2 font-semibold text-center text-white bg-black rounded-lg hover:bg-black/70"
               type="button"
+              onClick={() => navigate("/register")}
             >
               Sign up
             </button>

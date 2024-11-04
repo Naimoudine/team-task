@@ -42,19 +42,7 @@ export default function Navbar({}: Props) {
                 ? "hover:text-black text-black"
                 : "text-black/60 hover:text-black"
             }
-            to="/"
-          >
-            About
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "hover:text-black text-black"
-                : "text-black/60 hover:text-black"
-            }
-            to="/"
+            to="/contact"
           >
             Contact
           </NavLink>
