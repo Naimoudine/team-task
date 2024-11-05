@@ -19,6 +19,7 @@ import {
   updateTaskDescription,
   updateTaskDate,
   updateTaskDue,
+  deleteTask,
 } from "./modules/tasks/taskController";
 import {
   createProject,
@@ -55,6 +56,7 @@ router.put("/tasks/:id/taskLists/:taskListId", updateTaskTaskList);
 router.put("/tasks/:id/description", updateTaskDescription);
 router.put("/tasks/:id/date", updateTaskDate);
 router.put("/tasks/:id/due", updateTaskDue);
+router.delete("/tasks/:id/delete", deleteTask);
 
 //label
 router.post("/labels", createLabel);

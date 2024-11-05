@@ -20,6 +20,9 @@ import { Project } from "./Projects";
 import UpdatePriorityModal from "../components/dashboard/tasks/UpdatePriorityModal";
 import LabelModal from "../components/dashboard/tasks/LabelModal";
 import UpdateTaskTaskListModal from "../components/dashboard/tasks/UpdateTaskTaskListModal";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import TaskSettingsModal from "../components/dashboard/tasks/TaskSettingsModal";
+import ConfirmDeleteTaskModal from "../components/dashboard/tasks/ConfirmDeleteTaskModal";
 
 type Props = {};
 
@@ -59,6 +62,8 @@ export default function Task({}: Props) {
   const [updateTaskTaskList, setUpdateTaskTaskList] = useState<boolean>(false);
   const [updatePriority, setUpdatePriority] = useState<boolean>(false);
   const [addLabel, setAddLabel] = useState<boolean>(false);
+  const [deleteTask, setDeleTask] = useState<boolean>(false);
+  const [confirmDeleteTask, setConfirmDeleteTask] = useState<boolean>(false);
   const { project, taskList, task, taskLists, labels } =
     useLoaderData() as LoaderType;
   const [description, setDescription] = useState<string>(task.description!);
@@ -95,12 +100,18 @@ export default function Task({}: Props) {
 
   return (
     <div className="flex flex-col w-full h-full">
+      <ConfirmDeleteTaskModal
+        task={task}
+        confirmDeleteTask={confirmDeleteTask}
+        setConfirmDeleteTask={setConfirmDeleteTask}
+        redirect={`/projects/${project._id}/taskLists/`}
+      />
       <header className="flex items-center justify-center py-1 bg-zinc-100">
         <p className="w-full py-1 font-semibold text-center text-zinc-600">
           Task
         </p>
       </header>
-      <nav className="w-full px-6 py-4 text-sm font-semibold border-b border-zinc-200">
+      <nav className="flex items-center justify-start w-full gap-6 px-6 py-4 text-sm font-semibold border-b border-zinc-200">
         <ul className="flex items-center">
           <li>
             <NavLink to="/projects">Projects</NavLink>
@@ -123,6 +134,21 @@ export default function Task({}: Props) {
             </NavLink>
           </li>
         </ul>
+        <div className="relative">
+          <button
+            className="p-1 rounded-lg hover:bg-zinc-100"
+            type="button"
+            aria-label="open setting"
+            onClick={() => setDeleTask(!deleteTask)}
+          >
+            <EllipsisHorizontalIcon className="size-5" />
+          </button>
+          <TaskSettingsModal
+            deleteTask={deleteTask}
+            setDeleteTask={setDeleTask}
+            setConfirmDeleteTask={setConfirmDeleteTask}
+          />
+        </div>
       </nav>
       <main className="flex flex-grow">
         <div className="w-[80%]">

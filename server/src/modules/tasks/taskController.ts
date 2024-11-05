@@ -371,3 +371,27 @@ export const updateTaskDue = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const taskId = new ObjectId(req.params.id);
+
+    if (!taskId || !ObjectId.isValid(taskId)) {
+      res.status(400).json({ message: "task id is missing or is invalid" });
+      return;
+    }
+
+    const result = await taskCollection.deleteOne({ _id: taskId });
+
+    if (result.deletedCount !== 1) {
+      res.status(422).json({ message: "Failed to delete task" });
+      return;
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

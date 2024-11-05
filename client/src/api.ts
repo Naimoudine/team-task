@@ -293,3 +293,17 @@ export const updateTaskDueDate = async (id: string, due: string | null) => {
   }
   return null;
 };
+
+export const deleteTask = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/delete`,
+    {
+      method: "delete",
+      headers: { "Content-type": "application/json" },
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to delete date");
+  }
+  return null;
+};
