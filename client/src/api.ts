@@ -263,3 +263,33 @@ export const updateTaskDescription = async (
   }
   return null;
 };
+
+export const updateTaskDate = async (id: string, date: string | null) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/date`,
+    {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date }),
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update task date");
+  }
+  return null;
+};
+
+export const updateTaskDueDate = async (id: string, due: string | null) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/due`,
+    {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ due }),
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update due date");
+  }
+  return null;
+};

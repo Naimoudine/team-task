@@ -22,11 +22,11 @@ export async function createTaskCollection() {
             description: "priority must be a number",
           },
           date: {
-            bsonType: "date",
+            bsonType: ["date", "null"],
             description: "date must be a date",
           },
           due: {
-            bsonType: "date",
+            bsonType: ["date", "null"],
             description: "due must be a date",
           },
           assigned: {

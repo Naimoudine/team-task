@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   NavLink,
   useRevalidator,
@@ -8,7 +8,12 @@ import {
 } from "react-router-dom";
 import { TagIcon, SlashIcon } from "@heroicons/react/16/solid";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
-import { getTaskById, updateTaskDescription } from "../api";
+import {
+  getTaskById,
+  updateTaskDate,
+  updateTaskDescription,
+  updateTaskDueDate,
+} from "../api";
 import { displayPriority } from "../components/dashboard/tasks/TaskSection";
 import type { Task, TaskList } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
@@ -58,7 +63,35 @@ export default function Task({}: Props) {
     useLoaderData() as LoaderType;
   const [description, setDescription] = useState<string>(task.description!);
   const [modifyDesc, setModifyDesc] = useState<boolean>(false);
+  const currentDate = task.date ? new Date(task?.date) : null;
+  const currentDue = task.due ? new Date(task?.due) : null;
   const revalidator = useRevalidator();
+
+  const handleDate = async (date: string) => {
+    try {
+      if (task._id) {
+        await updateTaskDate(task._id, date);
+      } else if (task._id && date === "") {
+        await updateTaskDate(task._id, null);
+      }
+      return revalidator.revalidate();
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleDue = async (date: string) => {
+    try {
+      if (task._id) {
+        await updateTaskDueDate(task._id, date);
+      } else if (task._id && date === "") {
+        await updateTaskDueDate(task._id, null);
+      }
+      return revalidator.revalidate();
+    } catch (error) {
+      throw error;
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -180,11 +213,31 @@ export default function Task({}: Props) {
           </button>
           <div className="flex flex-col gap-2 px-4">
             <span className="font-semibold">date :</span>
-            <input className="w-full" type="date" name="date" id="date" />
+            <input
+              className="w-full"
+              type="datetime-local"
+              name="date"
+              id="date"
+              onChange={(e) => handleDate(e.currentTarget.value)}
+              defaultValue={
+                currentDate
+                  ? currentDate?.toISOString().slice(0, 16)
+                  : undefined
+              }
+            />
           </div>
           <div className="flex flex-col gap-2 px-4">
             <span className="font-semibold">due-date :</span>
-            <input className="w-full" type="date" name="due" id="due" />
+            <input
+              className="w-full"
+              type="datetime-local"
+              name="due"
+              id="due"
+              onChange={(e) => handleDue(e.currentTarget.value)}
+              defaultValue={
+                currentDue ? currentDue?.toISOString().slice(0, 16) : undefined
+              }
+            />
           </div>
           <article>
             <h3 className="mb-4">Labels :</h3>

@@ -8,8 +8,8 @@ interface Task {
   title: string;
   description?: string;
   priority: number;
-  date?: Date;
-  due?: Date;
+  date?: Date | null;
+  due?: Date | null;
   assigned?: ObjectId;
   taskListId: ObjectId;
   labelList: string[];
@@ -318,7 +318,7 @@ export const updateTaskDescription = async (req: Request, res: Response) => {
   }
 };
 
-export const uptdateTaskDate = async (req: Request, res: Response) => {
+export const updateTaskDate = async (req: Request, res: Response) => {
   try {
     const taskCollection = await getCollection<Task>("tasks");
     const taskId = new ObjectId(req.params.id);
@@ -330,11 +330,38 @@ export const uptdateTaskDate = async (req: Request, res: Response) => {
 
     const result = await taskCollection.updateOne(
       { _id: taskId },
-      { $set: { date: req.body.date } }
+      { $set: { date: req.body.date ? new Date(req.body.date) : null } }
     );
 
     if (!result.acknowledged) {
-      res.status(422).json({ message: "Failed to update task description" });
+      res.status(422).json({ message: "Failed to update task date" });
+      return;
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateTaskDue = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const taskId = new ObjectId(req.params.id);
+
+    if (!taskId || !ObjectId.isValid(taskId)) {
+      res.status(400).json({ message: "task id is missing or is invalid" });
+      return;
+    }
+
+    const result = await taskCollection.updateOne(
+      { _id: taskId },
+      { $set: { due: req.body.due ? new Date(req.body.due) : null } }
+    );
+
+    if (!result.acknowledged) {
+      res.status(422).json({ message: "Failed to update task due date" });
       return;
     }
 
