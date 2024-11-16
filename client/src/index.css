@@ -20,7 +20,7 @@
   }
 
   #logo {
-    @apply text-xl font-bold text-zinc-900;
+    @apply font-bold text-zinc-900;
   }
 
   .nav-link {
