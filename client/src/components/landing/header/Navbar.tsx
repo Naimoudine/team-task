@@ -1,4 +1,4 @@
-import { Bars2Icon } from "@heroicons/react/24/outline";
+import { Bars2Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Link as ScrollLink } from "react-scroll";
@@ -70,7 +70,11 @@ export default function Navbar({}: Props) {
               aria-label="open menu"
               onClick={() => setDisplayMobilLink(!displayMobilLink)}
             >
-              <Bars2Icon className="size-6" />
+              {displayMobilLink ? (
+                <XMarkIcon className="size-6" />
+              ) : (
+                <Bars2Icon className="size-6" />
+              )}
             </button>
           </li>
         </ul>
