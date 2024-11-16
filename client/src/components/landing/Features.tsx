@@ -11,21 +11,21 @@ export default function Features({}: Props) {
     useState<Feature>("workspace");
 
   return (
-    <section className="relative flex items-center gap-16 mt-40">
-      <div className="w-[40%] ml-[12.5rem]">
-        <h3 className="text-3xl font-medium">
+    <section className="relative flex flex-col gap-16 mt-40 xl:items-center xl:flex-row">
+      <div className="w-full xl:w-[40%] xl:ml-[12.5rem]">
+        <h3 className="text-2xl font-medium xl:text-3xl">
           Manage effectively your time and all your projects
         </h3>
         <p className="mt-8">
           Task-Team helps you manage large-scale projects, track deadlines, set
           priorities, and assign tasks.
         </p>
-        <div className="flex flex-col mt-16">
+        <div className="flex flex-row mt-16 xl:flex-col">
           <article
             className={
               displayedFeature === "workspace"
-                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
-                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
+                ? "px-6 py-8 border-t-2 xl:border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
+                : "px-6 py-8 border-t xl:border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
             }
             onClick={() => setDisplayedFeature("workspace")}
           >
@@ -37,8 +37,8 @@ export default function Features({}: Props) {
           <article
             className={
               displayedFeature === "custom"
-                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
-                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
+                ? "px-6 py-8 border-t-2 xl:border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
+                : "px-6 py-8 border-t xl: hover:bg-zinc-100 border-zinc-200 cursor-pointer"
             }
             onClick={() => setDisplayedFeature("custom")}
           >
@@ -48,8 +48,8 @@ export default function Features({}: Props) {
           <article
             className={
               displayedFeature === "collaborate"
-                ? "px-6 py-8 border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
-                : "px-6 py-8 border-l hover:bg-zinc-100 border-zinc-200 cursor-pointer"
+                ? "px-6 py-8 border-t-2 xl:border-l-2 hover:bg-zinc-100 border-black cursor-pointer"
+                : "px-6 py-8 border-t xl: hover:bg-zinc-100 border-zinc-200 cursor-pointer"
             }
             onClick={() => setDisplayedFeature("collaborate")}
           >
@@ -61,11 +61,9 @@ export default function Features({}: Props) {
         </div>
       </div>
 
-      <div className="w-[60%] flex justify-center">
+      <div className="xl:w-[60%] w-full flex justify-center">
         <img
-          className={
-            displayedFeature === "custom" ? "h-[25rem] w-auto" : "w-full h-full"
-          }
+          className={"w-full h-full"}
           src={
             displayedFeature === "workspace"
               ? workspace
