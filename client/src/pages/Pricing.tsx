@@ -9,13 +9,13 @@ export default function Pricing({}: Props) {
   return (
     <div className="w-screen h-screen">
       <Header />
-      <main className="flex flex-col items-center justify-center gap-4 pt-40">
+      <main className="flex flex-col items-center justify-center gap-4 px-8 pt-40 pb-16">
         <h1 className="text-3xl font-bold">Pricing</h1>
-        <p className="mt-2">
+        <p className="mt-2 text-center">
           Choose the plan that suits you the most. And scale if needed.
         </p>
-        <div className="flex gap-16 mt-12">
-          <article className="p-4 border rounded-lg border-zinc-200 w-[250px]">
+        <div className="flex flex-col gap-16 mt-12 md:flex-row">
+          <article className="p-4 border rounded-lg border-zinc-200 w-full md:w-[250px]">
             <h3 className="font-semibold ">starter</h3>
             <p className="text-sm">for individuals</p>
             <h2 className="mt-6 text-2xl">Free</h2>
@@ -34,7 +34,7 @@ export default function Pricing({}: Props) {
               Sign up
             </button>
           </article>
-          <article className="p-4 border-2 rounded-lg border-zinc-400 w-[250px]">
+          <article className="p-4 border-2 rounded-lg border-zinc-400 w-full md:w-[250px]">
             <h3 className="font-semibold ">pro</h3>
             <p className="text-sm">for teams</p>
             <h2 className="mt-6 text-2xl">
