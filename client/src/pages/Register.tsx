@@ -63,7 +63,6 @@ export default function Register({}: Props) {
     e: React.ChangeEvent<HTMLInputElement>,
     type: string
   ) => {
-    console.log(e.currentTarget.value);
     switch (type) {
       case "email":
         if (
@@ -123,10 +122,6 @@ export default function Register({}: Props) {
         }
     }
   };
-
-  useEffect(() => {
-    console.log(inputError);
-  }, [inputError]);
 
   return (
     <div className="flex flex-col items-center w-full h-full px-8 mt-24 h-fit">
