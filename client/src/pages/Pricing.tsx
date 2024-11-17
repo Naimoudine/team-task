@@ -9,7 +9,7 @@ export default function Pricing({}: Props) {
   return (
     <div className="w-screen h-screen">
       <Header />
-      <main className="flex flex-col items-center justify-center gap-4 px-8 pt-40 pb-16">
+      <main className="flex flex-col items-center justify-center gap-4 px-8 pt-40 pb-16 md:pb-8">
         <h1 className="text-3xl font-bold">Pricing</h1>
         <p className="mt-2 text-center">
           Choose the plan that suits you the most. And scale if needed.
