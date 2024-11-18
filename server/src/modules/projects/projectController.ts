@@ -1,7 +1,9 @@
 import { ObjectId } from "mongodb";
-import { getCollection } from "../../mongoClient";
+import { client, getCollection } from "../../mongoClient";
 import { Request, Response } from "express";
 import { User } from "../users/userController";
+import { TaskList } from "../tasks/taskListController";
+import { Task } from "../tasks/taskController";
 
 export interface Project {
   _id?: ObjectId;
@@ -139,5 +141,60 @@ export const readProjectsByUserId = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching tasklist:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteProject = async (req: Request, res: Response) => {
+  const session = client.startSession();
+  try {
+    session.startTransaction();
+
+    const projectCollection = await getCollection<Project>("projects");
+    const taskListCollection = await getCollection<TaskList>("taskLists");
+    const taskCollection = await getCollection<Task>("tasks");
+    const projectId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(projectId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
+    const result = await projectCollection.deleteOne(
+      { _id: projectId },
+      { session }
+    );
+
+    if (result.deletedCount !== 1) {
+      await session.abortTransaction();
+      res.status(404).json({ message: "Project not found" });
+      return;
+    }
+
+    const taskLists = await taskListCollection.find({ projectId }).toArray();
+
+    const taskListIds = taskLists.map((taskList) => taskList._id);
+
+    await taskListCollection.deleteMany({ projectId }, { session });
+
+    await taskCollection.deleteMany(
+      { taskListId: { $in: taskListIds } },
+      { session }
+    );
+
+    await session.commitTransaction();
+
+    res.status(200).json({
+      message: "Project, task lists, and tasks deleted successfully",
+      deletedTaskListsCount: taskListIds.length,
+      deletedTasksCount: taskLists.length, // Assuming tasks are directly related to taskLists
+    });
+  } catch (error) {
+    // Rollback the transaction on any error
+    await session.abortTransaction();
+    console.error("Error deleting project:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    // Always end the session
+    session.endSession();
   }
 };

@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { getCollection } from "../../mongoClient";
 import type { TaskList } from "./taskListController";
 
-interface Task {
+export interface Task {
   _id?: ObjectId;
   title: string;
   description?: string;

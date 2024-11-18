@@ -9,7 +9,7 @@ import { createLabelCollection } from "./modules/label/labelCollection";
 dotenv.config();
 
 const uri = process.env.DB_URI as string;
-const client = new MongoClient(uri);
+export const client = new MongoClient(uri);
 
 let dbInstance: Db | null = null; // Stocker l'instance de la base de données
 

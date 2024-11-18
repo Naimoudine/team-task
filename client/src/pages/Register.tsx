@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   useNavigation,
@@ -33,15 +33,95 @@ export const action = async ({ request }: any) => {
   }
 };
 
+interface InputErrorType {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+}
+
 export default function Register({}: Props) {
   const [password, setPassword] = useState<string>("");
   const [confirm, setConfirm] = useState<string>("");
+  const [inputError, setInputError] = useState<InputErrorType>({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
 
   const navigation = useNavigation();
   const isSubmiting = navigation.state === "loading";
   const error = useRouteError() as Error;
 
-  console.log(error);
+  const nameRegex = /^.{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: string
+  ) => {
+    switch (type) {
+      case "email":
+        if (
+          !emailRegex.test(e.currentTarget.value) &&
+          e.currentTarget.value.length > 0
+        ) {
+          setInputError({
+            ...inputError,
+            email:
+              "Email should have at least 2 characters before and after @ & at least 2 for the domaine.",
+          });
+        } else {
+          setInputError({ ...inputError, email: "" });
+        }
+        break;
+      case "password":
+        if (
+          !passwordRegex.test(e.currentTarget.value) &&
+          e.currentTarget.value.length > 0
+        ) {
+          setPassword(e.target.value);
+          setInputError({
+            ...inputError,
+            password:
+              "Password should be at least 8 characters long, include at least an uppercase and lowercase letter, include one digit & a special character (e.g, !@#$%^&*())",
+          });
+        } else {
+          setPassword(e.target.value);
+          setInputError({ ...inputError, password: "" });
+        }
+        break;
+      case "lastname":
+        if (
+          !nameRegex.test(e.currentTarget.value) &&
+          e.currentTarget.value.length > 0
+        ) {
+          setInputError({
+            ...inputError,
+            lastname: "Lasttname should be at least 2 characters long.",
+          });
+        } else {
+          setPassword(e.target.value);
+          setInputError({ ...inputError, lastname: "" });
+        }
+        break;
+      default:
+        if (
+          !nameRegex.test(e.currentTarget.value) &&
+          e.currentTarget.value.length > 0
+        ) {
+          setInputError({
+            ...inputError,
+            firstname: "Firstname should be at least 2 characters long.",
+          });
+        } else {
+          setInputError({ ...inputError, firstname: "" });
+        }
+    }
+  };
 
   return (
     <div className="flex flex-col items-center w-full h-full px-8 mt-24 h-fit">
@@ -60,7 +140,12 @@ export default function Register({}: Props) {
             name="firstname"
             id="firstname"
             placeholder="Enter your firstname"
+            required
+            onChange={(e) => handleChange(e, "")}
           />
+          {inputError.firstname && (
+            <p className="form-label-error">{inputError.firstname}</p>
+          )}
         </label>
         <label className="form-label" htmlFor="lastname">
           <input
@@ -69,7 +154,11 @@ export default function Register({}: Props) {
             id="lastname"
             placeholder="Enter your lastname"
             required
+            onChange={(e) => handleChange(e, "")}
           />
+          {inputError.lastname && (
+            <p className="error">{inputError.lastname}</p>
+          )}
         </label>
         <label className="form-label" htmlFor="email">
           <input
@@ -78,7 +167,11 @@ export default function Register({}: Props) {
             id="email"
             placeholder="Enter your email"
             required
+            onChange={(e) => handleChange(e, "email")}
           />
+          {inputError.email && (
+            <p className="form-label-error">{inputError.email}</p>
+          )}
         </label>
         <label className="form-label" htmlFor="password">
           <input
@@ -87,9 +180,14 @@ export default function Register({}: Props) {
             id="password"
             placeholder="Enter your password"
             required
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              handleChange(e, "password");
+            }}
             value={password!}
           />
+          {inputError.password && (
+            <p className="form-label-error">{inputError.password}</p>
+          )}
         </label>
         <label className="form-label" htmlFor="confirm">
           <input
@@ -105,7 +203,15 @@ export default function Register({}: Props) {
         <button
           className="flex items-center justify-center w-full py-2 text-white bg-black border-2 border-transparent rounded-lg hover:bg-black/70 disabled:bg-gray-200 "
           type="submit"
-          disabled={password !== confirm || password === "" || confirm === ""}
+          disabled={
+            password !== confirm ||
+            password === "" ||
+            confirm === "" ||
+            inputError.firstname !== "" ||
+            inputError.lastname !== "" ||
+            inputError.email !== "" ||
+            inputError.password !== ""
+          }
         >
           {isSubmiting ? (
             <svg

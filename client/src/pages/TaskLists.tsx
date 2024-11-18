@@ -4,6 +4,7 @@ import {
   useLocation,
   useRevalidator,
   NavLink,
+  useNavigate,
 } from "react-router-dom";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import type { TaskList } from "../components/dashboard/tasks/TaskSection";
@@ -12,7 +13,10 @@ import DisplayModal from "../components/dashboard/tasks/DisplayModal";
 import AddTaskListModal from "../components/dashboard/tasks/AddTaskListModal";
 import { getTaskListsByProjectId } from "../api";
 import { Project } from "./Projects";
-import { SlashIcon } from "@heroicons/react/24/outline";
+import { SlashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import ProjectSettingsModal from "../components/dashboard/projects/ProjectSettingsModal";
+import ConfirmDeleteProjectModal from "../components/dashboard/projects/ConfirmDeleteProjectModal";
+import ConfirmDeleteTaskListModal from "../components/dashboard/tasks/ConfirmDeleteTaskListModal";
 
 type Props = {};
 
@@ -36,7 +40,12 @@ export default function TaskLists({}: Props) {
   const [isDisplayModal, setIsDisplayModal] = useState<boolean>(false);
   const [displayAddTaskListModal, setDisplayAddTaskListModal] =
     useState<boolean>(false);
-
+  const [deleteProject, setDeleteProject] = useState<boolean>(false);
+  const [confirmDeleteProject, setConfirmDeleteProject] =
+    useState<boolean>(false);
+  const [currentTaskList, setCurrentTaskList] = useState<TaskList | null>(null);
+  const [confirmDeleteTaskList, setConfirmDeleteTaskList] =
+    useState<boolean>(false);
   const { project, taskLists } = useLoaderData() as LoaderDataType;
 
   const revalidator = useRevalidator();
@@ -47,6 +56,17 @@ export default function TaskLists({}: Props) {
 
   return (
     <div className="h-full">
+      <ConfirmDeleteTaskListModal
+        taskList={currentTaskList!}
+        confirmDeleteTaskList={confirmDeleteTaskList}
+        setConfirmDeleteTaskList={setConfirmDeleteTaskList}
+        redirect={`/projects/${projectId}/taskLists`}
+      />
+      <ConfirmDeleteProjectModal
+        project={project}
+        setConfirmDeleteProject={setConfirmDeleteProject}
+        confirmDeleteProject={confirmDeleteProject}
+      />
       <AddTaskListModal
         displayAddTaskListModal={displayAddTaskListModal}
         setDisplayAddTaskListModal={setDisplayAddTaskListModal}
@@ -85,7 +105,7 @@ export default function TaskLists({}: Props) {
           setIsDisplayModal={setIsDisplayModal}
         />
       </header>
-      <nav className="w-full px-6 py-3.5 text-sm font-semibold border-b border-zinc-200">
+      <nav className="w-full flex items-center gap-4 px-6 py-3.5 text-sm font-semibold border-b border-zinc-200">
         <ul className="flex items-center">
           <li>
             <NavLink to="/projects">Projects</NavLink>
@@ -102,12 +122,30 @@ export default function TaskLists({}: Props) {
             </NavLink>
           </li>
         </ul>
+        <div className="relative">
+          <button
+            className="p-1 rounded-lg hover:bg-zinc-100"
+            type="button"
+            aria-label="open setting"
+            onClick={() => setDeleteProject(!deleteProject)}
+          >
+            <EllipsisHorizontalIcon className="size-5" />
+          </button>
+          <ProjectSettingsModal
+            deleteProject={deleteProject}
+            setDeleteProject={setDeleteProject}
+            setConfirmDeleteProject={setConfirmDeleteProject}
+          />
+        </div>
       </nav>
       <TaskSection
         display={display}
         taskLists={taskLists}
         revalidator={revalidator}
         projectId={projectId}
+        currentTaskList={currentTaskList}
+        setCurrentTaskList={setCurrentTaskList}
+        setConfirmDeleteTaskList={setConfirmDeleteTaskList}
       />
     </div>
   );

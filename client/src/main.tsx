@@ -20,6 +20,7 @@ import { authUser } from "./api.ts";
 import Landing from "./pages/Landing.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Contact from "./pages/Contact.tsx";
+import Error from "./pages/Error.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
         action: taskAction,
       },
     ],
+    errorElement: <Error />,
   }),
   {
     path: "/register",

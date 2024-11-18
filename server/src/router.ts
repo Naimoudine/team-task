@@ -8,6 +8,7 @@ import {
   createTaskList,
   readById as taskListReadById,
   readTaskListsByProjectId,
+  deleteTaskList,
 } from "./modules/tasks/taskListController";
 import {
   createTask,
@@ -23,6 +24,7 @@ import {
 } from "./modules/tasks/taskController";
 import {
   createProject,
+  deleteProject,
   readAll as projectReadAll,
   readById as projectReadById,
   readProjectsByUserId,
@@ -40,11 +42,13 @@ const router = express.Router();
 router.post("/users/:id/projects", createProject);
 router.get("/users/:id/projects", readProjectsByUserId);
 router.get("/projects/:id", projectReadById);
+router.delete("/projects/:id", deleteProject);
 
 // taskLists
 router.get("/taskLists/:id", taskListReadById);
 router.get("/projects/:id/taskLists", readTaskListsByProjectId);
 router.post("/projects/:id/taskLists", createTaskList);
+router.delete("/taskLists/:id", deleteTaskList);
 
 //task
 router.get("/users/:id/tasks", tasksReadAll);
