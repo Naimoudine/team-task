@@ -1,14 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { DisplayType } from "../../../pages/TaskLists";
 import AddTaskModal from "./AddTaskModal";
 import TaskBoardView from "./TaskBoardView";
 import TaskListView from "./TaskListView";
+import { deleteTaskList } from "../../../api";
 
 type Props = {
   display: DisplayType;
   taskLists: TaskList[];
   revalidator: any;
   projectId: string;
+  currentTaskList: TaskList | null;
+  setCurrentTaskList: React.Dispatch<React.SetStateAction<TaskList | null>>;
+  setConfirmDeleteTaskList: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export interface Task {
@@ -43,36 +47,38 @@ export default function Tasksection({
   taskLists,
   revalidator,
   projectId,
+  currentTaskList,
+  setCurrentTaskList,
+  setConfirmDeleteTaskList,
 }: Props) {
   const [displayAddTask, setDisplayAddTask] = useState<boolean>(false);
-  const [currentListId, setCurrentListId] = useState<string | undefined>(
-    undefined
-  );
 
   return (
     <div className="w-full h-full overflow-scroll">
       <AddTaskModal
         displayAddTask={displayAddTask}
         setDisplayAddTask={setDisplayAddTask}
-        currentListId={currentListId}
+        currentTaskList={currentTaskList}
         revalidator={revalidator}
       />
       {display === "list" ? (
         <div className="w-full h-full">
           <TaskListView
             setDisplayAddTask={setDisplayAddTask}
-            setCurrentListId={setCurrentListId}
             taskLists={taskLists}
             projectId={projectId}
+            setCurrentTaskList={setCurrentTaskList}
+            setConfirmDeleteTaskList={setConfirmDeleteTaskList}
           />
         </div>
       ) : (
         <div className="flex w-full h-full gap-4 mt-2">
           <TaskBoardView
             setDisplayAddTask={setDisplayAddTask}
-            setCurrentListId={setCurrentListId}
             taskLists={taskLists}
             projectId={projectId}
+            setCurrentTaskList={setCurrentTaskList}
+            setConfirmDeleteTaskList={setConfirmDeleteTaskList}
           />
         </div>
       )}

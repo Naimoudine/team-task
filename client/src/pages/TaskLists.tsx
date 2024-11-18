@@ -16,6 +16,7 @@ import { Project } from "./Projects";
 import { SlashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import ProjectSettingsModal from "../components/dashboard/projects/ProjectSettingsModal";
 import ConfirmDeleteProjectModal from "../components/dashboard/projects/ConfirmDeleteProjectModal";
+import ConfirmDeleteTaskListModal from "../components/dashboard/tasks/ConfirmDeleteTaskListModal";
 
 type Props = {};
 
@@ -42,7 +43,9 @@ export default function TaskLists({}: Props) {
   const [deleteProject, setDeleteProject] = useState<boolean>(false);
   const [confirmDeleteProject, setConfirmDeleteProject] =
     useState<boolean>(false);
-
+  const [currentTaskList, setCurrentTaskList] = useState<TaskList | null>(null);
+  const [confirmDeleteTaskList, setConfirmDeleteTaskList] =
+    useState<boolean>(false);
   const { project, taskLists } = useLoaderData() as LoaderDataType;
 
   const revalidator = useRevalidator();
@@ -53,6 +56,12 @@ export default function TaskLists({}: Props) {
 
   return (
     <div className="h-full">
+      <ConfirmDeleteTaskListModal
+        taskList={currentTaskList!}
+        confirmDeleteTaskList={confirmDeleteTaskList}
+        setConfirmDeleteTaskList={setConfirmDeleteTaskList}
+        redirect={`/projects/${projectId}/taskLists`}
+      />
       <ConfirmDeleteProjectModal
         project={project}
         setConfirmDeleteProject={setConfirmDeleteProject}
@@ -134,6 +143,9 @@ export default function TaskLists({}: Props) {
         taskLists={taskLists}
         revalidator={revalidator}
         projectId={projectId}
+        currentTaskList={currentTaskList}
+        setCurrentTaskList={setCurrentTaskList}
+        setConfirmDeleteTaskList={setConfirmDeleteTaskList}
       />
     </div>
   );

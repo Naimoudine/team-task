@@ -2,23 +2,31 @@ import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import type React from "react";
 import { displayPriority, TaskList } from "./TaskSection";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   taskLists: TaskList[];
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
-  setCurrentListId: React.Dispatch<React.SetStateAction<string | undefined>>;
   projectId: string;
+  setCurrentTaskList: React.Dispatch<React.SetStateAction<TaskList | null>>;
+  setConfirmDeleteTaskList: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function TaskListView({
   taskLists,
   setDisplayAddTask,
-  setCurrentListId,
   projectId,
+  setCurrentTaskList,
+  setConfirmDeleteTaskList,
 }: Props) {
-  const handleOpenModal = (id: string) => {
+  const handleOpenModal = (taskList: TaskList) => {
     setDisplayAddTask(true);
-    setCurrentListId(id);
+    setCurrentTaskList(taskList);
+  };
+
+  const handleDelete = (taskList: TaskList) => {
+    setConfirmDeleteTaskList(true);
+    setCurrentTaskList(taskList);
   };
 
   return (
@@ -33,13 +41,22 @@ export default function TaskListView({
                   {list.tasksDetails ? list.tasksDetails.length : 0}
                 </span>
               </h2>
-              <button
-                className="p-1 rounded-lg hover:bg-zinc-100"
-                type="button"
-                onClick={() => handleOpenModal(list._id!)}
-              >
-                <PlusIcon className="size-4 text-zinc-600 text-zinc-900" />
-              </button>
+              <div>
+                <button
+                  className="p-1 rounded-lg hover:bg-zinc-100"
+                  type="button"
+                  onClick={() => handleOpenModal(list!)}
+                >
+                  <PlusIcon className="size-4 text-zinc-600 text-zinc-900" />
+                </button>
+                <button
+                  className="p-1 rounded-lg hover:bg-zinc-100"
+                  type="button"
+                  onClick={() => handleDelete(list!)}
+                >
+                  <TrashIcon className="size-4 text-zinc-600 text-zinc-900 hover:text-red-600" />
+                </button>
+              </div>
             </header>
             <ul className="task-list">
               {list.tasksDetails

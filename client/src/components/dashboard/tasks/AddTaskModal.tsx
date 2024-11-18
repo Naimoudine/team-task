@@ -2,18 +2,19 @@ import type React from "react";
 import { XMarkIcon } from "@heroicons/react/16/solid";
 import type { Task } from "./TaskSection";
 import { createTask } from "../../../api";
+import { TaskList } from "./TaskSection";
 
 type Props = {
   displayAddTask: boolean;
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
-  currentListId: string | undefined;
+  currentTaskList: TaskList | null;
   revalidator: any;
 };
 
 export default function AddTaskModal({
   displayAddTask,
   setDisplayAddTask,
-  currentListId,
+  currentTaskList,
   revalidator,
 }: Props) {
   const handeAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +26,7 @@ export default function AddTaskModal({
     const newPriority = formData.get("priority");
     const userId = JSON.parse(localStorage.getItem("userId") as string);
     try {
-      if (currentListId) {
+      if (currentTaskList?._id) {
         const newTask: Task = {
           title: newTaskTitle?.toString() || "",
           description: newDescription?.toString() || "",
@@ -40,7 +41,7 @@ export default function AddTaskModal({
           labelList: [],
         };
 
-        await createTask(userId, currentListId, newTask);
+        await createTask(userId, currentTaskList._id, newTask);
         revalidator.revalidate();
       }
     } catch (error) {

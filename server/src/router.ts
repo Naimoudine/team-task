@@ -8,6 +8,7 @@ import {
   createTaskList,
   readById as taskListReadById,
   readTaskListsByProjectId,
+  deleteTaskList,
 } from "./modules/tasks/taskListController";
 import {
   createTask,
@@ -47,6 +48,7 @@ router.delete("/projects/:id", deleteProject);
 router.get("/taskLists/:id", taskListReadById);
 router.get("/projects/:id/taskLists", readTaskListsByProjectId);
 router.post("/projects/:id/taskLists", createTaskList);
+router.delete("/taskLists/:id", deleteTaskList);
 
 //task
 router.get("/users/:id/tasks", tasksReadAll);
