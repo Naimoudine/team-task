@@ -74,6 +74,20 @@ export const getProjectById = async (id: string) => {
   return data;
 };
 
+export const deleteProject = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}`,
+    {
+      method: "delete",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (response.status !== 200) {
+    throw new Error("Failed to delete project");
+  }
+  return null;
+};
+
 export const getTaskListsByProjectId = async (id: string) => {
   const [projectsData, taskListsData] = await Promise.all([
     fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}`, {
@@ -303,7 +317,7 @@ export const deleteTask = async (id: string) => {
     }
   );
   if (response.status !== 204) {
-    throw new Error("Failed to delete date");
+    throw new Error("Failed to delete task");
   }
   return null;
 };

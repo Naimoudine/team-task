@@ -23,6 +23,7 @@ import {
 } from "./modules/tasks/taskController";
 import {
   createProject,
+  deleteProject,
   readAll as projectReadAll,
   readById as projectReadById,
   readProjectsByUserId,
@@ -40,6 +41,7 @@ const router = express.Router();
 router.post("/users/:id/projects", createProject);
 router.get("/users/:id/projects", readProjectsByUserId);
 router.get("/projects/:id", projectReadById);
+router.delete("/projects/:id", deleteProject);
 
 // taskLists
 router.get("/taskLists/:id", taskListReadById);
