@@ -9,6 +9,7 @@ type Props = {
 
 export default function Aside({ user, revalidator }: Props) {
   const clearUser = useUserStore((state) => state.clearUser);
+  const navigate = useNavigate();
 
   const handleLogOut = async () => {
     try {
@@ -21,7 +22,8 @@ export default function Aside({ user, revalidator }: Props) {
       }
       clearUser();
       localStorage.clear();
-      return revalidator.revalidate();
+      revalidator.revalidate();
+      return navigate("/");
     } catch (error) {
       throw error;
     }
