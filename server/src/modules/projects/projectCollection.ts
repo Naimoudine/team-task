@@ -7,7 +7,7 @@ export async function createProjectCollection() {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["title", "taskLists", "userId"],
+        required: ["title", "taskLists", "members"],
         properties: {
           title: {
             bsonType: "string",
@@ -21,10 +21,26 @@ export async function createProjectCollection() {
             description:
               "The tasksLists field must be an array of ObjectIds referencing tasks",
           },
-          userId: {
-            bsonType: "objectId",
-            description:
-              "The userId field must be an ObjectIds referencing an user",
+          members: {
+            bsonType: "array",
+            items: {
+              bsonType: "object",
+              required: ["userId", "role"],
+              properties: {
+                userId: {
+                  bsonType: "objectId",
+                  description:
+                    "The userId field must be an ObjectIds referencing an user",
+                },
+                role: {
+                  bsonType: "string",
+                  enum: ["Owner", "collaborator"],
+                  description:
+                    "The role field must be a string representing the user rôle in this project",
+                },
+              },
+            },
+            description: "Array of members with their roles",
           },
         },
       },

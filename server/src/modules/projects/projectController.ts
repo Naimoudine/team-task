@@ -5,11 +5,16 @@ import { User } from "../users/userController";
 import { TaskList } from "../tasks/taskListController";
 import { Task } from "../tasks/taskController";
 
+export interface ProjectMembers {
+  userId: ObjectId;
+  role: string;
+}
+
 export interface Project {
   _id?: ObjectId;
   title: string;
   taskLists: ObjectId[];
-  userId: ObjectId;
+  members: ProjectMembers[];
 }
 
 export const createProject = async (req: Request, res: Response) => {
@@ -30,7 +35,7 @@ export const createProject = async (req: Request, res: Response) => {
       const project = {
         title: req.body.title,
         taskLists: req.body.taskLists,
-        userId,
+        members: [{ userId, role: "Owner" }],
       };
 
       const result = await projectCollection.insertOne(project);
@@ -124,7 +129,9 @@ export const readProjectsByUserId = async (req: Request, res: Response) => {
     const projectsWithTaskLists = await projectCollection
       .aggregate([
         {
-          $match: { userId },
+          $match: {
+            members: { $elemMatch: { userId } },
+          },
         },
         {
           $lookup: {
