@@ -33,6 +33,11 @@ import {
   createLabel,
   readAll as labelReadAll,
 } from "./modules/label/labelController";
+import {
+  createInvitation,
+  readAll as invitationReadAll,
+  readByUserId as invitationReadByUserId,
+} from "./modules/invitations/invitationController";
 import { hashPassword, verifyToken } from "./service/auth";
 import { isLoggedIn, login, logout } from "./modules/users/authAction";
 
@@ -79,4 +84,9 @@ router.post("/verify-auth", verifyToken, isLoggedIn);
 
 //logout
 router.get("/logout", verifyToken, logout);
+
+//invitation
+router.get("/invitations", invitationReadAll);
+router.get("/invitations/:id", invitationReadByUserId);
+router.post("/invitations/:userId", createInvitation);
 export default router;

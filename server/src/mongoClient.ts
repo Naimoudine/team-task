@@ -5,6 +5,7 @@ import { createTaskListCollection } from "./modules/tasks/taskListCollection";
 import { createTaskCollection } from "./modules/tasks/taskCollection";
 import { createProjectCollection } from "./modules/projects/projectCollection";
 import { createLabelCollection } from "./modules/label/labelCollection";
+import { createInvitationCollection } from "./modules/invitations/invitationCollection";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ export async function getCollection<T extends Document>(
 export async function createAllCollection() {
   try {
     await createUserCollection();
+    await createInvitationCollection();
     await createProjectCollection();
     await createTaskListCollection();
     await createTaskCollection();

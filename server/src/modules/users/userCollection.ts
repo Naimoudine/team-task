@@ -6,7 +6,14 @@ export async function createUserCollection() {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["firstname", "lastname", "email", "password", "projects"],
+        required: [
+          "firstname",
+          "lastname",
+          "email",
+          "password",
+          "projects",
+          "friends",
+        ],
         properties: {
           firstname: {
             bsonType: "string",
@@ -32,6 +39,13 @@ export async function createUserCollection() {
             },
             description:
               "The projects field must be an array of ObjectIds referencing projects",
+          },
+          friends: {
+            bsonType: "array",
+            items: {
+              bsonType: "objectId",
+            },
+            description: "Array of users ids",
           },
         },
       },

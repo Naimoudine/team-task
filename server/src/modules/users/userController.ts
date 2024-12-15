@@ -10,6 +10,7 @@ export interface User {
   email: string;
   password?: string;
   projects: ObjectId[];
+  friends: ObjectId[];
 }
 
 export const readAll = async (req: Request, res: Response) => {
@@ -42,6 +43,7 @@ export const createUser = async (req: Request, res: Response) => {
       email: req.body.email,
       password: req.body.hashedPassword,
       projects: [],
+      friends: [],
     };
 
     const result = await userCollection.insertOne(user);
@@ -56,11 +58,9 @@ export const createUser = async (req: Request, res: Response) => {
     }
   } catch (error) {
     if (error instanceof MongoServerError && error.code === 11000) {
-      res
-        .status(409)
-        .json({
-          message: "User with this email already exists. Please log in.",
-        });
+      res.status(409).json({
+        message: "User with this email already exists. Please log in.",
+      });
     } else {
       console.error("Error creating user:", error);
       res.status(500).json({ message: "Internal Server Error" });

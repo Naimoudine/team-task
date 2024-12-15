@@ -52,11 +52,13 @@ export const createProject = async (req: Request, res: Response) => {
             projectId: newProjectId,
             message: "Project created and added to user's project list!",
           });
+          return;
         } else {
           res.status(500).json({
             message:
               "project created but failed to update user's projects list",
           });
+          return;
         }
       }
     } else {
@@ -109,11 +111,12 @@ export const readById = async (req: Request, res: Response) => {
 
 export const readProjectsByUserId = async (req: Request, res: Response) => {
   try {
-    const userId = new ObjectId(req.params.id);
-    if (!ObjectId.isValid(userId)) {
+    if (!ObjectId.isValid(req.params.id)) {
       res.status(400).json({ error: "Invalid user ID" });
       return;
     }
+
+    const userId = new ObjectId(req.params.id);
 
     const userCollection = await getCollection<Project>("users");
 
