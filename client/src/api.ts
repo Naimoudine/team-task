@@ -337,3 +337,25 @@ export const deleteTask = async (id: string) => {
   }
   return null;
 };
+
+export const createInvitation = async (
+  id: string,
+  email: string,
+  role: string
+) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/invitations/${id}`,
+    {
+      method: "post",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        email,
+        role,
+      }),
+    }
+  );
+  if (response.status !== 201) {
+    throw new Error("Failed to create invitation");
+  }
+  return null;
+};

@@ -35,6 +35,15 @@ export const createInvitation = async (req: Request, res: Response) => {
       return;
     }
 
+    const invitationExists = await invitationCollection.findOne({
+      $or: [{ recipient: recipientExists._id }, { sender: userExists._id }],
+    });
+
+    if (invitationExists && invitationExists.status !== "rejected") {
+      res.status(422).json({ message: "Invitation already exists" });
+      return;
+    }
+
     const newInvitation: Invitation = {
       sender: userExists._id,
       recipient: recipientExists._id,
@@ -77,9 +86,61 @@ export const readByUserId = async (req: Request, res: Response) => {
       return;
     }
 
-    const invitation = await invitationCollection.findOne({
-      $or: [{ recipient: id }, { sender: id }],
-    });
+    const invitation = await invitationCollection
+      .aggregate([
+        {
+          $match: {
+            $or: [{ recipient: id }, { sender: id }],
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "sender",
+            foreignField: "_id",
+            as: "senderDetails",
+            pipeline: [
+              {
+                $project: {
+                  _id: 1, // Inclure l'ID si nécessaire
+                  firstname: 1,
+                  lastname: 1,
+                  email: 1,
+                },
+              },
+            ],
+          },
+        },
+        {
+          $addFields: {
+            senderDetails: { $arrayElemAt: ["$senderDetails", 0] },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "recipient",
+            foreignField: "_id",
+            as: "recipientDetails",
+            pipeline: [
+              {
+                $project: {
+                  _id: 1, // Inclure l'ID si nécessaire
+                  firstname: 1,
+                  lastname: 1,
+                  email: 1,
+                },
+              },
+            ],
+          },
+        },
+        {
+          $addFields: {
+            recipientDetails: { $arrayElemAt: ["$recipientDetails", 0] },
+          },
+        },
+      ])
+      .toArray();
 
     if (!invitation) {
       res.status(404).json({ message: "Failed to find inviation" });

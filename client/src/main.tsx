@@ -21,6 +21,7 @@ import Landing from "./pages/Landing.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Contact from "./pages/Contact.tsx";
 import Error from "./pages/Error.tsx";
+import FriendsList from "./pages/FriendsList.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
         element: <Task />,
         loader: taskLoader,
         action: taskAction,
+      },
+      {
+        path: "team",
+        element: <FriendsList />,
       },
     ],
     errorElement: <Error />,
