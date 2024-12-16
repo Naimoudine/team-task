@@ -7,17 +7,26 @@ import { useRevalidator } from "react-router-dom";
 type Props = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showNotif: boolean;
+  setShowNotif: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Roles = ["collaborator"];
 
-export default function AddMemberModal({ showModal, setShowModal }: Props) {
+export default function AddMemberModal({
+  showModal,
+  setShowModal,
+  showNotif,
+  setShowNotif,
+}: Props) {
   const { userId } = useUserStore();
   const revalidator = useRevalidator();
 
   const roles: Roles = ["collaborator"];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const form = e.currentTarget;
     const formData = new FormData(form);
     const email = formData.get("email")?.toString();
@@ -25,11 +34,15 @@ export default function AddMemberModal({ showModal, setShowModal }: Props) {
 
     try {
       if (userId && email && role) {
-        await createInvitation(userId, email, role);
-        return revalidator.revalidate();
+        const result = await createInvitation(userId, email, role);
+        revalidator.revalidate();
+        setShowModal(!showModal);
+        setShowNotif(!showNotif);
       }
     } catch (error) {
-      throw new Error("Failed to send invitation");
+      setShowModal(!showModal);
+      setShowNotif(!showNotif);
+      throw new Error(error.message);
     }
   };
 
@@ -44,7 +57,7 @@ export default function AddMemberModal({ showModal, setShowModal }: Props) {
           <button
             className="px-2 py-1 font-medium bg-white border-2 rounded-lg border-zinc-200 hover:bg-zinc-100"
             aria-label="close modal"
-            onClick={() => setShowModal(!showModal)}
+            onClick={() => setShowModal(false)}
           >
             <XMarkIcon className="size-4" />
           </button>

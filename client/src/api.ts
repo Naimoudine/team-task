@@ -355,7 +355,22 @@ export const createInvitation = async (
     }
   );
   if (response.status !== 201) {
-    throw new Error("Failed to create invitation");
+    throw new Error("Failed to send invitation");
   }
-  return null;
+  return "Invitation send successfully";
+};
+
+export const getInvitations = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/invitations/${id}`,
+    {
+      method: "get",
+      headers: { "Content-type": "application/json" },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to get invitation");
+  }
+  const data = await response.json();
+  return data;
 };

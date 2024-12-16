@@ -21,7 +21,9 @@ import Landing from "./pages/Landing.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import Contact from "./pages/Contact.tsx";
 import Error from "./pages/Error.tsx";
-import FriendsList from "./pages/FriendsList.tsx";
+import FriendsList, {
+  loader as friendsListLoader,
+} from "./pages/FriendsList.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -70,6 +72,8 @@ const router = createBrowserRouter([
       {
         path: "team",
         element: <FriendsList />,
+        errorElement: <FriendsList />,
+        loader: friendsListLoader,
       },
     ],
     errorElement: <Error />,
