@@ -1,5 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import React from "react";
+import React, { useRef } from "react";
 import { useUserStore } from "../../../store/user-store";
 import { createInvitation } from "../../../api";
 import { useRevalidator } from "react-router-dom";
@@ -7,22 +7,16 @@ import { useRevalidator } from "react-router-dom";
 type Props = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  showNotif: boolean;
-  setShowNotif: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Roles = ["collaborator"];
 
-export default function AddMemberModal({
-  showModal,
-  setShowModal,
-  showNotif,
-  setShowNotif,
-}: Props) {
+export default function AddMemberModal({ showModal, setShowModal }: Props) {
   const { userId } = useUserStore();
   const revalidator = useRevalidator();
 
   const roles: Roles = ["collaborator"];
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,16 +28,25 @@ export default function AddMemberModal({
 
     try {
       if (userId && email && role) {
-        const result = await createInvitation(userId, email, role);
+        await createInvitation(userId, email, role);
         revalidator.revalidate();
+        form.reset();
         setShowModal(!showModal);
-        setShowNotif(!showNotif);
       }
     } catch (error) {
+      form.reset();
       setShowModal(!showModal);
-      setShowNotif(!showNotif);
-      throw new Error(error.message);
+      if (error instanceof Error) {
+        console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
+      } else {
+        console.error("Erreur inattendue :", error);
+      }
     }
+  };
+
+  const handleCloseModal = () => {
+    formRef.current?.reset();
+    setShowModal(!showModal);
   };
 
   return (
@@ -51,13 +54,14 @@ export default function AddMemberModal({
       <form
         className="relative bg-white rounded-lg h-fit w-[30rem] py-4 px-6 flex flex-col gap-4"
         onSubmit={handleSubmit}
+        ref={formRef}
       >
         <div className="flex items-center justify-between">
           <h1 className="font-semibold">Send an invitation to a team member</h1>
           <button
             className="px-2 py-1 font-medium bg-white border-2 rounded-lg border-zinc-200 hover:bg-zinc-100"
             aria-label="close modal"
-            onClick={() => setShowModal(false)}
+            onClick={handleCloseModal}
           >
             <XMarkIcon className="size-4" />
           </button>
