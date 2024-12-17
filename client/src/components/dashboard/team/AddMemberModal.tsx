@@ -7,13 +7,17 @@ import { useRevalidator } from "react-router-dom";
 type Props = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  revalidator: any;
 };
 
 type Roles = ["collaborator"];
 
-export default function AddMemberModal({ showModal, setShowModal }: Props) {
+export default function AddMemberModal({
+  showModal,
+  setShowModal,
+  revalidator,
+}: Props) {
   const { userId } = useUserStore();
-  const revalidator = useRevalidator();
 
   const roles: Roles = ["collaborator"];
   const formRef = useRef<HTMLFormElement>(null);

@@ -1,9 +1,9 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import AddMemberModal from "../components/dashboard/team/AddMemberModal";
-import { getInvitations } from "../api";
-import { useLoaderData } from "react-router-dom";
-import { useUserStore } from "../store/user-store";
+import { getInvitations, updateInvitation } from "../api";
+import { useLoaderData, useRevalidator } from "react-router-dom";
+import InvitationCard from "../components/dashboard/invitations/InvitationCard";
 
 type Props = {};
 
@@ -23,7 +23,7 @@ interface SenderDetails {
 
 interface Invitation {
   _id: string;
-  status: "accpeted" | "pending" | "rejected";
+  status: "accepted" | "pending" | "rejected";
   createdAt: Date;
   recipient: string;
   recipientDetails: RecipientDetails;
@@ -48,11 +48,39 @@ export default function FriendsList({}: Props) {
   const invitations = useLoaderData() as Invitation[];
   const userId = JSON.parse(localStorage.getItem("userId") as string);
 
-  console.log(invitations);
+  const revalidator = useRevalidator();
+
+  const handleInvitationAnswer = async (
+    status: "accepted" | "rejected",
+    id: string
+  ) => {
+    try {
+      if (status) {
+        await updateInvitation(id, status);
+        revalidator.revalidate();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
+      } else {
+        console.error("Erreur inattendue :", error);
+      }
+    }
+  };
+
+  const handleCancelInvitation = async () => {};
+
+  useEffect(() => {
+    console.log(showInvitations);
+  }, [showInvitations]);
 
   return (
     <div>
-      <AddMemberModal showModal={showModal} setShowModal={setShowModal} />
+      <AddMemberModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        revalidator={revalidator}
+      />
       <header className="page-header">
         <h1 className="page-title">Team members</h1>
         <button
@@ -67,12 +95,13 @@ export default function FriendsList({}: Props) {
         <div className="flex items-center gap-4">
           <button
             className={!showInvitations ? "border-b-2 border-zinc-600" : ""}
+            onClick={() => setShowInvitations(false)}
           >
             Members
           </button>
           <button
             className={showInvitations ? "border-b-2 border-zinc-600" : ""}
-            onClick={() => setShowInvitations(!showInvitations)}
+            onClick={() => setShowInvitations(true)}
           >
             Invitations
           </button>
@@ -84,46 +113,28 @@ export default function FriendsList({}: Props) {
                 {invitations.map((invitation) => (
                   <li key={invitation._id}>
                     {invitation.senderDetails._id !== userId ? (
-                      <div className="flex items-center justify-between p-4 border-2 rounded-lg bg-zinc-100/20 border-zinc-200">
-                        <div className="flex items-center gap-6">
-                          <h2 className="font-medium">
-                            {invitation.senderDetails.firstname}{" "}
-                            {invitation.senderDetails.lastname}
-                          </h2>
-                          <p className="text-sm">
-                            {invitation.senderDetails.email}
-                          </p>
-                          <span className="p-1 text-xs rounded-lg bg-zinc-200">
-                            {invitation.status}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <button className="px-4 py-1 font-medium text-white bg-black rounded-lg hover:bg-black/70">
-                            accept
-                          </button>
-                          <button className="px-4 py-1 font-medium text-white bg-black rounded-lg hover:bg-black/70">
-                            reject
-                          </button>
-                        </div>
-                      </div>
+                      <InvitationCard
+                        firstname={invitation?.senderDetails.firstname}
+                        lastname={invitation?.senderDetails.lastname}
+                        email={invitation?.senderDetails.email}
+                        status={invitation.status}
+                        isPending={invitation.status === "pending"}
+                        onAccept={() =>
+                          handleInvitationAnswer("accepted", invitation._id)
+                        }
+                        onReject={() =>
+                          handleInvitationAnswer("rejected", invitation._id)
+                        }
+                      />
                     ) : (
-                      <div className="flex items-center justify-between p-4 border-2 rounded-lg bg-zinc-100/20 border-zinc-200">
-                        <div className="flex items-center gap-6">
-                          <h2 className="font-medium">
-                            {invitation.recipientDetails.firstname}{" "}
-                            {invitation.recipientDetails.lastname}
-                          </h2>
-                          <p className="text-sm">
-                            {invitation.recipientDetails.email}
-                          </p>
-                          <span className="p-1 text-xs rounded-lg bg-zinc-200">
-                            {invitation.status}
-                          </span>
-                        </div>
-                        <button className="px-4 py-2 rounded-lg py2 bg-zinc-200 hover:bg-zinc-200/70">
-                          cancel
-                        </button>
-                      </div>
+                      <InvitationCard
+                        firstname={invitation?.recipientDetails.firstname}
+                        lastname={invitation?.recipientDetails.lastname}
+                        email={invitation?.recipientDetails.email}
+                        status={invitation.status}
+                        isPending={invitation.status === "pending"}
+                        onCancel={() => handleCancelInvitation()}
+                      />
                     )}
                   </li>
                 ))}

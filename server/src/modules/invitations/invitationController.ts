@@ -153,3 +153,81 @@ export const readByUserId = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const updateInvitation = async (req: Request, res: Response) => {
+  try {
+    const invitationCollection = await getCollection<Invitation>("invitations");
+    const userCollection = await getCollection<User>("users");
+    const invitationId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(invitationId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
+    const invitationExists = await invitationCollection.findOne({
+      _id: invitationId,
+    });
+
+    if (!invitationExists) {
+      res.status(404).json({ message: "Invitation doesn't exists" });
+      return;
+    }
+
+    if (invitationExists.status !== "pending") {
+      res.status(400).json({ message: "Invitation already answered" });
+      return;
+    }
+
+    const result = await invitationCollection.updateOne(
+      { _id: invitationId },
+      { $set: { status: req.body.status } }
+    );
+
+    if (result.modifiedCount !== 1) {
+      res.sendStatus(422);
+      return;
+    }
+
+    const updatedInvitation = await invitationCollection.findOne({
+      _id: invitationId,
+    });
+
+    if (updatedInvitation?.status === "accepted") {
+      const sender = await userCollection.findOne({
+        _id: invitationExists.sender,
+      });
+      const recipient = await userCollection.findOne({
+        _id: invitationExists.recipient,
+      });
+
+      if (sender && recipient) {
+        const senderUpdate = await userCollection.updateOne(
+          { _id: sender._id },
+          { $addToSet: { friends: recipient?._id } }
+        );
+
+        if (senderUpdate.modifiedCount === 0) {
+          console.error("Failed to update recipient");
+        }
+
+        const recipientUpdate = await userCollection.updateOne(
+          { _id: recipient._id },
+          { $addToSet: { friends: sender?._id } }
+        );
+
+        if (recipientUpdate.modifiedCount === 0) {
+          console.error("Failed to update recipient");
+        }
+      } else {
+        res.status(404).json({ message: "Sender or Recipient not found" });
+        return;
+      }
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

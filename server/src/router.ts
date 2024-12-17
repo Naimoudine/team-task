@@ -37,6 +37,7 @@ import {
   createInvitation,
   readAll as invitationReadAll,
   readByUserId as invitationReadByUserId,
+  updateInvitation,
 } from "./modules/invitations/invitationController";
 import { hashPassword, verifyToken } from "./service/auth";
 import { isLoggedIn, login, logout } from "./modules/users/authAction";
@@ -89,4 +90,5 @@ router.get("/logout", verifyToken, logout);
 router.get("/invitations", invitationReadAll);
 router.get("/invitations/:id", invitationReadByUserId);
 router.post("/invitations/:userId", createInvitation);
+router.post("/invitations/:id/respond", updateInvitation);
 export default router;

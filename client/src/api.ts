@@ -374,3 +374,19 @@ export const getInvitations = async (id: string) => {
   const data = await response.json();
   return data;
 };
+
+export const updateInvitation = async (id: string, status: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/invitations/${id}/respond`,
+    {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+      credentials: "include",
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to update invitation");
+  }
+  return null;
+};
