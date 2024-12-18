@@ -33,6 +33,22 @@ export const getUser = async (userId: string) => {
   }
 };
 
+export const getUserFriends = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/users/${id}/friends`,
+    {
+      method: "get",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to get user friends");
+  }
+  const data = await response.json();
+  return data;
+};
+
 export const createProject = async (id: string, project: Project) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/users/${id}/projects`,

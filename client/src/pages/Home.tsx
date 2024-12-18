@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getProjects, getTasks } from "../api";
+import { getProjects, getTasks, getUserFriends } from "../api";
 import { Task } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
 
@@ -15,7 +15,8 @@ export const loader = async () => {
     const userId = JSON.parse(localStorage.getItem("userId") as string);
     const projects = await getProjects(userId);
     const tasks = await getTasks(userId);
-    return { projects, tasks };
+    const members = await getUserFriends(userId);
+    return { projects, tasks, members };
   } catch (error) {
     console.error("Error fetching data:", error); // Log the error
     throw new Error("Failed to load projects and tasks"); // Throw a custom error message
@@ -23,7 +24,7 @@ export const loader = async () => {
 };
 
 export default function Home({}: Props) {
-  const { projects, tasks } = useLoaderData() as LoaderType;
+  const { projects, tasks, members } = useLoaderData() as LoaderType;
   const navigate = useNavigate();
 
   return (
@@ -48,7 +49,7 @@ export default function Home({}: Props) {
           <h2 className="font-semibold text-center text-zinc-600">
             Team members
           </h2>
-          <p className="text-xl font-bold">0</p>
+          <p className="text-xl font-bold">{members?.length}</p>
         </article>
       </div>
       <div className="grid w-full grid-cols-2 grid-rows-2 gap-8 mt-8">

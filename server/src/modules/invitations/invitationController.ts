@@ -27,7 +27,7 @@ export const createInvitation = async (req: Request, res: Response) => {
     });
 
     const recipientExists = await userCollection.findOne({
-      email: req.body.email,
+      $and: [{ email: req.body.email }, { _id: { $ne: userExists?._id } }],
     });
 
     if (!recipientExists || !userExists) {
@@ -48,7 +48,7 @@ export const createInvitation = async (req: Request, res: Response) => {
     }
 
     const invitationExists = await invitationCollection.findOne({
-      $or: [{ recipient: recipientExists._id }, { sender: userExists._id }],
+      $and: [{ recipient: recipientExists._id }, { sender: userExists._id }],
     });
 
     if (invitationExists && invitationExists.status !== "rejected") {

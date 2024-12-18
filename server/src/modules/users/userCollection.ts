@@ -52,6 +52,6 @@ export async function createUserCollection() {
     },
   });
   await userCollection.createIndex({ email: 1 }, { unique: true });
-  console.log("Unique index on email created (if not existing).");
+  console.info("Unique index on email created (if not existing).");
   console.info('Collection "users" created successfully!');
 }

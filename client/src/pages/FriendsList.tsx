@@ -1,9 +1,15 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import AddMemberModal from "../components/dashboard/team/AddMemberModal";
-import { cancelInvitation, getInvitations, updateInvitation } from "../api";
+import {
+  cancelInvitation,
+  getInvitations,
+  getUserFriends,
+  updateInvitation,
+} from "../api";
 import { useLoaderData, useRevalidator } from "react-router-dom";
 import InvitationCard from "../components/dashboard/invitations/InvitationCard";
+import FriendCard from "../components/dashboard/friends/FriendCard";
 
 type Props = {};
 
@@ -31,11 +37,24 @@ interface Invitation {
   senderDetails: SenderDetails;
 }
 
+export interface Friends {
+  _id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+}
+
+export interface LoaderType {
+  invitations: Invitation[];
+  friends: Friends[];
+}
+
 export const loader = async () => {
   try {
     const userId = JSON.parse(localStorage.getItem("userId") as string);
     const invitations = await getInvitations(userId);
-    return invitations;
+    const friends = await getUserFriends(userId);
+    return { invitations, friends };
   } catch (error) {
     throw new Error("Failed to get friends list");
   }
@@ -45,7 +64,7 @@ export default function FriendsList({}: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showInvitations, setShowInvitations] = useState<boolean>(false);
 
-  const invitations = useLoaderData() as Invitation[];
+  const { invitations, friends } = useLoaderData() as LoaderType;
   const userId = JSON.parse(localStorage.getItem("userId") as string);
 
   const revalidator = useRevalidator();
@@ -83,10 +102,6 @@ export default function FriendsList({}: Props) {
     }
   };
 
-  useEffect(() => {
-    console.log(showInvitations);
-  }, [showInvitations]);
-
   return (
     <div>
       <AddMemberModal
@@ -122,7 +137,7 @@ export default function FriendsList({}: Props) {
         <div>
           {showInvitations ? (
             <div className="mt-4">
-              <ul>
+              <ul className="flex flex-col gap-2">
                 {invitations.map((invitation) => (
                   <li key={invitation._id}>
                     {invitation.senderDetails._id !== userId ? (
@@ -153,7 +168,21 @@ export default function FriendsList({}: Props) {
                 ))}
               </ul>
             </div>
-          ) : null}
+          ) : (
+            <div className="mt-4">
+              <ul className="flex flex-col gap-2">
+                {friends.map((friend) => (
+                  <li key={friend._id}>
+                    <FriendCard
+                      firstname={friend.firstname}
+                      lastname={friend.lastname}
+                      email={friend.email}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </main>
     </div>

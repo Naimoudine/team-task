@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUser,
+  readFriends,
   readAll as userReadAll,
   readById as userReadById,
 } from "./modules/users/userController";
@@ -75,6 +76,7 @@ router.get("/labels", labelReadAll);
 
 //user
 router.get("/users", userReadAll);
+router.get("/users/:id/friends", readFriends);
 router.get("/users/:id", verifyToken, userReadById);
 router.post("/users", hashPassword, createUser);
 

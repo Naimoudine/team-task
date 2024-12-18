@@ -123,15 +123,10 @@ export default function Register({}: Props) {
             firstname: "Firstname should be at least 2 characters long.",
           });
         } else {
-          console.log("hey");
           setInputError({ ...inputError, firstname: "" });
         }
     }
   };
-
-  useEffect(() => {
-    console.log(firstname);
-  }, [firstname]);
 
   return (
     <div className="flex flex-col items-center w-full h-full px-8 mt-24 h-fit">

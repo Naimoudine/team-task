@@ -93,3 +93,37 @@ export const readById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const readFriends = async (req: Request, res: Response) => {
+  try {
+    const userCollection = await getCollection<User>("users");
+    const userId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
+    const userExists = await userCollection.findOne({ _id: userId });
+
+    if (!userExists) {
+      res.status(404).json({ message: "User doesn't exist" });
+      return;
+    }
+
+    if (!userExists.friends || userExists.friends.length === 0) {
+      res.status(200).json([]);
+      return;
+    }
+
+    const friends = await userCollection
+      .find({ _id: { $in: userExists.friends } })
+      .project({ firstname: 1, lastname: 1, email: 1 })
+      .toArray();
+
+    res.json(friends);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
