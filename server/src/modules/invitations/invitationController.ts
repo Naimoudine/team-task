@@ -31,7 +31,9 @@ export const createInvitation = async (req: Request, res: Response) => {
     });
 
     if (!recipientExists || !userExists) {
-      res.status(404).json({ message: "User doesn't exist" });
+      res
+        .status(404)
+        .json({ message: "User not found or cannot be the currunt user" });
       return;
     }
 

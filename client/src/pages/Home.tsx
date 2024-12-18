@@ -2,12 +2,14 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { getProjects, getTasks, getUserFriends } from "../api";
 import { Task } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
+import { Friends } from "./FriendsList";
 
 type Props = {};
 
 interface LoaderType {
   projects: Project[];
   tasks: Task[];
+  members: Friends[];
 }
 
 export const loader = async () => {

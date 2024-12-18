@@ -62,12 +62,19 @@ export const loader = async () => {
 
 export default function FriendsList({}: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [showInvitations, setShowInvitations] = useState<boolean>(false);
+  const [showSection, setShowSection] = useState<"members" | "invitations">(
+    "members"
+  );
 
   const { invitations, friends } = useLoaderData() as LoaderType;
   const userId = JSON.parse(localStorage.getItem("userId") as string);
 
   const revalidator = useRevalidator();
+
+  const sortedInvitations = invitations.sort((a, b) => {
+    const statusOrder = ["pending", "accepted", "rejected"]; // Ordre souhaité
+    return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  });
 
   const handleInvitationAnswer = async (
     status: "accepted" | "rejected",
@@ -122,23 +129,27 @@ export default function FriendsList({}: Props) {
       <main className="p-4">
         <div className="flex items-center gap-4">
           <button
-            className={!showInvitations ? "border-b-2 border-zinc-600" : ""}
-            onClick={() => setShowInvitations(false)}
+            className={
+              showSection === "members" ? "border-b-2 border-zinc-600" : ""
+            }
+            onClick={() => setShowSection("members")}
           >
             Members
           </button>
           <button
-            className={showInvitations ? "border-b-2 border-zinc-600" : ""}
-            onClick={() => setShowInvitations(true)}
+            className={
+              showSection === "invitations" ? "border-b-2 border-zinc-600" : ""
+            }
+            onClick={() => setShowSection("invitations")}
           >
             Invitations
           </button>
         </div>
         <div>
-          {showInvitations ? (
+          {showSection === "invitations" ? (
             <div className="mt-4">
               <ul className="flex flex-col gap-2">
-                {invitations.map((invitation) => (
+                {sortedInvitations.map((invitation) => (
                   <li key={invitation._id}>
                     {invitation.senderDetails._id !== userId ? (
                       <InvitationCard
