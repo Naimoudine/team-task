@@ -35,6 +35,18 @@ export const createInvitation = async (req: Request, res: Response) => {
       return;
     }
 
+    if (
+      recipientExists.friends
+        .map((id) => id.toString())
+        .includes(userExists._id.toString()) ||
+      userExists.friends
+        .map((id) => id.toString())
+        .includes(recipientExists._id.toString())
+    ) {
+      res.status(422).json({ message: "User is already in your friend list" });
+      return;
+    }
+
     const invitationExists = await invitationCollection.findOne({
       $or: [{ recipient: recipientExists._id }, { sender: userExists._id }],
     });
@@ -161,7 +173,7 @@ export const updateInvitation = async (req: Request, res: Response) => {
     const invitationId = new ObjectId(req.params.id);
 
     if (!ObjectId.isValid(invitationId)) {
-      res.status(400).json({ error: "Invalid user ID" });
+      res.status(400).json({ error: "Invalid invitation ID" });
       return;
     }
 
@@ -223,6 +235,46 @@ export const updateInvitation = async (req: Request, res: Response) => {
         res.status(404).json({ message: "Sender or Recipient not found" });
         return;
       }
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const cancelInvitation = async (req: Request, res: Response) => {
+  try {
+    const invitationCollection = await getCollection<Invitation>("invitations");
+    const invitationId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(invitationId)) {
+      res.status(400).json({ error: "Invalid invitation ID" });
+      return;
+    }
+
+    const invitationExists = await invitationCollection.findOne({
+      _id: invitationId,
+      status: "pending",
+    });
+
+    if (!invitationExists) {
+      res
+        .status(400)
+        .json({ message: "Only pending inviation can be cancelled" });
+      return;
+    }
+
+    const result = await invitationCollection.deleteOne({
+      _id: invitationExists._id,
+    });
+
+    if (result.deletedCount !== 1) {
+      res
+        .status(404)
+        .json({ message: "Invitation doesn't exist or already cancelled" });
+      return;
     }
 
     res.sendStatus(204);

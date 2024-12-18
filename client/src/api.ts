@@ -390,3 +390,18 @@ export const updateInvitation = async (id: string, status: string) => {
   }
   return null;
 };
+
+export const cancelInvitation = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/invitations/${id}/cancel`,
+    {
+      method: "delete",
+      headers: { "Content-type": "application/json" },
+      credentials: "include",
+    }
+  );
+  if (response.status !== 204) {
+    throw new Error("Failed to delete invitation");
+  }
+  return null;
+};

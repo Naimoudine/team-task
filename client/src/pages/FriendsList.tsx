@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import AddMemberModal from "../components/dashboard/team/AddMemberModal";
-import { getInvitations, updateInvitation } from "../api";
+import { cancelInvitation, getInvitations, updateInvitation } from "../api";
 import { useLoaderData, useRevalidator } from "react-router-dom";
 import InvitationCard from "../components/dashboard/invitations/InvitationCard";
 
@@ -55,7 +55,7 @@ export default function FriendsList({}: Props) {
     id: string
   ) => {
     try {
-      if (status) {
+      if (status && id) {
         await updateInvitation(id, status);
         revalidator.revalidate();
       }
@@ -68,7 +68,20 @@ export default function FriendsList({}: Props) {
     }
   };
 
-  const handleCancelInvitation = async () => {};
+  const handleCancelInvitation = async (id: string) => {
+    try {
+      if (id) {
+        await cancelInvitation(id);
+        revalidator.revalidate();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
+      } else {
+        console.error("Erreur inattendue :", error);
+      }
+    }
+  };
 
   useEffect(() => {
     console.log(showInvitations);
@@ -133,7 +146,7 @@ export default function FriendsList({}: Props) {
                         email={invitation?.recipientDetails.email}
                         status={invitation.status}
                         isPending={invitation.status === "pending"}
-                        onCancel={() => handleCancelInvitation()}
+                        onCancel={() => handleCancelInvitation(invitation._id)}
                       />
                     )}
                   </li>

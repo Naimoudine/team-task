@@ -34,6 +34,7 @@ import {
   readAll as labelReadAll,
 } from "./modules/label/labelController";
 import {
+  cancelInvitation,
   createInvitation,
   readAll as invitationReadAll,
   readByUserId as invitationReadByUserId,
@@ -91,4 +92,5 @@ router.get("/invitations", invitationReadAll);
 router.get("/invitations/:id", invitationReadByUserId);
 router.post("/invitations/:userId", createInvitation);
 router.post("/invitations/:id/respond", updateInvitation);
+router.delete("/invitations/:id/cancel", cancelInvitation);
 export default router;
