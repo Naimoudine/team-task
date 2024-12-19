@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import AddMemberModal from "../components/dashboard/team/AddMemberModal";
 import {
   cancelInvitation,
+  deleteFriend,
   getInvitations,
   getUserFriends,
   updateInvitation,
@@ -120,6 +121,23 @@ export default function FriendsList({}: Props) {
     }
   };
 
+  const handleUnfriend = async (recipientId: string) => {
+    try {
+      const result = await deleteFriend(userId, recipientId);
+      revalidator.revalidate();
+      setNotifMessage(result);
+      setDisplayNotif(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        setNotifMessage(error.message);
+        setDisplayNotif(true);
+        console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
+      } else {
+        console.error("Erreur inattendue :", error);
+      }
+    }
+  };
+
   return (
     <div>
       <AddMemberModal
@@ -208,6 +226,7 @@ export default function FriendsList({}: Props) {
                       firstname={friend.firstname}
                       lastname={friend.lastname}
                       email={friend.email}
+                      onUnfriend={() => handleUnfriend(friend._id)}
                     />
                   </li>
                 ))}

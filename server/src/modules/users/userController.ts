@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getCollection } from "../../mongoClient";
+import { client, getCollection } from "../../mongoClient";
 import { ObjectId } from "mongodb";
 import { MongoServerError } from "mongodb";
 
@@ -107,7 +107,7 @@ export const readFriends = async (req: Request, res: Response) => {
     const userExists = await userCollection.findOne({ _id: userId });
 
     if (!userExists) {
-      res.status(404).json({ message: "User doesn't exist" });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
@@ -125,5 +125,78 @@ export const readFriends = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteFriend = async (req: Request, res: Response) => {
+  const session = client.startSession();
+  try {
+    session.startTransaction();
+
+    const userCollection = await getCollection<User>("users");
+    const userId = new ObjectId(req.params.id);
+    const recipientId = new ObjectId(req.params.recipientId);
+
+    if (!ObjectId.isValid(userId)) {
+      res.status(404).json({ message: "Invalid user ID" });
+      return;
+    }
+
+    if (!ObjectId.isValid(recipientId)) {
+      res.status(404).json({ message: "Invalid recipient ID" });
+      return;
+    }
+
+    const userExists = await userCollection.findOne(
+      { _id: userId },
+      { session }
+    );
+
+    const recipientExists = await userCollection.findOne(
+      { _id: recipientId },
+      { session }
+    );
+
+    if (!userExists || !recipientExists) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const updateUser = await userCollection.updateOne(
+      { _id: userExists._id },
+      { $pull: { friends: recipientExists._id } },
+      { session }
+    );
+
+    const updateRecipient = await userCollection.updateOne(
+      { _id: recipientExists._id },
+      { $pull: { friends: userExists._id } },
+      { session }
+    );
+
+    if (updateUser.modifiedCount !== 1) {
+      await session.abortTransaction();
+      res.status(422).json({ message: "Couldn't update user's friend list" });
+      return;
+    }
+
+    if (updateRecipient.modifiedCount !== 1) {
+      await session.abortTransaction();
+      res
+        .status(422)
+        .json({ message: "Couldn't update recipient's friend list" });
+      return;
+    }
+
+    await session.commitTransaction();
+    res.status(200).json({
+      message: `${recipientExists.firstname} ${recipientExists.lastname} removed from friend list.`,
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    session.endSession();
   }
 };

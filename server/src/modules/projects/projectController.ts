@@ -62,7 +62,7 @@ export const createProject = async (req: Request, res: Response) => {
         }
       }
     } else {
-      res.status(404).json({ message: "User doesn't exists" });
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     console.error("Error fetching tasklist:", error);
@@ -123,7 +123,7 @@ export const readProjectsByUserId = async (req: Request, res: Response) => {
     const userExists = await userCollection.findOne({ _id: userId });
 
     if (!userExists) {
-      res.status(404).json({ message: "User doesn't exists" });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 

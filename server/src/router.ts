@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUser,
+  deleteFriend,
   readFriends,
   readAll as userReadAll,
   readById as userReadById,
@@ -79,6 +80,7 @@ router.get("/users", userReadAll);
 router.get("/users/:id/friends", readFriends);
 router.get("/users/:id", verifyToken, userReadById);
 router.post("/users", hashPassword, createUser);
+router.delete("/users/:id/delete/:recipientId", deleteFriend);
 
 //login
 router.post("/login", login);
