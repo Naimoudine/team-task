@@ -3,43 +3,36 @@ import React, { ReactNode, useEffect, useState } from "react";
 
 type Props = {
   children: ReactNode;
-  showNotif: boolean;
-  setShowNotif: React.Dispatch<React.SetStateAction<boolean>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  displayNotif: boolean;
+  setDisplayNotif: React.Dispatch<React.SetStateAction<boolean>>;
+  setNotifMessage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function Notif({
   children,
-  showNotif,
-  setShowNotif,
-  setErrorMessage,
-  setSuccessMessage,
+  displayNotif,
+  setDisplayNotif,
+  setNotifMessage,
 }: Props) {
-  const [visible, setVisible] = useState<boolean>(true);
-
   useEffect(() => {
     const timer = setTimeout(() => {
-      setErrorMessage("");
-      setSuccessMessage("");
-      setVisible(false);
+      setNotifMessage("");
+      setDisplayNotif(false);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
-
-  if (!visible) return null;
+  }, [displayNotif]);
 
   return (
     <div
       className={
-        showNotif
+        displayNotif
           ? "absolute bottom-5 left-1/2 -translate-x-1/2 py-1 px-2 flex items-center gap-4 font-medium text-white bg-black rounded-lg"
           : "hidden"
       }
     >
       {children}
-      <button onClick={() => setShowNotif(!showNotif)}>
+      <button onClick={() => setDisplayNotif(!displayNotif)}>
         <XMarkIcon className="size-3" />
       </button>
     </div>

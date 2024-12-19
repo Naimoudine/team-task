@@ -2,12 +2,13 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useRef } from "react";
 import { useUserStore } from "../../../store/user-store";
 import { createInvitation } from "../../../api";
-import { useRevalidator } from "react-router-dom";
 
 type Props = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   revalidator: any;
+  setNotifMessage: React.Dispatch<React.SetStateAction<string>>;
+  setDisplayNotif: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Roles = ["collaborator"];
@@ -16,6 +17,8 @@ export default function AddMemberModal({
   showModal,
   setShowModal,
   revalidator,
+  setNotifMessage,
+  setDisplayNotif,
 }: Props) {
   const { userId } = useUserStore();
 
@@ -32,15 +35,19 @@ export default function AddMemberModal({
 
     try {
       if (userId && email && role) {
-        await createInvitation(userId, email, role);
+        const result = await createInvitation(userId, email, role);
         revalidator.revalidate();
         form.reset();
         setShowModal(!showModal);
+        setNotifMessage(result);
+        setDisplayNotif(true);
       }
     } catch (error) {
       form.reset();
       setShowModal(!showModal);
       if (error instanceof Error) {
+        setDisplayNotif(true);
+        setNotifMessage(error.message);
         console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
       } else {
         console.error("Erreur inattendue :", error);

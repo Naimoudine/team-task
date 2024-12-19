@@ -31,9 +31,7 @@ export const createInvitation = async (req: Request, res: Response) => {
     });
 
     if (!recipientExists || !userExists) {
-      res
-        .status(404)
-        .json({ message: "User not found or cannot be the currunt user" });
+      res.status(404).json({ message: "User not found. Try again!" });
       return;
     }
 
@@ -233,13 +231,18 @@ export const updateInvitation = async (req: Request, res: Response) => {
         if (recipientUpdate.modifiedCount === 0) {
           console.error("Failed to update recipient");
         }
+        res.status(204).json({
+          message: `${sender.firstname} ${sender.lastname} added to your friend list`,
+        });
+        return;
       } else {
         res.status(404).json({ message: "Sender or Recipient not found" });
         return;
       }
     }
-
-    res.sendStatus(204);
+    res.status(200).json({
+      message: `Invitation rejected`,
+    });
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -275,11 +278,10 @@ export const cancelInvitation = async (req: Request, res: Response) => {
     if (result.deletedCount !== 1) {
       res
         .status(404)
-        .json({ message: "Invitation doesn't exist or already cancelled" });
+        .json({ message: "Invitation doesn't exist or is already cancelled" });
       return;
     }
-
-    res.sendStatus(204);
+    res.status(200).json({ message: "Invitation cancelled" });
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ message: "Internal Server Error" });

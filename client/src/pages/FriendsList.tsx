@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AddMemberModal from "../components/dashboard/team/AddMemberModal";
 import {
   cancelInvitation,
@@ -10,6 +10,7 @@ import {
 import { useLoaderData, useRevalidator } from "react-router-dom";
 import InvitationCard from "../components/dashboard/invitations/InvitationCard";
 import FriendCard from "../components/dashboard/friends/FriendCard";
+import Notif from "../components/dashboard/notifications/Notif";
 
 type Props = {};
 
@@ -65,6 +66,8 @@ export default function FriendsList({}: Props) {
   const [showSection, setShowSection] = useState<"members" | "invitations">(
     "members"
   );
+  const [displayNotif, setDisplayNotif] = useState<boolean>(false);
+  const [notifMessage, setNotifMessage] = useState<string>("");
 
   const { invitations, friends } = useLoaderData() as LoaderType;
   const userId = JSON.parse(localStorage.getItem("userId") as string);
@@ -82,11 +85,15 @@ export default function FriendsList({}: Props) {
   ) => {
     try {
       if (status && id) {
-        await updateInvitation(id, status);
+        const result = await updateInvitation(id, status);
         revalidator.revalidate();
+        setNotifMessage(result);
+        setDisplayNotif(true);
       }
     } catch (error) {
       if (error instanceof Error) {
+        setNotifMessage(error.message);
+        setDisplayNotif(true);
         console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
       } else {
         console.error("Erreur inattendue :", error);
@@ -97,11 +104,15 @@ export default function FriendsList({}: Props) {
   const handleCancelInvitation = async (id: string) => {
     try {
       if (id) {
-        await cancelInvitation(id);
+        const result = await cancelInvitation(id);
         revalidator.revalidate();
+        setNotifMessage(result);
+        setDisplayNotif(true);
       }
     } catch (error) {
       if (error instanceof Error) {
+        setNotifMessage(error.message);
+        setDisplayNotif(true);
         console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
       } else {
         console.error("Erreur inattendue :", error);
@@ -115,7 +126,16 @@ export default function FriendsList({}: Props) {
         showModal={showModal}
         setShowModal={setShowModal}
         revalidator={revalidator}
+        setNotifMessage={setNotifMessage}
+        setDisplayNotif={setDisplayNotif}
       />
+      <Notif
+        displayNotif={displayNotif}
+        setDisplayNotif={setDisplayNotif}
+        setNotifMessage={setNotifMessage}
+      >
+        {notifMessage}
+      </Notif>
       <header className="page-header">
         <h1 className="page-title">Team members</h1>
         <button

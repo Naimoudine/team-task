@@ -370,10 +370,11 @@ export const createInvitation = async (
       }),
     }
   );
+  const data = await response.json();
   if (response.status !== 201) {
-    throw new Error("Failed to send invitation");
+    throw new Error(data.message || "Failed to send invitation");
   }
-  return "Invitation send successfully";
+  return data.message;
 };
 
 export const getInvitations = async (id: string) => {
@@ -384,10 +385,10 @@ export const getInvitations = async (id: string) => {
       headers: { "Content-type": "application/json" },
     }
   );
-  if (!response.ok) {
-    throw new Error("Failed to get invitation");
-  }
   const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to get invitation");
+  }
   return data;
 };
 
@@ -401,10 +402,11 @@ export const updateInvitation = async (id: string, status: string) => {
       credentials: "include",
     }
   );
-  if (response.status !== 204) {
-    throw new Error("Failed to update invitation");
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to update invitation");
   }
-  return null;
+  return data.message;
 };
 
 export const cancelInvitation = async (id: string) => {
@@ -416,8 +418,9 @@ export const cancelInvitation = async (id: string) => {
       credentials: "include",
     }
   );
-  if (response.status !== 204) {
-    throw new Error("Failed to delete invitation");
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to cancel invitation");
   }
-  return null;
+  return data.message;
 };
