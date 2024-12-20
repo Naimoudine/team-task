@@ -191,6 +191,7 @@ export default function FriendsList({}: Props) {
                   <li key={invitation._id}>
                     {invitation.senderDetails._id !== userId ? (
                       <InvitationCard
+                        received={true}
                         firstname={invitation?.senderDetails.firstname}
                         lastname={invitation?.senderDetails.lastname}
                         email={invitation?.senderDetails.email}
@@ -205,6 +206,7 @@ export default function FriendsList({}: Props) {
                       />
                     ) : (
                       <InvitationCard
+                        received={false}
                         firstname={invitation?.recipientDetails.firstname}
                         lastname={invitation?.recipientDetails.lastname}
                         email={invitation?.recipientDetails.email}

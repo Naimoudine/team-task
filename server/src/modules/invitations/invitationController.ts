@@ -8,6 +8,7 @@ export interface Invitation {
   recipient: ObjectId;
   status: "accepted" | "rejected" | "pending";
   createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const createInvitation = async (req: Request, res: Response) => {
@@ -51,23 +52,30 @@ export const createInvitation = async (req: Request, res: Response) => {
       $and: [{ recipient: recipientExists._id }, { sender: userExists._id }],
     });
 
-    if (invitationExists && invitationExists.status !== "rejected") {
-      res.status(422).json({ message: "Invitation already exists" });
-      return;
-    }
+    if (invitationExists) {
+      const updateInvitation = await invitationCollection.updateOne(
+        { _id: invitationExists._id },
+        { $set: { status: "pending", updatedAt: new Date() } }
+      );
 
-    const newInvitation: Invitation = {
-      sender: userExists._id,
-      recipient: recipientExists._id,
-      status: "pending",
-      createdAt: new Date(),
-    };
+      if (updateInvitation.modifiedCount !== 1) {
+        res.status(422).json({ message: "Failed to update the invitation" });
+        return;
+      }
+    } else {
+      const newInvitation: Invitation = {
+        sender: userExists._id,
+        recipient: recipientExists._id,
+        status: "pending",
+        createdAt: new Date(),
+      };
 
-    const result = await invitationCollection.insertOne(newInvitation);
+      const result = await invitationCollection.insertOne(newInvitation);
 
-    if (!result.acknowledged) {
-      res.status(500).json({ message: "Failed to create invitation" });
-      return;
+      if (!result.acknowledged) {
+        res.status(500).json({ message: "Failed to create invitation" });
+        return;
+      }
     }
 
     res.status(201).json({ message: "Invitation send successfully" });
@@ -220,7 +228,7 @@ export const updateInvitation = async (req: Request, res: Response) => {
         );
 
         if (senderUpdate.modifiedCount === 0) {
-          console.error("Failed to update recipient");
+          console.error("Failed to update sender friend list");
         }
 
         const recipientUpdate = await userCollection.updateOne(
@@ -229,9 +237,9 @@ export const updateInvitation = async (req: Request, res: Response) => {
         );
 
         if (recipientUpdate.modifiedCount === 0) {
-          console.error("Failed to update recipient");
+          console.error("Failed to update recipient friend list");
         }
-        res.status(204).json({
+        res.status(200).json({
           message: `${sender.firstname} ${sender.lastname} added to your friend list`,
         });
         return;

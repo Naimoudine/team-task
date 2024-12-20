@@ -1,6 +1,7 @@
 import React from "react";
 
 type Props = {
+  received: boolean;
   firstname: string;
   lastname: string;
   email: string;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function InvitationCard({
+  received,
   firstname,
   lastname,
   email,
@@ -23,7 +25,12 @@ export default function InvitationCard({
 }: Props) {
   return (
     <div className="flex items-center justify-between p-4 border-2 rounded-lg bg-zinc-100/20 border-zinc-200">
-      <div className="flex items-center gap-6">
+      <article className="flex items-center gap-6">
+        {received ? (
+          <p className="text-xs text-zinc-600">Received</p>
+        ) : (
+          <p className="text-xs text-zinc-600">Sent</p>
+        )}
         <h2 className="font-medium">
           {firstname} {lastname}
         </h2>
@@ -39,7 +46,7 @@ export default function InvitationCard({
         >
           {status}
         </span>
-      </div>
+      </article>
       {isPending ? (
         onAccept && onReject ? (
           <div className="flex items-center gap-4">

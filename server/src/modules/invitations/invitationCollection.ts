@@ -22,6 +22,9 @@ export const createInvitationCollection = async () => {
           createdAt: {
             bsonType: "date",
           },
+          updatedAt: {
+            bsonType: "date",
+          },
         },
       },
     },
