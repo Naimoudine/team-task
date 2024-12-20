@@ -49,7 +49,7 @@ export const createInvitation = async (req: Request, res: Response) => {
     }
 
     const invitationExists = await invitationCollection.findOne({
-      $and: [{ recipient: recipientExists._id }, { sender: userExists._id }],
+      $or: [{ recipient: recipientExists._id }, { sender: userExists._id }],
     });
 
     if (invitationExists) {
