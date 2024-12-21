@@ -101,17 +101,21 @@ export default function Home({}: Props) {
               : "p-4 flex items-center justify-center border-2 rounded-lg border-zinc-200 h-[250px]"
           }
         >
-          <ul>
-            {members.map((member) => (
-              <li key={member._id}>
-                <FriendCard
-                  firstname={member.firstname}
-                  lastname={member.lastname}
-                  email={member.email}
-                />
-              </li>
-            ))}
-          </ul>
+          {members.length > 0 ? (
+            <ul>
+              {members.map((member) => (
+                <li key={member._id}>
+                  <FriendCard
+                    firstname={member.firstname}
+                    lastname={member.lastname}
+                    email={member.email}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <h3 className="font-semibold">You have no team members</h3>
+          )}
         </div>
       </div>
     </section>
