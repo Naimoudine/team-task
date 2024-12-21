@@ -5,7 +5,7 @@ type Props = {
   firstname: string;
   lastname: string;
   email: string;
-  onUnfriend: () => void;
+  onUnfriend?: () => void;
 };
 
 export default function FriendCard({
@@ -22,9 +22,14 @@ export default function FriendCard({
         </h2>
         <p className="text-sm text-zinc-600">{email}</p>
       </div>
-      <button className="p-2 rounded-lg hover:bg-zinc-100" onClick={onUnfriend}>
-        <UserMinusIcon className="size-4 text-zinc-600" />
-      </button>
+      {onUnfriend ? (
+        <button
+          className="p-2 rounded-lg hover:bg-zinc-100"
+          onClick={onUnfriend}
+        >
+          <UserMinusIcon className="size-4 text-zinc-600" />
+        </button>
+      ) : null}
     </div>
   );
 }

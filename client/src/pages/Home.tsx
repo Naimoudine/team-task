@@ -3,6 +3,7 @@ import { getProjects, getTasks, getUserFriends } from "../api";
 import { Task } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
 import { Friends } from "./FriendsList";
+import FriendCard from "../components/dashboard/friends/FriendCard";
 
 type Props = {};
 
@@ -93,8 +94,24 @@ export default function Home({}: Props) {
         <div className="flex items-center justify-center p-4 border-2 rounded-lg border-zinc-200">
           <h3 className="font-semibold">Coming soon tasks asigned to you</h3>
         </div>
-        <div className="flex items-center justify-center p-4 border-2 rounded-lg border-zinc-200">
-          <h3 className="font-semibold">Coming soon your team members</h3>
+        <div
+          className={
+            members.length > 0
+              ? "p-4 border-2 rounded-lg border-zinc-200 h-[250px]"
+              : "p-4 flex items-center justify-center border-2 rounded-lg border-zinc-200 h-[250px]"
+          }
+        >
+          <ul>
+            {members.map((member) => (
+              <li key={member._id}>
+                <FriendCard
+                  firstname={member.firstname}
+                  lastname={member.lastname}
+                  email={member.email}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
