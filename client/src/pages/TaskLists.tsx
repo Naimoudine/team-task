@@ -4,19 +4,25 @@ import {
   useLocation,
   useRevalidator,
   NavLink,
-  useNavigate,
 } from "react-router-dom";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/16/solid";
 import type { TaskList } from "../components/dashboard/tasks/TaskSection";
 import TaskSection from "../components/dashboard/tasks/TaskSection";
 import DisplayModal from "../components/dashboard/tasks/DisplayModal";
 import AddTaskListModal from "../components/dashboard/tasks/AddTaskListModal";
-import { getTaskListsByProjectId } from "../api";
+import {
+  getProjectById,
+  getTaskListsByProjectId,
+  getUserFriends,
+} from "../api";
 import { Project } from "./Projects";
 import { SlashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import ProjectSettingsModal from "../components/dashboard/projects/ProjectSettingsModal";
 import ConfirmDeleteProjectModal from "../components/dashboard/projects/ConfirmDeleteProjectModal";
 import ConfirmDeleteTaskListModal from "../components/dashboard/tasks/ConfirmDeleteTaskListModal";
+import AddMemberModal from "../components/dashboard/projects/AddMemberModal";
+import { Friend } from "./FriendsList";
+import Notif from "../components/dashboard/notifications/Notif";
 
 type Props = {};
 
@@ -25,11 +31,16 @@ export type DisplayType = "list" | "board";
 interface LoaderDataType {
   project: Project;
   taskLists: TaskList[];
+  friends: Friend[];
 }
 
 export const loader = async ({ params }: any) => {
   try {
-    return getTaskListsByProjectId(params.id);
+    const userId = JSON.parse(localStorage.getItem("userId") as string);
+    const project = await getProjectById(params.id);
+    const taskLists = await getTaskListsByProjectId(params.id);
+    const friends = await getUserFriends(userId);
+    return { project, taskLists, friends };
   } catch (error) {
     throw error;
   }
@@ -46,7 +57,11 @@ export default function TaskLists({}: Props) {
   const [currentTaskList, setCurrentTaskList] = useState<TaskList | null>(null);
   const [confirmDeleteTaskList, setConfirmDeleteTaskList] =
     useState<boolean>(false);
-  const { project, taskLists } = useLoaderData() as LoaderDataType;
+  const [displayAddMember, setDisplayAddMember] = useState<boolean>(false);
+  const [displayNotif, setDisplayNotif] = useState<boolean>(false);
+  const [notifMessage, setNotifMessage] = useState<string>("");
+
+  const { project, taskLists, friends } = useLoaderData() as LoaderDataType;
 
   const revalidator = useRevalidator();
 
@@ -73,6 +88,22 @@ export default function TaskLists({}: Props) {
         revalidator={revalidator}
         projectId={projectId}
       />
+      <AddMemberModal
+        displayAddMember={displayAddMember}
+        setDisplayAddMember={setDisplayAddMember}
+        friends={friends}
+        projectId={projectId}
+        setNotifMessage={setNotifMessage}
+        setDisplayNotif={setDisplayNotif}
+        revalidator={revalidator}
+      />
+      <Notif
+        displayNotif={displayNotif}
+        setDisplayNotif={setDisplayNotif}
+        setNotifMessage={setNotifMessage}
+      >
+        {notifMessage}
+      </Notif>
       <header className="relative flex items-center justify-between border-b wrapper border-zinc-200">
         <h1 className="page-title">{project?.title}</h1>
         <div className="flex items-center gap-8">
@@ -132,6 +163,8 @@ export default function TaskLists({}: Props) {
             <EllipsisHorizontalIcon className="size-5" />
           </button>
           <ProjectSettingsModal
+            displayAddMember={displayAddMember}
+            setDisplayAddMember={setDisplayAddMember}
             deleteProject={deleteProject}
             setDeleteProject={setDeleteProject}
             setConfirmDeleteProject={setConfirmDeleteProject}

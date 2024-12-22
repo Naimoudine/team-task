@@ -1,4 +1,5 @@
 import { Task, TaskList } from "./components/dashboard/tasks/TaskSection";
+import { Friend } from "./pages/FriendsList";
 import { Project } from "./pages/Projects";
 
 export const authUser = async () => {
@@ -121,23 +122,34 @@ export const deleteProject = async (id: string) => {
   return null;
 };
 
-export const getTaskListsByProjectId = async (id: string) => {
-  const [projectsData, taskListsData] = await Promise.all([
-    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}`, {
-      credentials: "include",
-    }),
-    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}/taskLists`, {
-      credentials: "include",
-    }),
-  ]);
-  if (!projectsData.ok || !taskListsData.ok) {
-    throw new Error("Failed to fetch data");
+export const addMembers = async (id: string, members: Friend[]) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}/members`,
+    {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ members }),
+    }
+  );
+  const data = await response.json();
+  if (response.status !== 200) {
+    throw new Error(data.message || "Failed to add members");
   }
-  const [project, taskLists] = await Promise.all([
-    projectsData.json(),
-    taskListsData.json(),
-  ]);
-  return { project, taskLists };
+  return data.message;
+};
+
+export const getTaskListsByProjectId = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}/taskLists`,
+    {
+      credentials: "include",
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch tasklists");
+  }
+  const data = await response.json();
+  return data;
 };
 
 export const getTaskLists = async (projectId: string) => {

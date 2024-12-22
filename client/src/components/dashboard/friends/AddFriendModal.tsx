@@ -11,8 +11,6 @@ type Props = {
   setDisplayNotif: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type Roles = ["collaborator"];
-
 export default function AddFriendModal({
   showModal,
   setShowModal,

@@ -5,12 +5,16 @@ type Props = {
   deleteProject: boolean;
   setDeleteProject: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirmDeleteProject: React.Dispatch<React.SetStateAction<boolean>>;
+  displayAddMember: boolean;
+  setDisplayAddMember: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ProjectSettingsModal({
   deleteProject,
   setDeleteProject,
   setConfirmDeleteProject,
+  displayAddMember,
+  setDisplayAddMember,
 }: Props) {
   const handleDelete = () => {
     setDeleteProject(!deleteProject);
@@ -29,6 +33,7 @@ export default function ProjectSettingsModal({
           <button
             className="flex items-center justify-center gap-2"
             type="button"
+            onClick={() => setDisplayAddMember(!displayAddMember)}
           >
             <UserPlusIcon className="size-4" />{" "}
             <span className="text-sm whitespace-nowrap">add member</span>

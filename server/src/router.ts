@@ -25,6 +25,7 @@ import {
   deleteTask,
 } from "./modules/tasks/taskController";
 import {
+  addMembers,
   createProject,
   deleteProject,
   readAll as projectReadAll,
@@ -52,6 +53,7 @@ router.post("/users/:id/projects", createProject);
 router.get("/users/:id/projects", readProjectsByUserId);
 router.get("/projects/:id", projectReadById);
 router.delete("/projects/:id", deleteProject);
+router.post("/projects/:id/members", addMembers);
 
 // taskLists
 router.get("/taskLists/:id", taskListReadById);

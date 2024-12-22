@@ -39,7 +39,7 @@ interface Invitation {
   senderDetails: SenderDetails;
 }
 
-export interface Friends {
+export interface Friend {
   _id: string;
   firstname: string;
   lastname: string;
@@ -48,7 +48,7 @@ export interface Friends {
 
 export interface LoaderType {
   invitations: Invitation[];
-  friends: Friends[];
+  friends: Friend[];
 }
 
 export const loader = async () => {
