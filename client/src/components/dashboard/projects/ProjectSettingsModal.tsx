@@ -1,4 +1,4 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 type Props = {
@@ -20,7 +20,7 @@ export default function ProjectSettingsModal({
     <div
       className={
         deleteProject
-          ? "absolute p-2 bg-white border-2 rounded-lg top-8 border-zinc-200"
+          ? "absolute p-2 bg-white border-2 rounded-lg top-8 border-zinc-200 w-fit"
           : "hidden"
       }
     >
@@ -29,9 +29,19 @@ export default function ProjectSettingsModal({
           <button
             className="flex items-center justify-center gap-2"
             type="button"
+          >
+            <UserPlusIcon className="size-4" />{" "}
+            <span className="text-sm whitespace-nowrap">add member</span>
+          </button>
+        </li>
+        <li className="w-full px-2 py-1 rounded-lg hover:bg-zinc-100">
+          <button
+            className="flex items-center justify-center gap-2"
+            type="button"
             onClick={() => handleDelete()}
           >
-            <TrashIcon className="size-4" /> <span>delete</span>
+            <TrashIcon className="size-4" />{" "}
+            <span className="text-sm whitespace-nowrap">delete</span>
           </button>
         </li>
       </ul>

@@ -1,6 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
-import AddMemberModal from "../components/dashboard/team/AddMemberModal";
+import AddFriendModal from "../components/dashboard/friends/AddFriendModal";
 import {
   cancelInvitation,
   deleteFriend,
@@ -64,8 +64,8 @@ export const loader = async () => {
 
 export default function FriendsList({}: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [showSection, setShowSection] = useState<"members" | "invitations">(
-    "members"
+  const [showSection, setShowSection] = useState<"friends" | "invitations">(
+    "friends"
   );
   const [displayNotif, setDisplayNotif] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string>("");
@@ -140,7 +140,7 @@ export default function FriendsList({}: Props) {
 
   return (
     <div>
-      <AddMemberModal
+      <AddFriendModal
         showModal={showModal}
         setShowModal={setShowModal}
         revalidator={revalidator}
@@ -155,7 +155,7 @@ export default function FriendsList({}: Props) {
         {notifMessage}
       </Notif>
       <header className="page-header">
-        <h1 className="page-title">Team members</h1>
+        <h1 className="page-title">Friends</h1>
         <button
           className="flex items-center justify-center gap-2 px-2 py-1 rounded-lg hover:bg-gray-200"
           onClick={() => setShowModal(!showModal)}
@@ -168,11 +168,11 @@ export default function FriendsList({}: Props) {
         <div className="flex items-center gap-4">
           <button
             className={
-              showSection === "members" ? "border-b-2 border-zinc-600" : ""
+              showSection === "friends" ? "border-b-2 border-zinc-600" : ""
             }
-            onClick={() => setShowSection("members")}
+            onClick={() => setShowSection("friends")}
           >
-            Members
+            Friends
           </button>
           <button
             className={

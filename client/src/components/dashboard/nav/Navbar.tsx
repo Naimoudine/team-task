@@ -39,10 +39,10 @@ export default function Navbar({}: Props) {
             className={({ isActive }) =>
               isActive ? "nav-active-link" : "nav-link"
             }
-            to="/team"
+            to="/friends"
           >
             <UsersIcon className="nav-icon" />
-            Team
+            Friends
           </NavLink>
         </li>
         <li>

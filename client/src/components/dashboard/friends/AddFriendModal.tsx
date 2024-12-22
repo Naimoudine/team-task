@@ -13,7 +13,7 @@ type Props = {
 
 type Roles = ["collaborator"];
 
-export default function AddMemberModal({
+export default function AddFriendModal({
   showModal,
   setShowModal,
   revalidator,
@@ -22,7 +22,6 @@ export default function AddMemberModal({
 }: Props) {
   const { userId } = useUserStore();
 
-  const roles: Roles = ["collaborator"];
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,11 +30,10 @@ export default function AddMemberModal({
     const form = e.currentTarget;
     const formData = new FormData(form);
     const email = formData.get("email")?.toString();
-    const role = formData.get("role")?.toString();
 
     try {
-      if (userId && email && role) {
-        const result = await createInvitation(userId, email, role);
+      if (userId && email) {
+        const result = await createInvitation(userId, email);
         revalidator.revalidate();
         form.reset();
         setShowModal(!showModal);
@@ -68,7 +66,7 @@ export default function AddMemberModal({
         ref={formRef}
       >
         <div className="flex items-center justify-between">
-          <h1 className="font-semibold">Send an invitation to a team member</h1>
+          <h1 className="font-semibold">Send an invitation to a friend</h1>
           <button
             className="px-2 py-1 font-medium bg-white border-2 rounded-lg border-zinc-200 hover:bg-zinc-100"
             aria-label="close modal"
@@ -86,17 +84,6 @@ export default function AddMemberModal({
             id="email"
           />
         </label>
-        <select
-          className="p-2 border rounded-lg border-zinc-400"
-          name="role"
-          id="role"
-        >
-          {roles.map((role) => (
-            <option key={role} value={role}>
-              {role}
-            </option>
-          ))}
-        </select>
         <button
           className="p-2 text-white bg-black rounded-lg button hover:bg-black/70"
           type="submit"

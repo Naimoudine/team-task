@@ -370,11 +370,7 @@ export const deleteTask = async (id: string) => {
   return null;
 };
 
-export const createInvitation = async (
-  id: string,
-  email: string,
-  role: string
-) => {
+export const createInvitation = async (id: string, email: string) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/invitations/${id}`,
     {
@@ -382,7 +378,6 @@ export const createInvitation = async (
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         email,
-        role,
       }),
     }
   );

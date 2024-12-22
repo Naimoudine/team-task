@@ -70,7 +70,7 @@ const router = createBrowserRouter([
         action: taskAction,
       },
       {
-        path: "team",
+        path: "friends",
         element: <FriendsList />,
         errorElement: <FriendsList />,
         loader: friendsListLoader,
