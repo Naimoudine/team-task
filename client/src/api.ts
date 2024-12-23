@@ -169,6 +169,22 @@ export const deleteMember = async (id: string, memberId: string) => {
   return data.message;
 };
 
+export const leaveProject = async (id: string, userId: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}/members/${userId}`,
+    {
+      method: "delete",
+      headers: { "Content-type": "application/json" },
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to leave project");
+  }
+  return data.message;
+};
+
 export const getTaskListsByProjectId = async (id: string) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/projects/${id}/taskLists`,

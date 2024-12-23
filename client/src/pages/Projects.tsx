@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { Link, useLoaderData, useRevalidator } from "react-router-dom";
 import { FolderIcon } from "@heroicons/react/16/solid";
-import {
-  PlusIcon,
-  AdjustmentsHorizontalIcon,
-} from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { getProjects } from "../api";
-import DisplayModal from "../components/dashboard/tasks/DisplayModal";
-import { DisplayType } from "./TaskLists";
 import AddProjectModal from "../components/dashboard/projects/AddProjectModal";
+import Notif from "../components/dashboard/notifications/Notif";
 
 type Props = {};
 

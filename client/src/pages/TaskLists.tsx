@@ -60,7 +60,7 @@ export default function TaskLists({}: Props) {
   const [isDisplayModal, setIsDisplayModal] = useState<boolean>(false);
   const [displayAddTaskListModal, setDisplayAddTaskListModal] =
     useState<boolean>(false);
-  const [deleteProject, setDeleteProject] = useState<boolean>(false);
+  const [displaySettings, setDisplaySettings] = useState<boolean>(false);
   const [confirmDeleteProject, setConfirmDeleteProject] =
     useState<boolean>(false);
   const [currentTaskList, setCurrentTaskList] = useState<TaskList | null>(null);
@@ -174,16 +174,19 @@ export default function TaskLists({}: Props) {
               className="p-1 rounded-lg hover:bg-zinc-100"
               type="button"
               aria-label="open setting"
-              onClick={() => setDeleteProject(!deleteProject)}
+              onClick={() => setDisplaySettings(!displaySettings)}
             >
               <EllipsisHorizontalIcon className="size-5" />
             </button>
             <ProjectSettingsModal
               displayAddMember={displayAddMember}
               setDisplayAddMember={setDisplayAddMember}
-              deleteProject={deleteProject}
-              setDeleteProject={setDeleteProject}
+              displaySettings={displaySettings}
+              setDisplaySettings={setDisplaySettings}
               setConfirmDeleteProject={setConfirmDeleteProject}
+              ownerId={ownerId!}
+              projectId={projectId}
+              revalidator={revalidator}
             />
           </div>
         </nav>
