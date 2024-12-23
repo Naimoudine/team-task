@@ -68,7 +68,10 @@ export default function ProjectSettingsModal({
           <button
             className="flex items-center justify-center gap-2"
             type="button"
-            onClick={() => setDisplayAddMember(!displayAddMember)}
+            onClick={() => {
+              setDisplayAddMember(!displayAddMember);
+              setDisplaySettings(!displaySettings);
+            }}
           >
             <UserPlusIcon className="size-4" />{" "}
             <span className="text-sm whitespace-nowrap">add member</span>

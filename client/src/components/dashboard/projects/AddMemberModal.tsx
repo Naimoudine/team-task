@@ -46,11 +46,11 @@ export default function AddMemberModal({
       revalidator.revalidate();
       setDisplayNotif(true);
       setNotifMessage(result);
-      setDisplayAddMember(!displayAddMember);
+      closeModal();
       setFriendList([]);
     } catch (error) {
       if (error instanceof Error) {
-        setDisplayAddMember(!displayAddMember);
+        closeModal();
         setDisplayNotif(true);
         setNotifMessage(error.message);
         console.error("Message d'erreur :", error.message); // Accès sécurisé à 'message'
