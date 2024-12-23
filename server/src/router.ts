@@ -27,9 +27,11 @@ import {
 import {
   addMembers,
   createProject,
+  deleteMember,
   deleteProject,
   readAll as projectReadAll,
   readById as projectReadById,
+  readProjectMembers,
   readProjectsByUserId,
 } from "./modules/projects/projectController";
 import {
@@ -54,6 +56,8 @@ router.get("/users/:id/projects", readProjectsByUserId);
 router.get("/projects/:id", projectReadById);
 router.delete("/projects/:id", deleteProject);
 router.post("/projects/:id/members", addMembers);
+router.get("/projects/:id/members", readProjectMembers);
+router.delete("/projects/:id/members/:memberId", deleteMember);
 
 // taskLists
 router.get("/taskLists/:id", taskListReadById);

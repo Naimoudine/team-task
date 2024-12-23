@@ -316,3 +316,132 @@ export const addMembers = async (req: Request, res: Response) => {
     session.endSession();
   }
 };
+
+export const readProjectMembers = async (req: Request, res: Response) => {
+  try {
+    const projectCollection = await getCollection<Project>("projects");
+    const userCollection = await getCollection<User>("users");
+    const projectId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(projectId)) {
+      res.status(400).json({ error: "Invalid project ID" });
+      return;
+    }
+
+    const projectExists = await projectCollection.findOne({ _id: projectId });
+
+    if (!projectExists) {
+      res.status(404).json({ message: "Project not found" });
+      return;
+    }
+
+    const userIds = projectExists.members.map((member) => member.userId);
+
+    const members = await userCollection
+      .aggregate([
+        { $match: { _id: { $in: userIds } } },
+        { $project: { firstname: 1, lastname: 1, email: 1 } },
+      ])
+      .toArray();
+
+    res.json(members);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteMember = async (req: Request, res: Response) => {
+  const session = client.startSession();
+  try {
+    await session.startTransaction();
+
+    const projectCollection = await getCollection<Project>("projects");
+    const userCollection = await getCollection<User>("users");
+    const projectId = new ObjectId(req.params.id);
+    const memberId = new ObjectId(req.params.memberId);
+
+    if (!ObjectId.isValid(projectId)) {
+      session.abortTransaction();
+      res.status(400).json({ error: "Invalid project ID" });
+      return;
+    }
+
+    if (!ObjectId.isValid(memberId)) {
+      session.abortTransaction();
+      res.status(400).json({ error: "Invalid member ID" });
+      return;
+    }
+
+    const memberExists = await userCollection.findOne(
+      { _id: memberId },
+      { session }
+    );
+
+    if (!memberExists) {
+      session.abortTransaction();
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const projectExists = await projectCollection.findOne(
+      { _id: projectId },
+      { session }
+    );
+
+    if (!projectExists) {
+      session.abortTransaction();
+      res.status(404).json({ message: "Project not found" });
+      return;
+    }
+
+    const proceedMembers = projectExists.members.map((member) => {
+      return { userId: member.userId.toString(), role: member.role };
+    });
+
+    if (
+      !proceedMembers.some(
+        (member) => member.userId === memberExists._id.toString()
+      )
+    ) {
+      session.abortTransaction();
+      res.status(422).json({ message: "User is not part of this project" });
+      return;
+    }
+
+    const updateProject = await projectCollection.updateOne(
+      { _id: projectExists._id },
+      {
+        $pull: { members: { userId: memberExists._id, role: "collaborator" } },
+      },
+      { session }
+    );
+
+    if (updateProject.modifiedCount !== 1) {
+      session.abortTransaction();
+      res
+        .status(500)
+        .json({ message: "Failed to update project's member list" });
+      return;
+    }
+
+    const updateMember = await userCollection.updateOne(
+      { _id: memberExists._id },
+      { $pull: { projects: projectExists._id } },
+      { session }
+    );
+
+    if (updateMember.modifiedCount !== 1) {
+      session.abortTransaction();
+      res.status(500).json({ message: "Failted to update user's projects" });
+      return;
+    }
+
+    await session.commitTransaction();
+
+    res.status(200).json({ message: "Member successfully removed" });
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

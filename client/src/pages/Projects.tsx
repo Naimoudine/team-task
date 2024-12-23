@@ -12,10 +12,16 @@ import AddProjectModal from "../components/dashboard/projects/AddProjectModal";
 
 type Props = {};
 
+export interface Member {
+  userId: string;
+  role: string;
+}
+
 export interface Project {
   _id?: string;
   title: string;
   taskLists: string[];
+  members: Member[];
 }
 
 export const loader = async () => {

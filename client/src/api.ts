@@ -107,6 +107,21 @@ export const getProjectById = async (id: string) => {
   return data;
 };
 
+export const getProjectMembers = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}/members`,
+    {
+      headers: { "Content-type": "application/json" },
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to remove member");
+  }
+  return data;
+};
+
 export const deleteProject = async (id: string) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/projects/${id}`,
@@ -134,6 +149,22 @@ export const addMembers = async (id: string, members: Friend[]) => {
   const data = await response.json();
   if (response.status !== 200) {
     throw new Error(data.message || "Failed to add members");
+  }
+  return data.message;
+};
+
+export const deleteMember = async (id: string, memberId: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/projects/${id}/members/${memberId}`,
+    {
+      method: "delete",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to remove member");
   }
   return data.message;
 };

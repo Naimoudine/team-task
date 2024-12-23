@@ -12,17 +12,24 @@ import DisplayModal from "../components/dashboard/tasks/DisplayModal";
 import AddTaskListModal from "../components/dashboard/tasks/AddTaskListModal";
 import {
   getProjectById,
+  getProjectMembers,
   getTaskListsByProjectId,
   getUserFriends,
 } from "../api";
 import { Project } from "./Projects";
-import { SlashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import {
+  SlashIcon,
+  EllipsisHorizontalIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
 import ProjectSettingsModal from "../components/dashboard/projects/ProjectSettingsModal";
 import ConfirmDeleteProjectModal from "../components/dashboard/projects/ConfirmDeleteProjectModal";
 import ConfirmDeleteTaskListModal from "../components/dashboard/tasks/ConfirmDeleteTaskListModal";
 import AddMemberModal from "../components/dashboard/projects/AddMemberModal";
 import { Friend } from "./FriendsList";
 import Notif from "../components/dashboard/notifications/Notif";
+import MemberList from "../components/dashboard/projects/MemberList";
+import { User } from "../store/user-store";
 
 type Props = {};
 
@@ -32,6 +39,7 @@ interface LoaderDataType {
   project: Project;
   taskLists: TaskList[];
   friends: Friend[];
+  members: User[];
 }
 
 export const loader = async ({ params }: any) => {
@@ -40,7 +48,8 @@ export const loader = async ({ params }: any) => {
     const project = await getProjectById(params.id);
     const taskLists = await getTaskListsByProjectId(params.id);
     const friends = await getUserFriends(userId);
-    return { project, taskLists, friends };
+    const members = await getProjectMembers(params.id);
+    return { project, taskLists, friends, members };
   } catch (error) {
     throw error;
   }
@@ -60,14 +69,20 @@ export default function TaskLists({}: Props) {
   const [displayAddMember, setDisplayAddMember] = useState<boolean>(false);
   const [displayNotif, setDisplayNotif] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string>("");
+  const [displayMemberList, setDisplayMemberList] = useState<boolean>(false);
 
-  const { project, taskLists, friends } = useLoaderData() as LoaderDataType;
+  const { project, taskLists, friends, members } =
+    useLoaderData() as LoaderDataType;
 
   const revalidator = useRevalidator();
 
   const { pathname } = useLocation();
 
   const projectId = pathname.slice(10, pathname.length - 10);
+
+  const ownerId = project.members.find(
+    (member) => member.role === "Owner"
+  )?.userId;
 
   return (
     <div className="h-full">
@@ -136,41 +151,63 @@ export default function TaskLists({}: Props) {
           setIsDisplayModal={setIsDisplayModal}
         />
       </header>
-      <nav className="w-full flex items-center gap-4 px-6 py-3.5 text-sm font-semibold border-b border-zinc-200">
-        <ul className="flex items-center">
-          <li>
-            <NavLink to="/projects">Projects</NavLink>
-          </li>
-          <SlashIcon className="size-5" />
-          <li>
-            <NavLink
-              className={(isActive) =>
-                isActive ? "underline underline-offset-2" : ""
-              }
-              to={`/projects/${projectId}/taskLists`}
+      <div className="border-b border-zinc-200 px-6 py-3.5 flex items-center justify-between">
+        <nav className="flex items-center w-full gap-4 text-sm font-semibold ">
+          <ul className="flex items-center">
+            <li>
+              <NavLink to="/projects">Projects</NavLink>
+            </li>
+            <SlashIcon className="size-5" />
+            <li>
+              <NavLink
+                className={(isActive) =>
+                  isActive ? "underline underline-offset-2" : ""
+                }
+                to={`/projects/${projectId}/taskLists`}
+              >
+                {project.title}
+              </NavLink>
+            </li>
+          </ul>
+          <div className="relative">
+            <button
+              className="p-1 rounded-lg hover:bg-zinc-100"
+              type="button"
+              aria-label="open setting"
+              onClick={() => setDeleteProject(!deleteProject)}
             >
-              {project.title}
-            </NavLink>
-          </li>
-        </ul>
+              <EllipsisHorizontalIcon className="size-5" />
+            </button>
+            <ProjectSettingsModal
+              displayAddMember={displayAddMember}
+              setDisplayAddMember={setDisplayAddMember}
+              deleteProject={deleteProject}
+              setDeleteProject={setDeleteProject}
+              setConfirmDeleteProject={setConfirmDeleteProject}
+            />
+          </div>
+        </nav>
         <div className="relative">
           <button
-            className="p-1 rounded-lg hover:bg-zinc-100"
-            type="button"
-            aria-label="open setting"
-            onClick={() => setDeleteProject(!deleteProject)}
+            aria-label="members"
+            className="flex items-center gap-1 p-1 rounded-lg hover:bg-zinc-100"
+            onClick={() => setDisplayMemberList(!displayMemberList)}
           >
-            <EllipsisHorizontalIcon className="size-5" />
+            <UsersIcon className="size-4" />
+            <span>{project.members.length}</span>
           </button>
-          <ProjectSettingsModal
-            displayAddMember={displayAddMember}
-            setDisplayAddMember={setDisplayAddMember}
-            deleteProject={deleteProject}
-            setDeleteProject={setDeleteProject}
-            setConfirmDeleteProject={setConfirmDeleteProject}
+          <MemberList
+            displayMemberList={displayMemberList}
+            setDisplayMemberList={setDisplayMemberList}
+            members={members}
+            ownerId={ownerId!}
+            projectId={projectId}
+            revalidator={revalidator}
+            setDisplayNotif={setDisplayNotif}
+            setNotifMessage={setNotifMessage}
           />
         </div>
-      </nav>
+      </div>
       <TaskSection
         display={display}
         taskLists={taskLists}

@@ -2,7 +2,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { getProjects, getTasks, getUserFriends } from "../api";
 import { Task } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
-import { Friends } from "./FriendsList";
+import { Friend } from "./FriendsList";
 import FriendCard from "../components/dashboard/friends/FriendCard";
 
 type Props = {};
@@ -10,7 +10,7 @@ type Props = {};
 interface LoaderType {
   projects: Project[];
   tasks: Task[];
-  members: Friends[];
+  members: Friend[];
 }
 
 export const loader = async () => {
@@ -102,7 +102,7 @@ export default function Home({}: Props) {
           }
         >
           {members.length > 0 ? (
-            <ul>
+            <ul className="flex flex-col gap-2">
               {members.map((member) => (
                 <li key={member._id}>
                   <FriendCard
