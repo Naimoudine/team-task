@@ -23,6 +23,8 @@ import UpdateTaskTaskListModal from "../components/dashboard/tasks/UpdateTaskTas
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import TaskSettingsModal from "../components/dashboard/tasks/TaskSettingsModal";
 import ConfirmDeleteTaskModal from "../components/dashboard/tasks/ConfirmDeleteTaskModal";
+import { User } from "../store/user-store";
+import AssignModal from "../components/dashboard/tasks/AssignModal";
 
 type Props = {};
 
@@ -36,6 +38,7 @@ interface LoaderType {
   task: Task;
   taskLists: TaskList[];
   labels: Label[];
+  members: User[];
 }
 
 export const loader = async ({ params }: any) => {
@@ -64,10 +67,12 @@ export default function Task({}: Props) {
   const [addLabel, setAddLabel] = useState<boolean>(false);
   const [deleteTask, setDeleTask] = useState<boolean>(false);
   const [confirmDeleteTask, setConfirmDeleteTask] = useState<boolean>(false);
-  const { project, taskList, task, taskLists, labels } =
+  const { project, taskList, task, taskLists, labels, members } =
     useLoaderData() as LoaderType;
   const [description, setDescription] = useState<string>(task.description!);
   const [modifyDesc, setModifyDesc] = useState<boolean>(false);
+  const [updateAssign, setUpdateAssign] = useState(false);
+  const [assignedList, setAssignedList] = useState<User[]>([]);
   const currentDate = task.date ? new Date(task?.date) : null;
   const currentDue = task.due ? new Date(task?.due) : null;
   const revalidator = useRevalidator();
@@ -97,6 +102,19 @@ export default function Task({}: Props) {
       throw error;
     }
   };
+
+  const displayAssigned = (arr: string[]) => {
+    const assignedMembers = members.filter((member) =>
+      arr.includes(member._id)
+    );
+    setAssignedList(assignedMembers);
+  };
+
+  useEffect(() => {
+    if (task.assignedTo) {
+      displayAssigned(task.assignedTo);
+    }
+  }, [task.assignedTo, members]);
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -174,7 +192,7 @@ export default function Task({}: Props) {
                 }
                 type="submit"
               >
-                save
+                <span className="font-medium">save</span>
               </button>
             </Form>
           </div>
@@ -188,7 +206,7 @@ export default function Task({}: Props) {
               type="button"
               onClick={() => setUpdateTaskTaskList(!updateTaskTaskList)}
             >
-              {taskList.title}
+              <span className="font-medium">{taskList.title}</span>
             </button>
             <UpdateTaskTaskListModal
               project={project}
@@ -223,7 +241,7 @@ export default function Task({}: Props) {
               onClick={() => setAddLabel(!addLabel)}
             >
               <TagIcon className="size-4 text-zinc-600" />
-              Add label
+              <span className="font-medium">Add label</span>
             </button>
             <LabelModal
               task={task}
@@ -233,10 +251,34 @@ export default function Task({}: Props) {
               revalidator={revalidator}
             />
           </div>
-          <button className="task-opt-btn" type="button">
-            <UserPlusIcon className="size-4 text-zinc-600" />
-            Assign
-          </button>
+          <div className="relative">
+            <button
+              className={
+                updateAssign ? "task-opt-btn bg-zinc-100" : "task-opt-btn"
+              }
+              type="button"
+              onClick={() => setUpdateAssign(!updateAssign)}
+            >
+              <UserPlusIcon className="size-4 text-zinc-600" />
+              {assignedList.length > 0 ? (
+                <span className="font-medium text-ellipsis whitespace-nowrap">
+                  {assignedList.map(
+                    (m, index) =>
+                      (index ? "," : "") + `${m.firstname} ${m.lastname}`
+                  )}
+                </span>
+              ) : (
+                <span className="font-sm">Assign</span>
+              )}
+            </button>
+            <AssignModal
+              task={task}
+              updateAssign={updateAssign}
+              setUpdateAssign={setUpdateAssign}
+              members={members}
+              revalidator={revalidator}
+            />
+          </div>
           <div className="flex flex-col gap-2 px-4">
             <span className="font-semibold">date :</span>
             <input

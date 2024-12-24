@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { NextFunction, Request, Response } from "express";
 import { getCollection } from "../../mongoClient";
 import type { TaskList } from "./taskListController";
+import { User } from "../users/userController";
 
 export interface Task {
   _id?: ObjectId;
@@ -10,7 +11,7 @@ export interface Task {
   priority: number;
   date?: Date | null;
   due?: Date | null;
-  assigned?: ObjectId;
+  assignedTo?: ObjectId[];
   taskListId: ObjectId;
   labelList: string[];
   userId: ObjectId;
@@ -57,11 +58,8 @@ export const createTask = async (req: Request, res: Response) => {
       if (req.body.due) {
         task.due = new Date(req.body.due);
       }
-      if (req.body.assigned) {
-        task.assigned = new ObjectId(req.body.assigned as string);
-      }
 
-      console.log("Document à insérer:", JSON.stringify(task, null, 2)); // Log pour débogage
+      // console.log("Document à insérer:", JSON.stringify(task, null, 2)); // Log pour débogage
 
       const result = await taskCollection.insertOne(task);
 
@@ -366,6 +364,70 @@ export const updateTaskDue = async (req: Request, res: Response) => {
     }
 
     res.sendStatus(204);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateTaskAssigned = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const userCollection = await getCollection<User>("users");
+    const taskId = new ObjectId(req.params.id);
+    const memberId = new ObjectId(req.params.memberId);
+
+    if (!ObjectId.isValid(taskId)) {
+      res.status(400).json({ message: "Invalid task ID" });
+      return;
+    }
+
+    if (!ObjectId.isValid(memberId)) {
+      res.status(400).json({ message: "Invalid member ID" });
+      return;
+    }
+
+    const taskExists = await taskCollection.findOne({ _id: taskId });
+
+    if (!taskExists) {
+      res.status(404).json({ message: "Task not found" });
+      return;
+    }
+
+    const memberExists = await userCollection.findOne({
+      _id: memberId,
+    });
+
+    if (!memberExists) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const proceedAssigned = taskExists.assignedTo?.map((id) => id.toString());
+
+    if (proceedAssigned?.some((id) => id === memberExists._id.toString())) {
+      const removeAssign = await taskCollection.updateOne(
+        { _id: taskExists._id },
+        { $pull: { assignedTo: memberExists._id } }
+      );
+
+      if (removeAssign.matchedCount !== 1) {
+        res.status(422).json({ message: "Failed to remove assign" });
+        return;
+      }
+    } else {
+      const addAssign = await taskCollection.updateOne(
+        { _id: taskExists._id },
+        { $addToSet: { assignedTo: memberExists._id } }
+      );
+
+      if (addAssign.matchedCount !== 1) {
+        res.status(422).json({ message: "Failed to add assign" });
+        return;
+      }
+    }
+
+    res.json({ message: "Task successfully update assigned" });
   } catch (error) {
     console.error("Error fetching tasklist:", error);
     res.status(500).json({ message: "Internal Server Error" });

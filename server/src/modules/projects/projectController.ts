@@ -441,7 +441,10 @@ export const deleteMember = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Member successfully removed" });
   } catch (error) {
+    await session.abortTransaction();
     console.error("Error fetching tasklist:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    session.endSession();
   }
 };

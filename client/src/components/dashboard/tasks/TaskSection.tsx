@@ -22,7 +22,7 @@ export interface Task {
   priority: 1 | 2 | 3;
   date?: Date;
   due?: Date;
-  assigned?: string;
+  assignedTo?: string[];
   labelList: string[];
 }
 

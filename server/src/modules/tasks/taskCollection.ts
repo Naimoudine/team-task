@@ -46,6 +46,14 @@ export async function createTaskCollection() {
             description:
               "The field userId must be an objectId referencing the user",
           },
+          assignedTo: {
+            bsonType: "array",
+            items: {
+              bsonType: "objectId",
+            },
+            description:
+              "The field assignedTo must be an array of objectId referencing the users",
+          },
         },
       },
     },

@@ -226,33 +226,43 @@ export const getTaskById = async (
   taskListId: string,
   id: string
 ) => {
-  const [projectData, taskListData, taskData, taskListsData, labelsData] =
-    await Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/taskLists/${taskListId}`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`),
-      fetch(
-        `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/taskLists`
-      ),
-      fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
-    ]);
+  const [
+    projectData,
+    taskListData,
+    taskData,
+    taskListsData,
+    labelsData,
+    membersData,
+  ] = await Promise.all([
+    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}`),
+    fetch(`${import.meta.env.VITE_API_URL}/api/taskLists/${taskListId}`),
+    fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`),
+    fetch(
+      `${import.meta.env.VITE_API_URL}/api/projects/${projectId}/taskLists`
+    ),
+    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
+    fetch(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}/members`),
+  ]);
   if (
     !projectData.ok ||
     !taskListData.ok ||
     !taskData.ok ||
     !taskListsData.ok ||
-    !labelsData.ok
+    !labelsData.ok ||
+    !membersData.ok
   ) {
     throw new Error("Failed to fetch data");
   }
-  const [project, taskList, task, taskLists, labels] = await Promise.all([
-    projectData.json(),
-    taskListData.json(),
-    taskData.json(),
-    taskListsData.json(),
-    labelsData.json(),
-  ]);
-  return { project, taskList, task, taskLists, labels };
+  const [project, taskList, task, taskLists, labels, members] =
+    await Promise.all([
+      projectData.json(),
+      taskListData.json(),
+      taskData.json(),
+      taskListsData.json(),
+      labelsData.json(),
+      membersData.json(),
+    ]);
+  return { project, taskList, task, taskLists, labels, members };
 };
 
 export const createTask = async (
@@ -413,6 +423,21 @@ export const updateTaskDueDate = async (id: string, due: string | null) => {
     throw new Error("Failed to update due date");
   }
   return null;
+};
+
+export const updateTaskAssgined = async (id: string, memberId: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks/${id}/assigned/${memberId}`,
+    {
+      method: "put",
+      headers: { "Content-type": "application/json" },
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to updated assigned to");
+  }
+  return data.message;
 };
 
 export const deleteTask = async (id: string) => {
