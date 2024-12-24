@@ -5,6 +5,7 @@ import { createTask } from "../../../api";
 import { TaskList } from "./TaskSection";
 
 type Props = {
+  projectId: string;
   displayAddTask: boolean;
   setDisplayAddTask: React.Dispatch<React.SetStateAction<boolean>>;
   currentTaskList: TaskList | null;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function AddTaskModal({
+  projectId,
   displayAddTask,
   setDisplayAddTask,
   currentTaskList,
@@ -41,7 +43,7 @@ export default function AddTaskModal({
           labelList: [],
         };
 
-        await createTask(userId, currentTaskList._id, newTask);
+        await createTask(userId, projectId, currentTaskList._id, newTask);
         revalidator.revalidate();
       }
     } catch (error) {

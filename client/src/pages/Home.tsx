@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { getProjects, getTasks, getUserFriends } from "../api";
+import { getAssignedTasks, getProjects, getUserFriends } from "../api";
 import { Task } from "../components/dashboard/tasks/TaskSection";
 import { Project } from "./Projects";
 import { Friend } from "./FriendsList";
@@ -17,7 +17,7 @@ export const loader = async () => {
   try {
     const userId = JSON.parse(localStorage.getItem("userId") as string);
     const projects = await getProjects(userId);
-    const tasks = await getTasks(userId);
+    const tasks = await getAssignedTasks(userId);
     const members = await getUserFriends(userId);
     return { projects, tasks, members };
   } catch (error) {
@@ -29,6 +29,8 @@ export const loader = async () => {
 export default function Home({}: Props) {
   const { projects, tasks, members } = useLoaderData() as LoaderType;
   const navigate = useNavigate();
+
+  console.log(tasks);
 
   return (
     <section className="wrapper">
@@ -91,8 +93,44 @@ export default function Home({}: Props) {
             )}
           </ul>
         </div>
-        <div className="flex items-center justify-center p-4 border-2 rounded-lg border-zinc-200">
-          <h3 className="font-semibold">Coming soon tasks asigned to you</h3>
+        <div
+          className={
+            tasks.length > 0
+              ? "p-4 border-2 rounded-lg border-zinc-200 h-[250px]"
+              : "p-4 flex items-center justify-center border-2 rounded-lg border-zinc-200 h-[250px]"
+          }
+        >
+          <ul>
+            {tasks.length > 0 ? (
+              tasks.map((task, i) => (
+                <li
+                  className={
+                    i + 1 !== tasks?.length
+                      ? "flex items-center justify-between px-4 py-2 border-b border-zinc-200"
+                      : "flex items-center justify-between px-4 py-2"
+                  }
+                  key={task?._id}
+                >
+                  <h3>{task?.title}</h3>
+                  <button
+                    className="px-4 py-2 border rounded-lg border-zinc-200 hover:bg-zinc-100"
+                    type="button"
+                    onClick={() =>
+                      navigate(
+                        `/projects/${task.projectId}/taskLists/${task.taskListId}/tasks/${task._id}`
+                      )
+                    }
+                  >
+                    visit
+                  </button>
+                </li>
+              ))
+            ) : (
+              <h3 className="font-semibold">
+                You have no tasks assigned to you
+              </h3>
+            )}
+          </ul>
         </div>
         <div
           className={

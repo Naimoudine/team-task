@@ -13,6 +13,7 @@ export interface Task {
   due?: Date | null;
   assignedTo?: ObjectId[];
   taskListId: ObjectId;
+  projectId: ObjectId;
   labelList: string[];
   userId: ObjectId;
 }
@@ -20,8 +21,14 @@ export interface Task {
 export const createTask = async (req: Request, res: Response) => {
   try {
     const taskListCollection = await getCollection<TaskList>("taskLists");
+    const projectId = new ObjectId(req.params.projectId);
     const taskListId = new ObjectId(req.params.id);
     const userId = new ObjectId(req.params.userId);
+
+    if (!ObjectId.isValid(projectId)) {
+      res.status(400).json({ error: "Invalid project ID" });
+      return;
+    }
 
     if (!ObjectId.isValid(taskListId)) {
       res.status(400).json({ error: "Invalid taskList ID" });
@@ -44,6 +51,7 @@ export const createTask = async (req: Request, res: Response) => {
         title: req.body.title,
         priority: req.body.priority,
         taskListId,
+        projectId,
         labelList: [],
         userId,
       };
@@ -106,6 +114,32 @@ export const readAll = async (req: Request, res: Response) => {
     }
     const taskCollection = await getCollection<Task>("tasks");
     const tasks = await taskCollection.find({ userId: userId }).toArray();
+    res.json(tasks);
+  } catch (error) {
+    console.error("Error fetching tasklist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const readAssignedTasks = async (req: Request, res: Response) => {
+  try {
+    const taskCollection = await getCollection<Task>("tasks");
+    const userCollection = await getCollection<User>("users");
+    const userId = new ObjectId(req.params.id);
+
+    if (!ObjectId.isValid(userId)) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
+    const userExists = await userCollection.findOne({ _id: userId });
+
+    const tasks = await taskCollection
+      .find({
+        assignedTo: userExists?._id,
+      })
+      .toArray();
+
     res.json(tasks);
   } catch (error) {
     console.error("Error fetching tasklist:", error);

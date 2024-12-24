@@ -24,6 +24,7 @@ import {
   updateTaskDue,
   deleteTask,
   updateTaskAssigned,
+  readAssignedTasks,
 } from "./modules/tasks/taskController";
 import {
   addMembers,
@@ -68,7 +69,11 @@ router.delete("/taskLists/:id", deleteTaskList);
 
 //task
 router.get("/users/:id/tasks", tasksReadAll);
-router.post("/users/:userId/taskLists/:id/tasks", createTask);
+router.get("/users/:id/assigned", readAssignedTasks);
+router.post(
+  "/users/:userId/projects/:projectId/taskLists/:id/tasks",
+  createTask
+);
 router.get("/tasks/:id", readTaskById);
 router.put("/tasks/:id/priority", updateTaskPriority);
 router.put("/tasks/:id/label", updateTaskLabelList);

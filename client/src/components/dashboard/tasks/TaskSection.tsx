@@ -24,6 +24,8 @@ export interface Task {
   due?: Date;
   assignedTo?: string[];
   labelList: string[];
+  taskListId?: string;
+  projectId?: string;
 }
 
 export interface TaskList {
@@ -56,6 +58,7 @@ export default function Tasksection({
   return (
     <div className="w-full h-full overflow-scroll">
       <AddTaskModal
+        projectId={projectId}
         displayAddTask={displayAddTask}
         setDisplayAddTask={setDisplayAddTask}
         currentTaskList={currentTaskList}

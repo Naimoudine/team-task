@@ -221,6 +221,17 @@ export const getTasks = async (id: string) => {
   return data;
 };
 
+export const getAssignedTasks = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/users/${id}/assigned`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch assigned tasks");
+  }
+  const data = await response.json();
+  return data;
+};
+
 export const getTaskById = async (
   projectId: string,
   taskListId: string,
@@ -267,13 +278,14 @@ export const getTaskById = async (
 
 export const createTask = async (
   userId: string,
+  projectId: string,
   taskListId: string,
   task: Task
 ) => {
   const response = await fetch(
     `${
       import.meta.env.VITE_API_URL
-    }/api/users/${userId}/taskLists/${taskListId}/tasks`,
+    }/api/users/${userId}/projects/${projectId}/taskLists/${taskListId}/tasks`,
     {
       method: "post",
       headers: { "Content-Type": "application/json" },
