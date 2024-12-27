@@ -49,6 +49,14 @@ import {
 } from "./modules/invitations/invitationController";
 import { hashPassword, verifyToken } from "./service/auth";
 import { isLoggedIn, login, logout } from "./modules/users/authAction";
+import {
+  addMessage,
+  createConversation,
+  deleteConversation,
+  deleteMessage,
+  readConversationById,
+  readConversationByUserId,
+} from "./modules/conversations/conversationController";
 
 const router = express.Router();
 
@@ -110,4 +118,13 @@ router.get("/invitations/:id", invitationReadByUserId);
 router.post("/invitations/:userId", createInvitation);
 router.post("/invitations/:id/respond", updateInvitation);
 router.delete("/invitations/:id/cancel", cancelInvitation);
+
+//conversations
+router.post("/users/:id/conversations/:friendId", createConversation);
+router.get("/conversations/:id", readConversationById);
+router.get("/users/:id/conversations", readConversationByUserId);
+router.post("/conversations/:id/send/:userId", addMessage);
+router.delete("/conversations/:id", deleteConversation);
+router.delete("/conversations/:id/messages/:messageId", deleteMessage);
+
 export default router;

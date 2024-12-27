@@ -6,3 +6,11 @@ declare module "express-serve-static-core" {
     auth?: string | JwtPayload; // Adjust type based on your expected `auth` payload
   }
 }
+
+import "socket.io";
+
+declare module "socket.io" {
+  interface Socket {
+    user?: any; // Remplacez `any` par le type exact de vos données utilisateur
+  }
+}

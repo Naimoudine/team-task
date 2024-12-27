@@ -6,6 +6,7 @@ import { createTaskCollection } from "./modules/tasks/taskCollection";
 import { createProjectCollection } from "./modules/projects/projectCollection";
 import { createLabelCollection } from "./modules/label/labelCollection";
 import { createInvitationCollection } from "./modules/invitations/invitationCollection";
+import { createConversationCollection } from "./modules/conversations/conversationCollection";
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ export async function createAllCollection() {
     await createTaskListCollection();
     await createTaskCollection();
     await createLabelCollection();
+    await createConversationCollection();
   } catch (error) {
     console.error("Error while creating collections: ", error);
   }

@@ -26,7 +26,7 @@ export const createLabel = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: "Label created", labelId: result.insertedId });
   } catch (error) {
-    console.error("Error fetching tasklist:", error);
+    console.error("Error fetching labels:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -37,7 +37,7 @@ export const readAll = async (req: Request, res: Response) => {
     const labelList = await labelCollection.find({}).toArray();
     res.json(labelList);
   } catch (error) {
-    console.error("Error fetching tasklist:", error);
+    console.error("Error fetching labels:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
