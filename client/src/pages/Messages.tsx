@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { getConversations } from "../api";
+import { getConversations, getUserFriends } from "../api";
 import { useLoaderData, useRevalidator } from "react-router-dom";
-import { useUserStore } from "../store/user-store";
 import Conversation from "../components/dashboard/conversations/Conversation";
+import AddConversation from "../components/dashboard/conversations/AddConversation";
+import { User } from "../store/user-store";
 
 type Props = {};
 
@@ -32,13 +33,15 @@ export interface Conversation {
 
 interface LoaderType {
   conversations: Conversation[];
+  friends: User[];
 }
 
 export const loader = async () => {
   try {
     const userId = JSON.parse(localStorage.getItem("userId") as string);
     const conversations = await getConversations(userId);
-    return { conversations };
+    const friends = await getUserFriends(userId);
+    return { conversations, friends };
   } catch (error: any) {
     throw new Error(error);
   }
@@ -51,6 +54,8 @@ export default function Messages({}: Props) {
   const [currConversation, setCurrConversation] = useState<Conversation | null>(
     null
   );
+  const [displayAdd, setDisplayAdd] = useState<boolean>(false);
+
   const userId = JSON.parse(localStorage.getItem("userId") as string);
   const loaderData = useLoaderData() as LoaderType;
   const revalidator = useRevalidator();
@@ -91,21 +96,33 @@ export default function Messages({}: Props) {
     <div className="flex flex-col w-full h-full">
       <header className="page-header">
         <h1 className="page-title">Message</h1>
-        <div className="flex items-center gap-8">
+        <div className="relative flex items-center gap-8">
           <button
             type="button"
-            className="flex items-center justify-center gap-2 px-2 py-1 rounded-lg hover:bg-gray-200"
+            className={
+              displayAdd
+                ? "flex items-center justify-center gap-2 px-2 py-1 rounded-lg hover:bg-zinc-100 bg-zinc-100"
+                : "flex items-center justify-center gap-2 px-2 py-1 rounded-lg hover:bg-zinc-100"
+            }
+            onClick={() => setDisplayAdd(!displayAdd)}
           >
             <PlusIcon className="size-4 text-zinc-600" />
             <span className="text-sm font-semibold text-zinc-600">
               Create conversation
             </span>
           </button>
+          <AddConversation
+            friends={loaderData?.friends}
+            revalidator={revalidator}
+            conversations={conversations ? conversations : []}
+            displayAdd={displayAdd}
+            setDisplayAdd={setDisplayAdd}
+          />
         </div>
       </header>
-      <main className="flex grow">
-        <div className="w-[25%] h-full border-r border-zinc-200">
-          {conversations && conversations.length ? (
+      {conversations?.length ? (
+        <main className="flex grow">
+          <div className="w-[25%] h-full border-r border-zinc-200">
             <ul className="w-full">
               {conversations.map((conversation) => (
                 <li
@@ -143,21 +160,23 @@ export default function Messages({}: Props) {
                 </li>
               ))}
             </ul>
-          ) : (
-            <h2>No conversations</h2>
-          )}
-        </div>
-        <div className="w-[75%] max-h-full">
-          {currConversation && (
-            <Conversation
-              key={currConversation._id}
-              conversation={currConversation}
-              userId={userId!}
-              revalidator={revalidator}
-            />
-          )}
-        </div>
-      </main>
+          </div>
+          <div className="w-[75%] max-h-full">
+            {currConversation && (
+              <Conversation
+                key={currConversation._id}
+                conversation={currConversation}
+                userId={userId!}
+                revalidator={revalidator}
+              />
+            )}
+          </div>
+        </main>
+      ) : (
+        <h2 className="mt-8 text-lg font-medium text-center">
+          No conversation found. Don't hesitate to create one.
+        </h2>
+      )}
     </div>
   );
 }

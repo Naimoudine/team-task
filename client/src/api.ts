@@ -547,6 +547,23 @@ export const getConversations = async (id: string) => {
   return data;
 };
 
+export const addConversation = async (userId: string, friendId: string) => {
+  const response = await fetch(
+    `${
+      import.meta.env.VITE_API_URL
+    }/api/users/${userId}/conversations/${friendId}`,
+    {
+      method: "post",
+      headers: { "Content-type": "application/json" },
+    }
+  );
+  const data = await response.json();
+  if (response.status !== 201) {
+    throw new Error(data.message || "Failed to create conversation");
+  }
+  return data.message;
+};
+
 export const addMessage = async (
   id: string,
   userId: string,
