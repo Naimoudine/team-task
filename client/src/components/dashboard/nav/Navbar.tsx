@@ -53,7 +53,7 @@ export default function Navbar({}: Props) {
             to="/messages"
           >
             <ChatBubbleOvalLeftEllipsisIcon className="nav-icon" />
-            Message
+            Messages
           </NavLink>
         </li>
       </ul>

@@ -7,22 +7,24 @@ export const createConversationCollection = async () => {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["user1", "user2", "messages", "createdAt"],
+        required: ["creator", "correspondent", "messages", "createdAt"],
         properties: {
-          user1: {
+          creator: {
             bsonType: "objectId",
-            description: "must be an objectId referencing an user",
           },
-          user2: {
+          correspondent: {
             bsonType: "objectId",
-            description: "must be an objectId referencing an user",
           },
           messages: {
             bsonType: "array",
             items: {
               bsonType: "object",
-              required: ["sender", "createdAt"],
+              required: ["_id", "sender", "createdAt"],
               properties: {
+                _id: {
+                  bsonType: "objectId",
+                  description: "Unique identifier for each message",
+                },
                 sender: {
                   bsonType: "objectId",
                   description:

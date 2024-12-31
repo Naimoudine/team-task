@@ -4,7 +4,6 @@ import { FolderIcon } from "@heroicons/react/16/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { getProjects } from "../api";
 import AddProjectModal from "../components/dashboard/projects/AddProjectModal";
-import Notif from "../components/dashboard/notifications/Notif";
 
 type Props = {};
 

@@ -24,6 +24,7 @@ import Error from "./pages/Error.tsx";
 import FriendsList, {
   loader as friendsListLoader,
 } from "./pages/FriendsList.tsx";
+import Messages, { loader as messagesLoader } from "./pages/Messages.tsx";
 
 function protectedRoute(routeConfig: any) {
   return {
@@ -74,6 +75,11 @@ const router = createBrowserRouter([
         element: <FriendsList />,
         errorElement: <FriendsList />,
         loader: friendsListLoader,
+      },
+      {
+        path: "messages",
+        element: <Messages />,
+        loader: messagesLoader,
       },
     ],
     errorElement: <Error />,

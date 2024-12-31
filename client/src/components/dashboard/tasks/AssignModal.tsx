@@ -21,7 +21,6 @@ export default function AssignModal({
   const handleOnChange = async (e: any) => {
     try {
       if (task._id) {
-        console.log(e.currentTarget.value);
         await updateTaskAssgined(task._id, e.currentTarget.value);
         revalidator.revalidate();
       }

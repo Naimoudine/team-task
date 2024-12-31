@@ -3,10 +3,10 @@ import { getCollection } from "../../mongoClient";
 import { ObjectId } from "mongodb";
 import { User } from "../users/userController";
 import { connectedUsers, io } from "../..";
-import { getReceiverId, validateConversationAccess } from "../../lib/utils";
+import { validateConversationAccess } from "../../lib/utils";
 
 export interface Message {
-  _id?: ObjectId;
+  _id: ObjectId;
   text?: string;
   sender: ObjectId;
   image?: string;
@@ -14,8 +14,8 @@ export interface Message {
 }
 export interface Conversation {
   _id?: ObjectId;
-  user1: ObjectId;
-  user2: ObjectId;
+  creator: ObjectId;
+  correspondent: ObjectId;
   messages: Message[];
   createdAt: Date;
 }
@@ -62,10 +62,8 @@ export const createConversation = async (req: Request, res: Response) => {
     }
 
     const conversationExists = await conversationCollection.findOne({
-      $or: [
-        { user1: userId, user2: friendId },
-        { user1: friendId, user2: userId },
-      ],
+      creator: userExists._id,
+      correspondent: friendExists._id,
     });
 
     if (conversationExists) {
@@ -74,8 +72,8 @@ export const createConversation = async (req: Request, res: Response) => {
     }
 
     const newConversation: Conversation = {
-      user1: userExists._id,
-      user2: friendExists._id,
+      creator: userExists._id,
+      correspondent: friendExists._id,
       messages: [],
       createdAt: new Date(),
     };
@@ -147,60 +145,51 @@ export const readConversationByUserId = async (req: Request, res: Response) => {
 
     const conversationExists = await conversationCollection
       .aggregate([
+        { $match: { $or: [{ creator: userId }, { correspondent: userId }] } },
         {
-          $match: {
-            $or: [{ user1: userExists._id }, { user2: userExists._id }],
+          $lookup: {
+            from: "users",
+            localField: "correspondent",
+            foreignField: "_id",
+            as: "correspondentDetails",
+          },
+        },
+        {
+          $unwind: {
+            path: "$correspondentDetails",
+            preserveNullAndEmptyArrays: true, // Si aucun utilisateur correspondant, conserver le document.
           },
         },
         {
           $lookup: {
             from: "users",
-            localField: "user1",
+            localField: "creator",
             foreignField: "_id",
-            as: "firstUserDetails",
+            as: "creatorDetails",
           },
         },
         {
-          $lookup: {
-            from: "users",
-            localField: "user2",
-            foreignField: "_id",
-            as: "secondUserDetails",
+          $unwind: {
+            path: "$creatorDetails",
+            preserveNullAndEmptyArrays: true, // Si aucun utilisateur correspondant, conserver le document.
           },
         },
         {
           $project: {
             _id: 1,
-            user1: 1,
-            user2: 1,
+            creator: 1,
+            correspondent: 1,
             messages: 1,
-            "firstUserDetails.firstname": {
-              $arrayElemAt: ["$firstUserDetails.firstname", 0],
-            },
-            "firstUserDetails.lastname": {
-              $arrayElemAt: ["$firstUserDetails.lastname", 0],
-            },
-            "firstUserDetails.email": {
-              $arrayElemAt: ["$firstUserDetails.email", 0],
-            },
-            "secondUserDetails.firstname": {
-              $arrayElemAt: ["$secondUserDetails.firstname", 0],
-            },
-            "secondUserDetails.lastname": {
-              $arrayElemAt: ["$secondUserDetails.lastname", 0],
-            },
-            "secondUserDetails.email": {
-              $arrayElemAt: ["$secondUserDetails.email", 0],
-            },
+            "correspondentDetails.firstname": 1,
+            "correspondentDetails.lastname": 1,
+            "correspondentDetails.email": 1,
+            "creatorDetails.firstname": 1,
+            "creatorDetails.lastname": 1,
+            "creatorDetails.email": 1,
           },
         },
       ])
       .toArray();
-
-    if (!conversationExists.length) {
-      res.status(404).json({ message: "No conversations found for this user" });
-      return;
-    }
 
     res.json(conversationExists);
   } catch (error) {
@@ -256,21 +245,21 @@ export const addMessage = async (req: Request, res: Response) => {
     }
 
     const newMessage: Message = {
+      _id: new ObjectId(),
       sender: userId,
       text: req.body.text || null,
       image: req.body.image || null,
       createdAt: new Date(),
     };
 
-    const receiverId = getReceiverId(conversationExists, userId);
+    const receiverId = conversationExists.correspondent;
     const receiverSocketId = connectedUsers.get(receiverId.toString());
 
     try {
       if (receiverSocketId) {
         io.to(receiverSocketId).emit("private_message", newMessage);
-        console.log("Message sent");
       } else {
-        console.log("User disconnected, message saved");
+        console.info("User disconnected, message saved");
       }
     } catch (err) {
       console.error("Error emitting message via Socket.IO:", err);

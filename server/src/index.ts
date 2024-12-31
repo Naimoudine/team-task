@@ -22,15 +22,14 @@ export const connectedUsers = new Map<string, string>();
 io.on("connection", (socket) => {
   if (socket.user && socket.user.id) {
     connectedUsers.set(socket.user.id, socket.id);
-    console.log("User has connected", socket.user.id, socket.id);
   } else {
-    console.log("Failed to connect user, missing user information");
+    console.info("Failed to connect user, missing user information");
   }
 
   socket.on("disconnect", () => {
     if (socket.user && socket.user.id) {
       connectedUsers.delete(socket.user.id);
-      console.log("User disconnected", socket.user.id);
+      console.info("User disconnected", socket.user.id);
     }
   });
 });

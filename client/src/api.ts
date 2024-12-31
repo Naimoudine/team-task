@@ -531,3 +531,39 @@ export const cancelInvitation = async (id: string) => {
   }
   return data.message;
 };
+
+export const getConversations = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/users/${id}/conversations`,
+    {
+      headers: { "Content-type": "application/json" },
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to fetch conversations");
+  }
+  return data;
+};
+
+export const addMessage = async (
+  id: string,
+  userId: string,
+  message: string
+) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/conversations/${id}/send/${userId}`,
+    {
+      method: "post",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ text: message }),
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to add message");
+  }
+  return data.message;
+};

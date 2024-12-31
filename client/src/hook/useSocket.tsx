@@ -5,7 +5,6 @@ export default function useSocket(): Socket | null {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    console.log("Initializing socket connection...");
     if (!socketRef.current) {
       socketRef.current = io("http://localhost:3310", {
         transports: ["websocket"],
@@ -14,7 +13,6 @@ export default function useSocket(): Socket | null {
     }
 
     return () => {
-      console.log("Disconnecting socket...");
       socketRef.current?.disconnect();
       socketRef.current = null;
     };

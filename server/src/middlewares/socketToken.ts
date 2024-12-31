@@ -6,12 +6,8 @@ import jwt from "jsonwebtoken";
 const SECRET_KEY = process.env.APP_SECRET!;
 
 export const socketVerifyToken = () => {
-  console.log("appelé");
   io.use((socket, next) => {
-    console.log("Checking token...");
-
     const cookies = socket.handshake.headers.cookie;
-    console.log("Cookies received:", cookies);
 
     if (!cookies) {
       return next(new Error("No cookies found"));
@@ -27,8 +23,6 @@ export const socketVerifyToken = () => {
     try {
       // Vérifie et décode le token
       const decoded = jwt.verify(token, SECRET_KEY);
-
-      console.log("Decoded token:", decoded); // Ajoutez ceci pour voir ce qui est décodé
 
       // Assurez-vous que le token contient bien un champ 'id' ou 'sub'
       socket.user = decoded; // Associe l'utilisateur au socket

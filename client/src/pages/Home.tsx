@@ -30,14 +30,12 @@ export default function Home({}: Props) {
   const { projects, tasks, members } = useLoaderData() as LoaderType;
   const navigate = useNavigate();
 
-  console.log(tasks);
-
   return (
     <section className="wrapper">
       <header>
         <h1 className="page-title">Home</h1>
       </header>
-      <div className="flex justify-between gap-8 p-4 mt-8 border-2 rounded-lg w-fit border-zinc-200">
+      <div className="flex justify-between gap-4 p-4 mt-6 border-2 rounded-lg w-fit border-zinc-200">
         <article className="px-4 border-r-2 border-dashed border-zinc-200">
           <h2 className="font-semibold text-center text-zinc-600">
             Total Projects
@@ -57,7 +55,7 @@ export default function Home({}: Props) {
           <p className="text-xl font-bold">{members?.length}</p>
         </article>
       </div>
-      <div className="grid w-full grid-cols-2 grid-rows-2 gap-8 mt-8">
+      <div className="grid w-full grid-cols-2 grid-rows-2 gap-4 mt-8">
         <div
           className={
             projects.length > 0
