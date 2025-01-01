@@ -584,3 +584,19 @@ export const addMessage = async (
   }
   return data.message;
 };
+
+export const deleteConversation = async (id: string) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/conversations/${id}`,
+    {
+      method: "delete",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to delete conversation");
+  }
+  return data.message;
+};

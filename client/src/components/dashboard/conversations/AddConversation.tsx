@@ -49,7 +49,7 @@ export default function AddConversation({
     <div
       className={
         displayAdd
-          ? "absolute left-0 w-full p-2 bg-white border rounded-lg shadow-lg border-zinc-100 top-8"
+          ? "absolute z-50 left-0 w-full p-2 bg-white border rounded-lg shadow-lg border-zinc-100 top-8"
           : "hidden"
       }
     >
@@ -67,25 +67,18 @@ export default function AddConversation({
                 )
               )
               .map((friend) => (
-                <li
-                  key={friend._id}
-                  className="rounded-lg hover:px-2 hover:py-1 hover:bg-zinc-100"
-                >
-                  <article
+                <li key={friend._id}>
+                  <button
+                    aria-label="add friend"
                     className={
                       selectedUser?._id === friend._id
-                        ? "bg-zinc-100 px-2 py-1 rounded-lg"
-                        : "px-2 py-1"
+                        ? "bg-zinc-100 px-2 py-1 rounded-lg w-full"
+                        : "px-2 py-1 w-full hover:bg-zinc-100 rounded-lg"
                     }
+                    onClick={() => handleClick(friend)}
                   >
-                    <button
-                      aria-label="add friend"
-                      className=""
-                      onClick={() => handleClick(friend)}
-                    >
-                      {friend.firstname} {friend.lastname}
-                    </button>
-                  </article>
+                    {friend.firstname} {friend.lastname}
+                  </button>
                 </li>
               ))}
           </ul>

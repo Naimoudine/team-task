@@ -65,19 +65,19 @@ const router = createBrowserRouter([
         loader: taskListsLoarder,
       },
       {
-        path: "projects/:projectId/taskLists/:taskListId/tasks/:taskId",
+        path: "/projects/:projectId/taskLists/:taskListId/tasks/:taskId",
         element: <Task />,
         loader: taskLoader,
         action: taskAction,
       },
       {
-        path: "friends",
+        path: "/friends",
         element: <FriendsList />,
         errorElement: <FriendsList />,
         loader: friendsListLoader,
       },
       {
-        path: "messages",
+        path: "/messages",
         element: <Messages />,
         loader: messagesLoader,
       },

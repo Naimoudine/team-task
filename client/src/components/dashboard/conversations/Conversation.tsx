@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
 import type { Conversation, Message } from "../../../pages/Messages";
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { addMessage } from "../../../api";
+import { addMessage, deleteConversation } from "../../../api";
 import useSocket from "../../../hook/useSocket";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type Props = {
   conversation: Conversation;
   userId: string;
   revalidator: any;
+  setDisplayDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Conversation({
   conversation,
   userId,
   revalidator,
+  setDisplayDeleteModal,
 }: Props) {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const socket = useSocket();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +74,7 @@ export default function Conversation({
   }, [socket]);
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="relative flex flex-col w-full h-full">
       <header className="flex items-center justify-between p-4 border-b border-zinc-200">
         <h2 className="flex items-center gap-4 text-lg font-medium">
           {conversation.correspondent === userId
@@ -82,7 +87,10 @@ export default function Conversation({
             <div className="w-2 h-2 bg-green-600 rounded-full" />
           </span>
         </h2>
-        <button aria-label="delete conversation">
+        <button
+          aria-label="delete conversation"
+          onClick={() => setDisplayDeleteModal(true)}
+        >
           <TrashIcon className="size-4" />
         </button>
       </header>

@@ -5,6 +5,7 @@ import { useLoaderData, useRevalidator } from "react-router-dom";
 import Conversation from "../components/dashboard/conversations/Conversation";
 import AddConversation from "../components/dashboard/conversations/AddConversation";
 import { User } from "../store/user-store";
+import ConfirmDeleteModal from "../components/dashboard/conversations/ConfirmDeleteModal";
 
 type Props = {};
 
@@ -55,6 +56,7 @@ export default function Messages({}: Props) {
     null
   );
   const [displayAdd, setDisplayAdd] = useState<boolean>(false);
+  const [displayDeleteModal, setDisplayDeleteModal] = useState<boolean>(false);
 
   const userId = JSON.parse(localStorage.getItem("userId") as string);
   const loaderData = useLoaderData() as LoaderType;
@@ -94,6 +96,11 @@ export default function Messages({}: Props) {
 
   return (
     <div className="flex flex-col w-full h-full">
+      <ConfirmDeleteModal
+        displayDeleteModal={displayDeleteModal}
+        setDisplayDeleteModal={setDisplayDeleteModal}
+        currConversation={currConversation!}
+      />
       <header className="page-header">
         <h1 className="page-title">Message</h1>
         <div className="relative flex items-center gap-8">
@@ -168,6 +175,7 @@ export default function Messages({}: Props) {
                 conversation={currConversation}
                 userId={userId!}
                 revalidator={revalidator}
+                setDisplayDeleteModal={setDisplayDeleteModal}
               />
             )}
           </div>
